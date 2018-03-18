@@ -1,0 +1,43 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<CommandTable xmlns="http://schemas.microsoft.com/VisualStudio/2005-10-18/CommandTable" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+
+  <!--This is the file that defines the IDs for all the commands exposed by VisualStudio. -->
+  <Extern href="stdidcmd.h"/>
+
+  <!--This header contains the command ids for the menus provided by the shell. -->
+  <Extern href="vsshlids.h"/>
+
+  <!--The Commands section is where commands, menus, and menu groups are defined.
+      This section uses a Guid to identify the package that provides the command defined inside it. -->
+  <Commands package="guidTipOfTheDayPackage">
+
+    <Groups>
+      <Group guid="guidTipOfTheDayPackageCmdSet" id="TipOfTheDayGroup" priority="0x0600">
+        <Parent guid="guidSHLMainMenu" id="IDM_VS_MENU_HELP"/>
+      </Group>
+    </Groups>
+
+    <!--Buttons section. -->
+    <Buttons>
+      <Button guid="guidTipOfTheDayPackageCmdSet" id="TipOfTheDayId" priority="0x0100" type="Button">
+        <Parent guid="guidTipOfTheDayPackageCmdSet" id="TipOfTheDayGroup" />
+        <Strings>
+          <ButtonText>T&amp;ip of the Day</ButtonText>
+        </Strings>
+      </Button>
+    </Buttons>
+
+  </Commands>
+
+  <Symbols>
+    <!-- This is the package guid. -->
+    <GuidSymbol name="guidTipOfTheDayPackage" value="{7c97805a-7191-482c-9396-5b8ef31bc05d}" />
+
+    <!-- This is the guid used to group the menu commands together -->
+    <GuidSymbol name="guidTipOfTheDayPackageCmdSet" value="{3fc91750-97a6-4544-be7b-572f72433e9b}">
+      <IDSymbol name="TipOfTheDayGroup" value="0x1020" />
+      <IDSymbol name="TipOfTheDayId" value="0x0100" />
+    </GuidSymbol>
+
+  </Symbols>
+</CommandTable>
