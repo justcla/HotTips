@@ -1,0 +1,21 @@
+﻿<Window x:Class="HotTips.TipOfTheDayWindow"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             mc:Ignorable="d" 
+             SizeToContent="WidthAndHeight"
+             ResizeMode="CanResizeWithGrip"
+             d:DataContext="local:ShortcutsImportViewModel"
+        Height="200"
+        MinHeight="150"
+        Width="400" 
+        MinWidth="200"
+        >
+    <Border>
+        <Grid>
+            <Label Content="Tip of the Day" HorizontalAlignment="Left" Margin="30,30,0,0" VerticalAlignment="Top" Height="36" FontSize="18" FontWeight="Bold"/>
+            <Button Content="Got it!" HorizontalAlignment="Right" Margin="10" VerticalAlignment="Bottom" Width="75"/>
+        </Grid>
+    </Border>
+</Window>
