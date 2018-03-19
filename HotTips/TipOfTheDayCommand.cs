@@ -17,12 +17,12 @@ namespace HotTips
         /// <summary>
         /// Command ID.
         /// </summary>
-        public const int CommandId = 0x0100;
+        public const int TipOfTheDayCmdId = 0x0100;
 
         /// <summary>
         /// Command menu group (command set GUID).
         /// </summary>
-        public static readonly Guid CommandSet = new Guid("3fc91750-97a6-4544-be7b-572f72433e9b");
+        public static readonly Guid TipOfTheDayCmdSetGuid = new Guid("3fc91750-97a6-4544-be7b-572f72433e9b");
 
         /// <summary>
         /// VS Package that provides this command, not null.
@@ -38,11 +38,17 @@ namespace HotTips
         private TipOfTheDayCommand(AsyncPackage package, OleMenuCommandService commandService)
         {
             this.package = package ?? throw new ArgumentNullException(nameof(package));
-            commandService = commandService ?? throw new ArgumentNullException(nameof(commandService));
 
-            var menuCommandID = new CommandID(CommandSet, CommandId);
+            // Register command handler for Tip of the Day command
+            commandService = commandService ?? throw new ArgumentNullException(nameof(commandService));
+            commandService.AddCommand(CreateMenuItem(TipOfTheDayCmdSetGuid, TipOfTheDayCmdId));
+        }
+
+        private MenuCommand CreateMenuItem(Guid tipOfTheDayCmdSetGuid, int tipOfTheDayCmdId)
+        {
+            var menuCommandID = new CommandID(TipOfTheDayCmdSetGuid, TipOfTheDayCmdId);
             var menuItem = new MenuCommand(this.Execute, menuCommandID);
-            commandService.AddCommand(menuItem);
+            return menuItem;
         }
 
         /// <summary>
@@ -87,6 +93,11 @@ namespace HotTips
         /// <param name="sender">Event sender.</param>
         /// <param name="e">Event args.</param>
         private void Execute(object sender, EventArgs e)
+        {
+            ShowTipOfTheDay();
+        }
+
+        public void ShowTipOfTheDay()
         {
             ThreadHelper.ThrowIfNotOnUIThread();
             string message = "Use Tip of the Day to learn great features available to you in Visual Studio.";

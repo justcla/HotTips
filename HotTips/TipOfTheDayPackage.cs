@@ -35,6 +35,10 @@ namespace HotTips
     [PackageRegistration(UseManagedResourcesOnly = true, AllowsBackgroundLoading = true)]
     [InstalledProductRegistration("#110", "#112", "1.0", IconResourceID = 400)] // Info on this package for Help/About
     [ProvideMenuResource("Menus.ctmenu", 1)]
+    //[ProvideAutoLoad(VSConstants.UICONTEXT.NoSolution_string)]
+    [ProvideAutoLoad(VSConstants.UICONTEXT.SolutionExists_string)]
+    [ProvideAutoLoad(VSConstants.UICONTEXT.SolutionHasMultipleProjects_string)]
+    [ProvideAutoLoad(VSConstants.UICONTEXT.SolutionHasSingleProject_string)]
     [Guid(TipOfTheDayPackage.PackageGuidString)]
     [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1650:ElementDocumentationMustBeSpelledCorrectly", Justification = "pkgdef, VS and vsixmanifest are valid VS terms")]
     public sealed class TipOfTheDayPackage : AsyncPackage
@@ -70,6 +74,18 @@ namespace HotTips
             // Do any initialization that requires the UI thread after switching to the UI thread.
             await this.JoinableTaskFactory.SwitchToMainThreadAsync(cancellationToken);
             await TipOfTheDayCommand.InitializeAsync(this);
+
+            // Show TotD at startup
+            if (ShouldShowTOTD())
+            {
+                TipOfTheDayCommand.Instance.ShowTipOfTheDay();
+            }
+        }
+
+        private bool ShouldShowTOTD()
+        {
+            // TODO: Check if we should be showing TotD
+            return true;
         }
 
         #endregion
