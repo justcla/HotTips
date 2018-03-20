@@ -55,18 +55,29 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="EmbeddedTipsProvider.cs" />
+    <Compile Include="ITipGroupProvider.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TipOfTheDayCommand.cs" />
     <Compile Include="TipOfTheDayWindow.xaml.cs">
       <DependentUpon>TipOfTheDayWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="TipOfTheDayPackage.cs" />
+    <Compile Include="Utils.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
     <None Include="source.extension.vsixmanifest">
       <SubType>Designer</SubType>
     </None>
+    <Content Include="Groups\general.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="Groups\editor.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
   </ItemGroup>
   <ItemGroup>
     <Content Include="Resources\TipOfTheDay.png" />
