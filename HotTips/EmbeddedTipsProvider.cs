@@ -2,8 +2,18 @@
 
 namespace HotTips
 {
-    class EmbeddedTipsProvider : ITipGroupProvider
+    public class EmbeddedTipsProvider : ITipGroupProvider
     {
+        private static EmbeddedTipsProvider _instance;
+        public static EmbeddedTipsProvider Instance()
+        {
+            if (_instance == null)
+            {
+                _instance = new EmbeddedTipsProvider();
+            }
+            return _instance;
+        }
+
         public List<string> GetGroupDefinitions()
         {
             List<string> tipGroups = new List<string>();

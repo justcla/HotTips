@@ -22,8 +22,8 @@ namespace HotTips
         [TestMethod]
         public void TestGetAllTips()
         {
-            List<TipGroup> allTips = TipCalculator.GetAllTipGroups();
-            Assert.IsTrue(allTips.Count == 2);
+            List<GroupOfTips>[] allTips = TipCalculator.GetAllTipGroups();
+            Assert.IsNotNull(allTips);
             var tipGroup = allTips[0];
         }
     }

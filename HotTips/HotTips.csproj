@@ -59,8 +59,7 @@
     <Compile Include="ITipGroupProvider.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TipCalculator.cs" />
-    <Compile Include="TipObjects\Tip.cs" />
-    <Compile Include="TipObjects\TipGroup.cs" />
+    <Compile Include="TipObjects\TipObjects.cs" />
     <Compile Include="TipOfTheDayCommand.cs" />
     <Compile Include="TipOfTheDayWindow.xaml.cs">
       <DependentUpon>TipOfTheDayWindow.xaml</DependentUpon>
