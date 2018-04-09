@@ -72,7 +72,7 @@ namespace HotTips
             {
                 // Loop increasing scanRow until a scan of a row returns no tips. Then move to next priorityBand.
                 int scanRow = 0;
-                bool tipFound = false;
+                bool tipFound;
                 do
                 {
                     // Search the whole priorityBand (ie, [3][1], [2][2], [1][3] for each scanRow.
@@ -81,7 +81,8 @@ namespace HotTips
                     // If tips found, but none to show scan whoe priorityBand at next scanRow.
                     // Stop when no tips found in the whole priorityBand for the given scanRow.
                     
-                    TipInfo holdTipInfo = null;
+                    tipFound = false;
+                    TipInfo sameGroupTip = null;
 
                     for (int i = 1; i <= 3; i++)
                     {
@@ -108,16 +109,16 @@ namespace HotTips
                                 // This tipGroup has no tips at this tipPri level. Move to next group.
                                 continue;
                             }
-
                             List<TipInfo> tipsAtPriBand = tipGroupTipsPriList[tipPri-1];
 
                             // Look at scanRow posn for a tip
-                            TipInfo tipInfo = tipsAtPriBand[scanRow];
-                            if (tipInfo == null)
+                            if (tipsAtPriBand == null || scanRow >= tipsAtPriBand.Count)
                             {
                                 // No tips left in this group at this scanRow. Move to the next group.
                                 continue;
                             }
+                            // Assume tipInfo will not be null at this point.
+                            TipInfo tipInfo = tipsAtPriBand[scanRow];
 
                             // TipInfo is not null! We found a tip at this scanRow in this tipPri in this groupPri
                             // Note: Tip might have already been seen.
@@ -134,22 +135,20 @@ namespace HotTips
                             // If tip is NOT from the same group as the last tip shown, we have a good tip to return.
                             if (!WasFromLastSeenTipGroup(tipInfo, lastSeenGroupId))
                             {
-                                {
-                                    return tipInfo;
-                                }
+                                return tipInfo;
                             }
 
                             // Hold this tip. It should be shown if no other tip found at this scanRow for groupPri/tipPri.
-                            holdTipInfo = tipInfo;
+                            sameGroupTip = tipInfo;
                         }
                     }
 
                     // If we are holding a tip from the last seen tip group, we can return this tip now,
                     // as it is more important than any tip from the next priorityBand.
-                    if (holdTipInfo != null)
+                    if (sameGroupTip != null)
                     {
                         {
-                            return holdTipInfo;
+                            return sameGroupTip;
                         }
                     }
 
@@ -205,7 +204,7 @@ namespace HotTips
         private static List<string> LoadTipHistory()
         {
             // TODO: Pull tip history from VS settings store
-            return new List<string> {"GN001", "ED001"};
+            return new List<string> {"General-GN001", "Editor-ED001"};
         }
 
         private static HashSet<string> GetTipHistorySet()

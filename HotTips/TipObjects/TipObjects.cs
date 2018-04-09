@@ -20,6 +20,7 @@ namespace HotTips
 
     public class TipInfo
     {
+        public string globalTipId { get; set; }
         public string tipId { get; set; }
         public string name { get; set; }
         public int priority { get; set; }
@@ -38,9 +39,15 @@ namespace HotTips
                 contentUri = tipContentUri,
                 groupId = tipGroup.groupId,
                 groupName = tipGroup.groupName,
-                groupPriority = tipGroup.groupPriority
+                groupPriority = tipGroup.groupPriority,
+                globalTipId = GetGlobalTipId(tipGroup.groupId, tip.tipId)
             };
             return tipInfo;
+        }
+
+        private static string GetGlobalTipId(string groupId, string tipId)
+        {
+            return groupId + "-" + tipId;
         }
     }
 

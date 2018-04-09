@@ -4,19 +4,19 @@
   "groupPriority": 2,
   "tips": [
     {
-      "tipId": "ET001",
+      "tipId": "ED001",
       "name": "Duplicate Text",
       "content": "ET001.html",
       "priority": 1
     },
     {
-      "tipId": "ET002",
+      "tipId": "ED002",
       "name": "Expand Selection",
       "content": "ET002.html",
       "priority": 1
     },
     {
-      "tipId": "ET003",
+      "tipId": "ED003",
       "name": "Delete Line",
       "content": "ET003.html",
       "priority": 2

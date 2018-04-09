@@ -32,6 +32,7 @@ namespace HotTips
         {
             TipInfo nextTip = TipCalculator.GetNextTip();
             Assert.IsNotNull(nextTip);
+            Assert.AreEqual("Editor-ED002", nextTip.globalTipId);
         }
     }
 }
