@@ -22,9 +22,16 @@ namespace HotTips
         [TestMethod]
         public void TestGetAllTips()
         {
-            List<GroupOfTips>[] allTips = TipCalculator.GetAllTipGroups();
+            List<GroupOfTips>[] allTips = TipCalculator.GetPrioritizedTipGroups();
             Assert.IsNotNull(allTips);
             var tipGroup = allTips[0];
+        }
+        
+        [TestMethod]
+        public void TestGetNextTip()
+        {
+            TipInfo nextTip = TipCalculator.GetNextTip();
+            Assert.IsNotNull(nextTip);
         }
     }
 }

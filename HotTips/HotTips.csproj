@@ -55,10 +55,10 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="EmbeddedTipsProvider.cs" />
-    <Compile Include="ITipGroupProvider.cs" />
+    <Compile Include="Engine\EmbeddedTipsProvider.cs" />
+    <Compile Include="Engine\ITipGroupProvider.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="TipCalculator.cs" />
+    <Compile Include="Engine\TipCalculator.cs" />
     <Compile Include="TipObjects\TipObjects.cs" />
     <Compile Include="TipOfTheDayCommand.cs" />
     <Compile Include="TipOfTheDayWindow.xaml.cs">
