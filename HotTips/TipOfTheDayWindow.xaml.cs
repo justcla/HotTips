@@ -1,6 +1,4 @@
 ﻿using System;
-using System.IO;
-using System.Reflection;
 using System.Windows;
 
 namespace HotTips
@@ -22,27 +20,11 @@ namespace HotTips
         {
             InitializeComponent();
 
-            TipContentBrowser.Navigate(new Uri(GetNextTipPath()));
+            string nextTipURI = TipCalculator.GetNextTipPath();
+
+            TipContentBrowser.Navigate(new Uri(nextTipURI));
         }
 
-        private static string GetNextTipPath()
-        {
-            string tipId = GetNextTipId();
-
-            string relativeTipPath = $"/Tips/{tipId}.html";
-            return GetLocalExtensionDir() + relativeTipPath;
-        }
-
-        private static string GetLocalExtensionDir()
-        {
-            return Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
-        }
-
-        private static string GetNextTipId()
-        {
-            // TODO: Work out the next tip.
-            return "Tip001";
-        }
     }
 
 }

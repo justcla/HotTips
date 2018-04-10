@@ -1,0 +1,26 @@
+{
+  "groupId": "Editor",
+  "groupName": "Editor",
+  "groupPriority": 2,
+  "tips": [
+    {
+      "tipId": "ED001",
+      "name": "Duplicate Text",
+      "content": "ED001.html",
+      "priority": 1
+    },
+    {
+      "tipId": "ED002",
+      "name": "Expand Selection",
+      "content": "ED002.html",
+      "priority": 1
+    },
+    {
+      "tipId": "ED003",
+      "name": "Delete Line",
+      "content": "ED003.html",
+      "priority": 2
+    }
+  ]
+
+}
