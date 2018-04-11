@@ -58,6 +58,8 @@
     <Compile Include="Engine\EmbeddedTipsProvider.cs" />
     <Compile Include="Engine\ITipGroupProvider.cs" />
     <Compile Include="Engine\ITipHistoryManager.cs" />
+    <Compile Include="Engine\ITipManager.cs" />
+    <Compile Include="Engine\TipManager.cs" />
     <Compile Include="Engine\VSTipHistoryManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Engine\TipCalculator.cs" />

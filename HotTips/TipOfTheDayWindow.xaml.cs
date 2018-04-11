@@ -16,13 +16,20 @@ namespace HotTips
     /// </summary>
     public partial class TipOfTheDayWindow : Window
     {
+        private ITipManager _tipManager;
+
         public TipOfTheDayWindow()
         {
             InitializeComponent();
 
             ITipHistoryManager vsTipHistoryManager = VSTipHistoryManager.Instance();
             
-            string nextTipURI = new TipCalculator(vsTipHistoryManager).GetNextTipPath();
+            // Create a new Tip Manager during window creation. It should be disposed when the window is closed.
+            _tipManager = new TipManager();
+
+            TipCalculator tipCalculator = new TipCalculator(vsTipHistoryManager, _tipManager);
+            
+            string nextTipURI = tipCalculator.GetNextTipPath();
 
             TipContentBrowser.Navigate(new Uri(nextTipURI));
             
