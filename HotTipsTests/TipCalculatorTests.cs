@@ -8,17 +8,6 @@ namespace HotTips
     [TestClass]
     public class TipCalculatorTests
     {
-        [TestMethod]
-        public void TestMethod1()
-        {
-            System.Diagnostics.Debug.WriteLine("Running test");
-            Console.Out.WriteLine("Running test - console output");
-            //Assert.Fail("Fail this test");
-
-            string result = new TipCalculator(new VSTipHistoryManager()).GetNextTipPath();
-
-            //Assert.IsTrue(result.Contains("Tips/Tip001.html"));
-        }
 
         [TestMethod]
         public void TestGetAllTips()
@@ -44,7 +33,7 @@ namespace HotTips
         {
             // Setup
             Mock<ITipHistoryManager> mockTipHistoryManager = new Mock<ITipHistoryManager>();
-            List<string> tipsSeen = new List<string>() {"General-GN001", "Editor-ED001"};
+            List<string> tipsSeen = new List<string> {"General-GN001", "Editor-ED001"};
             mockTipHistoryManager.Setup(m => m.GetAllTipsSeen()).Returns(tipsSeen);
 
             TipCalculator tipCalculator = new TipCalculator(mockTipHistoryManager.Object);
@@ -55,6 +44,24 @@ namespace HotTips
             // Verify
             Assert.IsNotNull(nextTip);
             Assert.AreEqual("Editor-ED002", nextTip.globalTipId);
+        }
+
+        [TestMethod]
+        public void TestGetNextTip2()
+        {
+            // Setup
+            Mock<ITipHistoryManager> mockTipHistoryManager = new Mock<ITipHistoryManager>();
+            List<string> tipsSeen = new List<string> {"General-GN001", "Editor-ED001", "Editor-ED002"};
+            mockTipHistoryManager.Setup(m => m.GetAllTipsSeen()).Returns(tipsSeen);
+
+            TipCalculator tipCalculator = new TipCalculator(mockTipHistoryManager.Object);
+            
+            // Act
+            TipInfo nextTip = tipCalculator.GetNextTip();
+            
+            // Verify
+            Assert.IsNotNull(nextTip);
+            Assert.AreEqual("Editor-ED003", nextTip.globalTipId);
         }
     }
 }

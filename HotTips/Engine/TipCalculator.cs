@@ -105,6 +105,11 @@ namespace HotTips
 
                         // For each group in the groupPri bucket,
                         List<GroupOfTips> tipGroups = prioritizedTipGroups[groupPri-1];
+                        if (tipGroups == null)
+                        {
+                            // No groups in this group priority
+                            continue;
+                        }
                         foreach (GroupOfTips tipGroup in tipGroups)
                         {
                             //  If Group is an excluded group, skip to the next group
