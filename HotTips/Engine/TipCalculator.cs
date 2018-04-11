@@ -8,23 +8,35 @@ namespace HotTips
 {
     public class TipCalculator
     {
-        public static List<GroupOfTips>[] groupsPriList { get; set; }
+        public List<GroupOfTips>[] groupsPriList { get; set; }
 
         // History of tips seen (ordered list)
-        private static List<string> tipHistory;
+        private List<string> tipHistory;
 
         // Fast-lookup tip history HashSet
-        private static HashSet<string> tipHistorySet;
+        private HashSet<string> tipHistorySet;
 
         private static readonly char GLOBAL_TIP_ID_SEPARATOR = '-';
+        private ITipHistoryManager _tipHistoryManager;
 
-        public static string GetNextTipPath()
+        public ITipHistoryManager TipHistoryManager
+        {
+            get => _tipHistoryManager;
+            set => _tipHistoryManager = value;
+        }
+
+        public TipCalculator(ITipHistoryManager tipHistoryManager)
+        {
+            _tipHistoryManager = tipHistoryManager;
+        }
+
+        public string GetNextTipPath()
         {
             TipInfo tipInfo = GetNextTip();
             return tipInfo.contentUri;
         }
 
-        public static TipInfo GetNextTip()
+        public TipInfo GetNextTip()
         {
             // TODO: Work out the next tip.
 
@@ -43,7 +55,7 @@ namespace HotTips
             return nextTip;
         }
 
-        public static TipInfo CalculateNextTip()
+        public TipInfo CalculateNextTip()
         {
             TipInfo nextTip;
             // Get Prioritized Tip Groups
@@ -64,7 +76,7 @@ namespace HotTips
             return GetNextTipAlgorithm(prioritizedTipGroups, lastSeenGroupId);
         }
 
-        private static TipInfo GetNextTipAlgorithm(List<GroupOfTips>[] prioritizedTipGroups, string lastSeenGroupId)
+        private TipInfo GetNextTipAlgorithm(List<GroupOfTips>[] prioritizedTipGroups, string lastSeenGroupId)
         {
             // Algorithm:
             //  Go through tips in order, *order determined by priGroup, then natural list ordering, round-robin by rowId.
@@ -163,35 +175,35 @@ namespace HotTips
             return null;
         }
 
-        private static string GetGlobalTipId(TipInfo tipInfo)
+        private string GetGlobalTipId(TipInfo tipInfo)
         {
             return $"{tipInfo.groupId}{GLOBAL_TIP_ID_SEPARATOR}{tipInfo.tipId}";
         }
 
-        private static bool WasFromLastSeenTipGroup(TipInfo tipInfo, string lastSeenGroupId)
+        private bool WasFromLastSeenTipGroup(TipInfo tipInfo, string lastSeenGroupId)
         {
             return tipInfo.groupId == lastSeenGroupId;
         }
 
-        private static bool IsExcludedGroup(string groupId)
+        private bool IsExcludedGroup(string groupId)
         {
             // TODO: Store excluded groups as class variable
             return GetExcludedGroups().Contains(groupId);
         }
 
-        private static HashSet<string> GetExcludedGroups()
+        private HashSet<string> GetExcludedGroups()
         {
             // TODO: Fetch excluded groups from VS store (user should be able to ignore specific groups)
             return new HashSet<string>();
         }
 
-        private static void ClearTipHistory()
+        private void ClearTipHistory()
         {
             tipHistory = new List<string>();
             // TODO: Persist the new cleared history. (Might be able to delay as new tip will persist history)
         }
 
-        private static List<string> GetTipHistory()
+        private List<string> GetTipHistory()
         {
             if (tipHistory == null)
             {
@@ -201,13 +213,13 @@ namespace HotTips
             return tipHistory;
         }
 
-        private static List<string> LoadTipHistory()
+        private List<string> LoadTipHistory()
         {
-            // TODO: Pull tip history from VS settings store
-            return new List<string> {"General-GN001", "Editor-ED001"};
+            // Ask the Tip History Manager for all tips seen
+            return _tipHistoryManager.GetAllTipsSeen();
         }
 
-        private static HashSet<string> GetTipHistorySet()
+        private HashSet<string> GetTipHistorySet()
         {
             if (tipHistorySet == null)
             {
@@ -217,13 +229,13 @@ namespace HotTips
             return tipHistorySet;
         }
 
-        private static bool IsFirstTime()
+        private bool IsFirstTime()
         {
             // TODO: Determine if is first time
             return false;
         }
 
-        public static List<GroupOfTips>[] GetPrioritizedTipGroups()
+        public List<GroupOfTips>[] GetPrioritizedTipGroups()
         {
             // Get all tip group providers
             IEnumerable<ITipGroupProvider> tipGroupProviders = GetTipGroupProviders();
@@ -258,7 +270,7 @@ namespace HotTips
             return groupsPriList;
         }
 
-        private static void ProcessTipGroup(ITipGroupProvider tipGroupProvider, TipGroup tipGroup)
+        private void ProcessTipGroup(ITipGroupProvider tipGroupProvider, TipGroup tipGroup)
         {
             // Create a new GroupOfTips
             GroupOfTips groupOfTips = InitializeGroupOfTips(tipGroup);
@@ -278,7 +290,7 @@ namespace HotTips
             AddTipGroupToGroupsPriList(groupOfTips, tipGroup.groupPriority);
         }
 
-        private static GroupOfTips InitializeGroupOfTips(TipGroup tipGroup)
+        private GroupOfTips InitializeGroupOfTips(TipGroup tipGroup)
         {
             return new GroupOfTips
             {
@@ -289,7 +301,7 @@ namespace HotTips
             };
         }
 
-        private static void AddTipToPriListOfTips(GroupOfTips groupOfTips, TipInfo tipInfo)
+        private void AddTipToPriListOfTips(GroupOfTips groupOfTips, TipInfo tipInfo)
         {
             // Add Tip to the correct prioritized tip list within the groupOfTips
             int tipPriority = tipInfo.priority;
@@ -304,7 +316,7 @@ namespace HotTips
             tipList.Add(tipInfo);
         }
 
-        private static void AddTipGroupToGroupsPriList(GroupOfTips groupOfTips, int groupPriority)
+        private void AddTipGroupToGroupsPriList(GroupOfTips groupOfTips, int groupPriority)
         {
             // Initialze GroupsPriList if required
             if (groupsPriList == null)
@@ -323,7 +335,7 @@ namespace HotTips
             groupsList.Add(groupOfTips);
         }
 
-        private static string GetJsonStringFromFile(string groupFile)
+        private string GetJsonStringFromFile(string groupFile)
         {
             string json;
             // Read the file into string
@@ -335,7 +347,7 @@ namespace HotTips
             return json;
         }
 
-        private static IEnumerable<ITipGroupProvider> GetTipGroupProviders()
+        private IEnumerable<ITipGroupProvider> GetTipGroupProviders()
         {
             List<ITipGroupProvider> tipGroupProviders = new List<ITipGroupProvider>();
             // Add the Embedded Tips Provider

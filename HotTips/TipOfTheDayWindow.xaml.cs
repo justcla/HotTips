@@ -20,9 +20,14 @@ namespace HotTips
         {
             InitializeComponent();
 
-            string nextTipURI = TipCalculator.GetNextTipPath();
+            ITipHistoryManager vsTipHistoryManager = VSTipHistoryManager.Instance();
+            
+            string nextTipURI = new TipCalculator(vsTipHistoryManager).GetNextTipPath();
 
             TipContentBrowser.Navigate(new Uri(nextTipURI));
+            
+            // Mark tip as shown
+            vsTipHistoryManager.MarkTipAsSeen("Editor-ED002.html");
         }
 
     }
