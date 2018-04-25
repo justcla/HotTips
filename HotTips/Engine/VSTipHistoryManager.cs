@@ -1,6 +1,5 @@
 ﻿using Microsoft.VisualStudio.Settings;
 using Microsoft.VisualStudio.Shell;
-using Microsoft.VisualStudio.Shell.Settings;
 using System;
 using System.Collections.Generic;
 
@@ -8,28 +7,14 @@ namespace HotTips
 {
     public class VSTipHistoryManager : ITipHistoryManager
     {
-        private const string TIP_OF_THE_DAY_SETTINGS = "TipOfTheDay";
-        private const string TIP_HISTORY = "TipHistory";
+        private static readonly string SVsSettingsPersistenceManagerGuid = "9B164E40-C3A2-4363-9BC5-EB4039DEF653";
+        private static readonly string TIP_OF_THE_DAY_SETTINGS = "TipOfTheDay";
+        private static readonly string TIP_HISTORY = "TipHistory";
+        private static readonly bool RoamSettings = true;
+
         private static VSTipHistoryManager _instance;
 
-        //private IServiceProvider ServiceProvider;
-        private ShellSettingsManager SettingsManager;
-        //private SettingsStore SettingsStore;
-
-        //private WritableSettingsStore _userSettingsStore;
-        //private WritableSettingsStore UserSettingsStore
-        //{
-        //    get
-        //    {
-        //        if (_userSettingsStore == null)
-        //        {
-        //            ShellSettingsManager settingsManager = new ShellSettingsManager(this.ServiceProvider);
-        //            _userSettingsStore = settingsManager.GetWritableSettingsStore(SettingsScope.UserSettings);
-        //        }
-        //        return _userSettingsStore;
-        //    }
-        //}
-
+        private ISettingsManager SettingsManager;
         private List<string> _tipsSeen;
 
         public static ITipHistoryManager Instance()
@@ -45,13 +30,12 @@ namespace HotTips
 
         private void InitialiseTipHistory()
         {
-            SettingsManager = new ShellSettingsManager(ServiceProvider.GlobalProvider);
+            // Note: Must instaniate on UI thread.
+            ThreadHelper.ThrowIfNotOnUIThread();
+            SettingsManager = (ISettingsManager)ServiceProvider.GlobalProvider.GetService(new Guid(SVsSettingsPersistenceManagerGuid));
 
-            // Pull tip history from VS settings store
-            SettingsStore settingsStore = SettingsManager.GetReadOnlySettingsStore(SettingsScope.UserSettings);
-
-            // Get the TipHIstory (Comma separated string of TipIDs)
-            string tipHistory = GetTipHistoryFromSettingsStore(settingsStore);
+            // Pull tip history from VS settings store (Comma separated string of TipIDs)
+            var tipHistory = GetTipHistoryFromSettingsStore();
             if (tipHistory != null)
             {
                 _tipsSeen = new List<string>(tipHistory.Split(','));
@@ -59,19 +43,13 @@ namespace HotTips
             {
                 _tipsSeen = new List<string>();
             }
-
-            //_tipsSeen = new List<string> { "General-GN001", "Editor-ED001" };
         }
 
-        private static string GetTipHistoryFromSettingsStore(SettingsStore settingsStore)
+        private string GetTipHistoryFromSettingsStore()
         {
-            // Extract values from UserSettingsStore
             string collectionPath = TIP_OF_THE_DAY_SETTINGS;
-            if (settingsStore.CollectionExists(collectionPath))
-            {
-                return settingsStore.GetString(collectionPath, TIP_HISTORY);
-            }
-            return null;
+            SettingsManager.TryGetValue(collectionPath, out string tipHistoryRaw);
+            return tipHistoryRaw;
         }
 
         public void MarkTipAsSeen(string globalTipId)
@@ -83,10 +61,9 @@ namespace HotTips
             // Update the VS settings store with the latest tip history
             string tipHistoryRaw = String.Join(",", tipsSeen);
             // Get Writable settings store and update value
-            WritableSettingsStore settingsStore = SettingsManager.GetWritableSettingsStore(SettingsScope.UserSettings);
             string collectionPath = TIP_OF_THE_DAY_SETTINGS;
-            settingsStore.CreateCollection(collectionPath);
-            settingsStore.SetString(collectionPath, TIP_HISTORY, tipHistoryRaw);
+            ISettingsList settingsList = SettingsManager.GetOrCreateList(collectionPath, isMachineLocal: !RoamSettings);
+            SettingsManager.SetValueAsync(collectionPath, tipHistoryRaw, isMachineLocal: !RoamSettings);
         }
 
         public void ClearTipHistory()
@@ -94,13 +71,10 @@ namespace HotTips
             // Clear the local tips object
             _tipsSeen = null;
 
-            // Delete the entries from the Settings Store
-            WritableSettingsStore settingsStore = SettingsManager.GetWritableSettingsStore(SettingsScope.UserSettings);
+            // Delete the entries from the Settings Store by setting to Empty string
             string collectionPath = TIP_OF_THE_DAY_SETTINGS;
-            if (settingsStore.CollectionExists(collectionPath))
-            {
-                settingsStore.DeleteCollection(collectionPath);
-            }
+            SettingsManager.SetValueAsync(collectionPath, string.Empty, isMachineLocal: !RoamSettings);
+
         }
     }
 }
