@@ -6,5 +6,6 @@ namespace HotTips
     {
         List<string> GetAllTipsSeen();
         void  MarkTipAsSeen(string globalTipId);
+        void ClearTipHistory();
     }
 }

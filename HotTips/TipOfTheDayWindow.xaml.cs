@@ -28,13 +28,12 @@ namespace HotTips
             _tipManager = new TipManager();
 
             TipCalculator tipCalculator = new TipCalculator(vsTipHistoryManager, _tipManager);
-            
-            string nextTipURI = tipCalculator.GetNextTipPath();
+            TipInfo nextTip = tipCalculator.GetNextTip();
 
-            TipContentBrowser.Navigate(new Uri(nextTipURI));
+            TipContentBrowser.Navigate(new Uri(nextTip.contentUri));
             
             // Mark tip as shown
-            vsTipHistoryManager.MarkTipAsSeen("Editor-ED002.html");
+            vsTipHistoryManager.MarkTipAsSeen(nextTip.globalTipId);
         }
 
     }

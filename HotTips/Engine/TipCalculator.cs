@@ -60,17 +60,22 @@ namespace HotTips
             List<GroupOfTips>[] prioritizedTipGroups = TipManager.GetPrioritizedTipGroups();
 
             // Get group of last tip seen
-            string lastTipGlobalId = GetTipHistory().Last();
-            // Extract groupId from global tip Id "[GroupId-TipId]"
-            string lastSeenGroupId = lastTipGlobalId.Split(GLOBAL_TIP_ID_SEPARATOR)[0];
+            List<string> tipHistoryList = GetTipHistory();
+            string lastSeenGroupId = null;
+            if (tipHistoryList != null && tipHistoryList.Count > 0)
+            {
+                string lastTipGlobalId = tipHistoryList.Last();
+                // Extract groupId from global tip Id "[GroupId-TipId]"
+                lastSeenGroupId = lastTipGlobalId.Split(GLOBAL_TIP_ID_SEPARATOR)[0];
+            }
 
             nextTip = GetNextTipAlgorithm(prioritizedTipGroups, lastSeenGroupId);
 
-            if (nextTip != null || GetTipHistory() == null) return nextTip;
+            if (nextTip != null || tipHistoryList == null) return nextTip;
 
             //  if no tips found at any priGroup level, clear history and start again.
             ClearTipHistory();
-            return GetNextTipAlgorithm(prioritizedTipGroups, lastSeenGroupId);
+            return GetNextTipAlgorithm(prioritizedTipGroups, null);
         }
 
         private TipInfo GetNextTipAlgorithm(List<GroupOfTips>[] prioritizedTipGroups, string lastSeenGroupId)
@@ -201,8 +206,9 @@ namespace HotTips
 
         private void ClearTipHistory()
         {
-            tipHistory = new List<string>();
-            // TODO: Persist the new cleared history. (Might be able to delay as new tip will persist history)
+            tipHistory = null;
+            tipHistorySet = null;
+            TipHistoryManager.ClearTipHistory();
         }
 
         private List<string> GetTipHistory()
