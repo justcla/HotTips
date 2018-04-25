@@ -21,6 +21,7 @@ namespace HotTips
         public TipOfTheDayWindow()
         {
             InitializeComponent();
+            Owner = Application.Current.MainWindow;
 
             ITipHistoryManager vsTipHistoryManager = VSTipHistoryManager.Instance();
             
