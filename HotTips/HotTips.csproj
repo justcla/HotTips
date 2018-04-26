@@ -89,6 +89,10 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="ReleaseNotes.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
     <Content Include="Resources\TipOfTheDay.png" />
     <Content Include="Resources\TipOfTheDayPackage.ico" />
     <Content Include="Tips\ED001.html">
