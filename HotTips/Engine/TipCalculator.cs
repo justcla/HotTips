@@ -1,51 +1,31 @@
 ﻿using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
-using System.Windows.Forms;
 
 namespace HotTips
 {
     public class TipCalculator
     {
-        private static readonly string TIP_OF_THE_DAY_TITLE = "Tip of the Day";
         private static readonly char GLOBAL_TIP_ID_SEPARATOR = '-';
 
         // Managers
-        private ITipHistoryManager _tipHistoryManager;
-        private ITipManager _tipManager;
+        public ITipHistoryManager TipHistoryManager;
+        public ITipManager TipManager;
 
         public TipCalculator(ITipHistoryManager tipHistoryManager, ITipManager tipManager = null)
         {
-            _tipHistoryManager = tipHistoryManager;
-            _tipManager = tipManager ?? new TipManager();
+            TipHistoryManager = tipHistoryManager;
+            TipManager = tipManager ?? new TipManager();
         }
 
         public string GetNextTipPath()
         {
             TipInfo tipInfo = GetNextTip();
-            return tipInfo.contentUri;
+            return tipInfo?.contentUri;
         }
 
         public TipInfo GetNextTip()
         {
-            // TODO: Work out the next tip.
-
-            // First time, set tipInfo to Tip001
-            if (IsFirstTime())
-            {
-                return new TipInfo
-                {
-                    tipId = "GN001",
-                    contentUri = EmbeddedTipsProvider.Instance().GetTipPath("Tip001.html")
-                };
-            }
-
-            return CalculateNextTip();
-        }
-
-        private TipInfo CalculateNextTip()
-        {
-            List<string> tipHistoryList = _tipHistoryManager.GetTipHistory();
+            List<string> tipHistoryList = TipHistoryManager.GetTipHistory();
             //List<string> tipHistoryList = GetTipHistory();
 
             string lastSeenGroupId = GetLastTipGroupSeen(tipHistoryList);
@@ -53,37 +33,7 @@ namespace HotTips
             // Get the next tip (using Tip generator algorithm)
             TipInfo nextTip = GetNextTipAlgorithm(lastSeenGroupId);
 
-            // If we found a tip, return it.
-            if (nextTip != null) return nextTip;
-
-            // No new tips to show.
-
-            // Check strange case - No new tips and no tips shown.
-            if (tipHistoryList == null)
-            {
-                // No tip found and there are none in the history, so we must have no tips at all. (Strange case)
-                Debug.WriteLine("No tips seen and no tips yet to see. (Check if tip groups loaded correctly.)");
-                return null;
-            }
-
-            // Ask user if they want to start fresh from the beginning.
-            return ResetAndGetTipFromBeginning();
-        }
-
-        private TipInfo ResetAndGetTipFromBeginning()
-        {
-            // Ask user if they want to clear the history and start again from the beginning.
-            const string Text = "No new tips to show.\n\nClear tip history and start showing tips from the beginning?";
-            if (MessageBox.Show(Text, TIP_OF_THE_DAY_TITLE, MessageBoxButtons.OKCancel) != DialogResult.OK)
-            {
-                // User does not want to reset history. Exit nicely.
-                return null;
-            }
-
-            // Reset Tip History and fetch next tip
-            ClearTipHistory();
-
-            return GetNextTipAlgorithm(lastSeenGroupId: null);
+            return nextTip;
         }
 
         private static string GetLastTipGroupSeen(List<string> tipHistoryList)
@@ -126,7 +76,7 @@ namespace HotTips
                         if (tipPri < 1 || tipPri > 3) break;
 
                         // For each group in the groupPri bucket,
-                        List<GroupOfTips> tipGroups = _tipManager.GetPrioritizedTipGroups()[groupPri-1];
+                        List<GroupOfTips> tipGroups = TipManager.GetPrioritizedTipGroups()[groupPri-1];
                         if (tipGroups == null)
                         {
                             // No groups in this group priority
@@ -164,9 +114,7 @@ namespace HotTips
                             tipFound = true;
 
                             // If we've seen the tip, move to the next group.
-                            //HashSet<string> tipHistorySet = GetTipHistorySet();
-                            //if (tipHistorySet.Contains(tipInfo.globalTipId))
-                            if (_tipHistoryManager.HasTipBeenSeen(tipInfo.globalTipId))
+                            if (TipHistoryManager.HasTipBeenSeen(tipInfo.globalTipId))
                             {
                                 // Already seen this tip. Skip to the next group.
                                 continue;
@@ -226,15 +174,7 @@ namespace HotTips
 
         private void ClearTipHistory()
         {
-            //tipHistory = null;
-            //tipHistorySet = null;
-            _tipHistoryManager.ClearTipHistory();
-        }
-
-        private bool IsFirstTime()
-        {
-            // TODO: Determine if is first time
-            return false;
+            TipHistoryManager.ClearTipHistory();
         }
 
     }
