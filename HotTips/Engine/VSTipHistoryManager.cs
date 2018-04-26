@@ -22,7 +22,13 @@ namespace HotTips
             return _instance ?? (_instance = new VSTipHistoryManager());
         }
 
-        public List<string> GetAllTipsSeen()
+        public bool HasTipBeenSeen(string globalTipId)
+        {
+            List<string> tipsSeen = GetTipHistory();
+            return tipsSeen != null && tipsSeen.Contains(globalTipId);
+        }
+
+        public List<string> GetTipHistory()
         {
             if (_tipsSeen == null) InitialiseTipHistory();
             return _tipsSeen;
@@ -35,14 +41,8 @@ namespace HotTips
             SettingsManager = (ISettingsManager)ServiceProvider.GlobalProvider.GetService(new Guid(SVsSettingsPersistenceManagerGuid));
 
             // Pull tip history from VS settings store (Comma separated string of TipIDs)
-            var tipHistory = GetTipHistoryFromSettingsStore();
-            if (tipHistory != null)
-            {
-                _tipsSeen = new List<string>(tipHistory.Split(','));
-            } else
-            {
-                _tipsSeen = new List<string>();
-            }
+            string tipHistory = GetTipHistoryFromSettingsStore();
+            _tipsSeen = (!String.IsNullOrEmpty(tipHistory)) ? new List<string>(tipHistory.Split(',')) : new List<string>();
         }
 
         private string GetTipHistoryFromSettingsStore()
@@ -55,14 +55,14 @@ namespace HotTips
         public void MarkTipAsSeen(string globalTipId)
         {
             // Add tip ID to the tip history and persist to the VS settings store
-            List<string> tipsSeen = GetAllTipsSeen();
+            List<string> tipsSeen = GetTipHistory();
             tipsSeen.Add(globalTipId);
 
             // Update the VS settings store with the latest tip history
             string tipHistoryRaw = String.Join(",", tipsSeen);
             // Get Writable settings store and update value
             string collectionPath = TIP_OF_THE_DAY_SETTINGS;
-            ISettingsList settingsList = SettingsManager.GetOrCreateList(collectionPath, isMachineLocal: !RoamSettings);
+            //ISettingsList settingsList = SettingsManager.GetOrCreateList(collectionPath, isMachineLocal: !RoamSettings);
             SettingsManager.SetValueAsync(collectionPath, tipHistoryRaw, isMachineLocal: !RoamSettings);
         }
 

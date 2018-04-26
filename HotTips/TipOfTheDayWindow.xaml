@@ -15,7 +15,8 @@
     <Border>
         <Grid>
             <Label Content="Tip of the Day" HorizontalAlignment="Left" Margin="30,30,0,0" VerticalAlignment="Top" Height="36" FontSize="18" FontWeight="Bold"/>
-            <Button Content="Got it!" HorizontalAlignment="Right" Margin="10" VerticalAlignment="Bottom" Width="75"/>
+            <Button Name="NextTipButton" Content="Next" HorizontalAlignment="Left" Margin="10" VerticalAlignment="Bottom" Width="75" Click="NextTipButton_Click"/>
+            <Button Name="CloseButton" Content="Got it!" HorizontalAlignment="Right" Margin="10" VerticalAlignment="Bottom" Width="75" Click="CloseButton_Click"/>
             <WebBrowser Name="TipContentBrowser" Margin="30,60" VerticalAlignment="Top" MinWidth="400" MinHeight="160"/>
         </Grid>
     </Border>

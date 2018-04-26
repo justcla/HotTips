@@ -15,7 +15,7 @@ namespace HotTips
             // Setup
             Mock<ITipHistoryManager> mockTipHistoryManager = new Mock<ITipHistoryManager>();
             List<string> emptyList = new List<string>();
-            mockTipHistoryManager.Setup(m => m.GetAllTipsSeen()).Returns(emptyList);
+            mockTipHistoryManager.Setup(m => m.GetTipHistory()).Returns(emptyList);
 
             TipCalculator tipCalculator = new TipCalculator(mockTipHistoryManager.Object);
             
@@ -34,7 +34,7 @@ namespace HotTips
             // Setup
             Mock<ITipHistoryManager> mockTipHistoryManager = new Mock<ITipHistoryManager>();
             List<string> tipsSeen = new List<string> {"General-GN001", "Editor-ED001"};
-            mockTipHistoryManager.Setup(m => m.GetAllTipsSeen()).Returns(tipsSeen);
+            mockTipHistoryManager.Setup(m => m.GetTipHistory()).Returns(tipsSeen);
 
             TipCalculator tipCalculator = new TipCalculator(mockTipHistoryManager.Object);
             
@@ -52,7 +52,7 @@ namespace HotTips
             // Setup
             Mock<ITipHistoryManager> mockTipHistoryManager = new Mock<ITipHistoryManager>();
             List<string> tipsSeen = new List<string> {"General-GN001", "Editor-ED001", "Editor-ED002"};
-            mockTipHistoryManager.Setup(m => m.GetAllTipsSeen()).Returns(tipsSeen);
+            mockTipHistoryManager.Setup(m => m.GetTipHistory()).Returns(tipsSeen);
 
             TipCalculator tipCalculator = new TipCalculator(mockTipHistoryManager.Object);
             
@@ -74,7 +74,7 @@ namespace HotTips
 
             // Mock the TipHistoryManager
             Mock<ITipHistoryManager> mockTipHistoryManager = new Mock<ITipHistoryManager>();
-            mockTipHistoryManager.Setup(m => m.GetAllTipsSeen()).Returns(new List<string> { "General-GN001", "Editor-ED001", "Editor-ED002" });
+            mockTipHistoryManager.Setup(m => m.GetTipHistory()).Returns(new List<string> { "General-GN001", "Editor-ED001", "Editor-ED002" });
 
             TipCalculator tipCalculator = new TipCalculator(mockTipHistoryManager.Object, mockTipManager.Object);
             

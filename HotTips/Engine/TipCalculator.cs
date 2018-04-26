@@ -1,30 +1,23 @@
 ﻿using System.Collections.Generic;
 using System.Diagnostics;
-using System.IO;
 using System.Linq;
-using Newtonsoft.Json;
+using System.Windows.Forms;
 
 namespace HotTips
 {
     public class TipCalculator
     {
-        public List<GroupOfTips>[] groupsPriList { get; set; }
-
-        // History of tips seen (ordered list)
-        private List<string> tipHistory;
-
-        // Fast-lookup tip history HashSet
-        private HashSet<string> tipHistorySet;
-
+        private static readonly string TIP_OF_THE_DAY_TITLE = "Tip of the Day";
         private static readonly char GLOBAL_TIP_ID_SEPARATOR = '-';
 
-        public ITipHistoryManager TipHistoryManager { get; set; }
-        public ITipManager TipManager { get; private set; }
+        // Managers
+        private ITipHistoryManager _tipHistoryManager;
+        private ITipManager _tipManager;
 
         public TipCalculator(ITipHistoryManager tipHistoryManager, ITipManager tipManager = null)
         {
-            TipHistoryManager = tipHistoryManager;
-            TipManager = tipManager ?? new TipManager();
+            _tipHistoryManager = tipHistoryManager;
+            _tipManager = tipManager ?? new TipManager();
         }
 
         public string GetNextTipPath()
@@ -47,20 +40,54 @@ namespace HotTips
                 };
             }
 
-            var nextTip = CalculateNextTip();
-
-            return nextTip;
+            return CalculateNextTip();
         }
 
-        public TipInfo CalculateNextTip()
+        private TipInfo CalculateNextTip()
         {
-            TipInfo nextTip;
-            // Get Prioritized Tip Groups
-            // TODO: Move to class variable
-            List<GroupOfTips>[] prioritizedTipGroups = TipManager.GetPrioritizedTipGroups();
+            List<string> tipHistoryList = _tipHistoryManager.GetTipHistory();
+            //List<string> tipHistoryList = GetTipHistory();
 
-            // Get group of last tip seen
-            List<string> tipHistoryList = GetTipHistory();
+            string lastSeenGroupId = GetLastTipGroupSeen(tipHistoryList);
+
+            // Get the next tip (using Tip generator algorithm)
+            TipInfo nextTip = GetNextTipAlgorithm(lastSeenGroupId);
+
+            // If we found a tip, return it.
+            if (nextTip != null) return nextTip;
+
+            // No new tips to show.
+
+            // Check strange case - No new tips and no tips shown.
+            if (tipHistoryList == null)
+            {
+                // No tip found and there are none in the history, so we must have no tips at all. (Strange case)
+                Debug.WriteLine("No tips seen and no tips yet to see. (Check if tip groups loaded correctly.)");
+                return null;
+            }
+
+            // Ask user if they want to start fresh from the beginning.
+            return ResetAndGetTipFromBeginning();
+        }
+
+        private TipInfo ResetAndGetTipFromBeginning()
+        {
+            // Ask user if they want to clear the history and start again from the beginning.
+            const string Text = "No new tips to show.\n\nClear tip history and start showing tips from the beginning?";
+            if (MessageBox.Show(Text, TIP_OF_THE_DAY_TITLE, MessageBoxButtons.OKCancel) != DialogResult.OK)
+            {
+                // User does not want to reset history. Exit nicely.
+                return null;
+            }
+
+            // Reset Tip History and fetch next tip
+            ClearTipHistory();
+
+            return GetNextTipAlgorithm(lastSeenGroupId: null);
+        }
+
+        private static string GetLastTipGroupSeen(List<string> tipHistoryList)
+        {
             string lastSeenGroupId = null;
             if (tipHistoryList != null && tipHistoryList.Count > 0)
             {
@@ -68,17 +95,10 @@ namespace HotTips
                 // Extract groupId from global tip Id "[GroupId-TipId]"
                 lastSeenGroupId = lastTipGlobalId.Split(GLOBAL_TIP_ID_SEPARATOR)[0];
             }
-
-            nextTip = GetNextTipAlgorithm(prioritizedTipGroups, lastSeenGroupId);
-
-            if (nextTip != null || tipHistoryList == null) return nextTip;
-
-            //  if no tips found at any priGroup level, clear history and start again.
-            ClearTipHistory();
-            return GetNextTipAlgorithm(prioritizedTipGroups, null);
+            return lastSeenGroupId;
         }
 
-        private TipInfo GetNextTipAlgorithm(List<GroupOfTips>[] prioritizedTipGroups, string lastSeenGroupId)
+        private TipInfo GetNextTipAlgorithm(string lastSeenGroupId)
         {
             // Algorithm:
             //  Go through tips in order, *order determined by priGroup, then natural list ordering, round-robin by rowId.
@@ -106,7 +126,7 @@ namespace HotTips
                         if (tipPri < 1 || tipPri > 3) break;
 
                         // For each group in the groupPri bucket,
-                        List<GroupOfTips> tipGroups = prioritizedTipGroups[groupPri-1];
+                        List<GroupOfTips> tipGroups = _tipManager.GetPrioritizedTipGroups()[groupPri-1];
                         if (tipGroups == null)
                         {
                             // No groups in this group priority
@@ -144,7 +164,9 @@ namespace HotTips
                             tipFound = true;
 
                             // If we've seen the tip, move to the next group.
-                            if (GetTipHistorySet().Contains(tipInfo.globalTipId))
+                            //HashSet<string> tipHistorySet = GetTipHistorySet();
+                            //if (tipHistorySet.Contains(tipInfo.globalTipId))
+                            if (_tipHistoryManager.HasTipBeenSeen(tipInfo.globalTipId))
                             {
                                 // Already seen this tip. Skip to the next group.
                                 continue;
@@ -166,14 +188,12 @@ namespace HotTips
                     // as it is more important than any tip from the next priorityBand.
                     if (sameGroupTip != null)
                     {
-                        {
-                            return sameGroupTip;
-                        }
+                        return sameGroupTip;
                     }
 
                     // Prepare to scan the priorityBand at the next scanRow.
                     scanRow++;
-                    
+
                 // If no tips were found at this scan row, we have exhuasted the scan for this priorityBand.
                 } while (tipFound);
             }
@@ -206,35 +226,9 @@ namespace HotTips
 
         private void ClearTipHistory()
         {
-            tipHistory = null;
-            tipHistorySet = null;
-            TipHistoryManager.ClearTipHistory();
-        }
-
-        private List<string> GetTipHistory()
-        {
-            if (tipHistory == null)
-            {
-                tipHistory = LoadTipHistory();
-            }
-
-            return tipHistory;
-        }
-
-        private List<string> LoadTipHistory()
-        {
-            // Ask the Tip History Manager for all tips seen
-            return TipHistoryManager.GetAllTipsSeen();
-        }
-
-        private HashSet<string> GetTipHistorySet()
-        {
-            if (tipHistorySet == null)
-            {
-                tipHistorySet = new HashSet<string>(GetTipHistory());
-            }
-
-            return tipHistorySet;
+            //tipHistory = null;
+            //tipHistorySet = null;
+            _tipHistoryManager.ClearTipHistory();
         }
 
         private bool IsFirstTime()

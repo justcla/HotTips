@@ -15,6 +15,15 @@ namespace HotTips
 
         public List<GroupOfTips>[] GetPrioritizedTipGroups()
         {
+            if (groupsPriList == null)
+            {
+                groupsPriList = DeserializeTipGroups();
+            }
+            return groupsPriList;
+        }
+
+        private List<GroupOfTips>[] DeserializeTipGroups()
+        {
             // Get all tip group providers
             IEnumerable<ITipGroupProvider> tipGroupProviders = GetTipGroupProviders();
             foreach (ITipGroupProvider tipGroupProvider in tipGroupProviders)
