@@ -170,6 +170,11 @@ namespace HotTips
 
             return true;
         }
+
+        private void Window_PreviewKeyDown(object sender, System.Windows.Input.KeyEventArgs e)
+        {
+            // Add telemetry here for keys pressed
+        }
     }
 
 }
