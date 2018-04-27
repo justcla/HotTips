@@ -1,3 +1,4 @@
 ﻿Hot Tips
 
+26-Apr-2018 v1.0.2: Added initial icon
 26-Apr-2018 v1.0.0: Initial release

@@ -93,6 +93,9 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
+    <Content Include="Resources\HotTips_Icon_128.png">
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
     <Content Include="Resources\TipOfTheDay.png" />
     <Content Include="Resources\TipOfTheDayPackage.ico" />
     <Content Include="Tips\ED001.html">
