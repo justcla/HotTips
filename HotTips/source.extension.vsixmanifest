@@ -1,12 +1,12 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <PackageManifest Version="2.0.0" xmlns="http://schemas.microsoft.com/developer/vsx-schema/2011" xmlns:d="http://schemas.microsoft.com/developer/vsx-schema-design/2011">
     <Metadata>
-        <Identity Id="HotTips.a69101f6-9edd-4579-a98f-625e3b680bad" Version="1.0.2" Language="en-US" Publisher="Justin Clareburt" />
+        <Identity Id="HotTips.a69101f6-9edd-4579-a98f-625e3b680bad" Version="1.0.3" Language="en-US" Publisher="Justin Clareburt" />
         <DisplayName>Hot Tips</DisplayName>
-        <Description xml:space="preserve">Provides handy tips via Tip of the Day</Description>
+        <Description xml:space="preserve">Tip of the Day provider for Visual Studio. See useful tips and handy shortcuts that help you be more productive in Visual Studio.</Description>
         <MoreInfo>https://marketplace.visualstudio.com/items?itemName=JustinClareburtMSFT.HotTips</MoreInfo>
         <ReleaseNotes>ReleaseNotes.txt</ReleaseNotes>
-        <Icon>Resources\HotTips_Icon_128.png</Icon>
+        <Icon>Resources\HotTips_Icon_128x.png</Icon>
     </Metadata>
     <Installation>
         <InstallationTarget Id="Microsoft.VisualStudio.Community" Version="[15.0, 16.0)" />
