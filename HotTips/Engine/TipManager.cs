@@ -24,9 +24,9 @@ namespace HotTips
             return _groupsPriList;
         }
 
-        public TipInfo GetTipInfo(string previousTipId)
+        public TipInfo GetTipInfo(string globalTipId)
         {
-            return allTips?[previousTipId];
+            return allTips?[globalTipId];
         }
 
         private void DeserializeTipGroups()
