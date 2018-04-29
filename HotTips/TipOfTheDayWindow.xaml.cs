@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Windows;
 using System.Windows.Forms;
@@ -122,6 +123,8 @@ namespace HotTips
     {
         private TipCalculator _tipCalculator;
         private ITipHistoryManager _tipHistoryManager;
+        private ITipManager _tipManager;
+        private string currentTip;
 
         public TipOfTheDayWindow(TipCalculator tipCalculator)
         {
@@ -130,6 +133,7 @@ namespace HotTips
 
             _tipCalculator = tipCalculator;
             _tipHistoryManager = tipCalculator.TipHistoryManager;
+            _tipManager = tipCalculator.TipManager;
         }
 
         private void CloseButton_Click(object sender, RoutedEventArgs e)
@@ -140,6 +144,11 @@ namespace HotTips
         private void NextTipButton_Click(object sender, RoutedEventArgs e)
         {
             GoToNextTip();
+        }
+
+        private void PrevTipButton_Click(object sender, RoutedEventArgs e)
+        {
+            GoToPrevTip();
         }
 
         private void GoToNextTip()
@@ -154,7 +163,53 @@ namespace HotTips
             }
         }
 
-        internal bool NavigateToTip(TipInfo nextTip)
+        private void GoToPrevTip()
+        {
+            // Get the index of the current tip in the tip history. (Should always resolve.)
+            List<string> tipHistory = _tipHistoryManager.GetTipHistory();
+            var currentTipHistoryIndex = tipHistory.LastIndexOf(currentTip);
+
+            // Get the previous tip (if there is one)
+            TipInfo previousTip = GetPreviousTip(tipHistory, currentTipHistoryIndex);
+
+            // Back out if there is no previous tip.
+            if (previousTip == null)
+            {
+                Debug.WriteLine("Tip of the Day: There is no previous tip to navigte to.");
+                return;
+            }
+
+            // Navigate to the previous tip.
+            bool success = NavigateToTip(previousTip, markAsSeen: false);
+        }
+
+        private TipInfo GetPreviousTip(List<string> tipHistory, int tipHistoryIndex)
+        {
+            if (tipHistoryIndex < 1)
+            {
+                // We've reached the beginning of history. There is no previous.
+                return null;
+            }
+
+            // Previous tip is the one before the current tip in the tip history.
+            string previousTipId = tipHistory[tipHistoryIndex - 1];
+
+            // Get the full TipInfo (by the given TipId) from the Tip Manager.
+            TipInfo previousTip = _tipManager.GetTipInfo(previousTipId);
+
+            if (previousTip != null)
+            {
+                // Found a tip! Return it.
+                return previousTip;
+            }
+
+            // No Previous tip to show. It's possible the tip previously shown no longer exists.
+            // Look for next previous tip. (drop the index back one position and try again)
+            // repeat - until currentTipHistoryIndex < 1 or previousTip != null
+            return GetPreviousTip(tipHistory, tipHistoryIndex--);
+        }
+
+        internal bool NavigateToTip(TipInfo nextTip, bool markAsSeen = true)
         {
             if (nextTip == null || String.IsNullOrEmpty(nextTip.contentUri))
             {
@@ -163,10 +218,14 @@ namespace HotTips
             }
 
             // Navigate to the Tip URI
+            currentTip = nextTip.globalTipId;
             TipContentBrowser.Navigate(new Uri(nextTip.contentUri));
 
             // Mark tip as shown
-            _tipHistoryManager.MarkTipAsSeen(nextTip.globalTipId);
+            if (markAsSeen)
+            {
+                _tipHistoryManager.MarkTipAsSeen(nextTip.globalTipId);
+            }
 
             return true;
         }

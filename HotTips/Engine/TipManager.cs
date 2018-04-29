@@ -2,12 +2,14 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 
 namespace HotTips
 {
     internal class TipManager : ITipManager
     {
-        private List<GroupOfTips>[] groupsPriList;
+        private List<GroupOfTips>[] _groupsPriList;
+        private Dictionary<string, TipInfo> allTips;
 
         public TipManager()
         {
@@ -15,15 +17,22 @@ namespace HotTips
 
         public List<GroupOfTips>[] GetPrioritizedTipGroups()
         {
-            if (groupsPriList == null)
+            if (_groupsPriList == null)
             {
-                groupsPriList = DeserializeTipGroups();
+                DeserializeTipGroups();
             }
-            return groupsPriList;
+            return _groupsPriList;
         }
 
-        private List<GroupOfTips>[] DeserializeTipGroups()
+        public TipInfo GetTipInfo(string previousTipId)
         {
+            return allTips?[previousTipId];
+        }
+
+        private void DeserializeTipGroups()
+        {
+            var newTips = new Dictionary<string, TipInfo>();
+
             // Get all tip group providers
             IEnumerable<ITipGroupProvider> tipGroupProviders = GetTipGroupProviders();
             foreach (ITipGroupProvider tipGroupProvider in tipGroupProviders)
@@ -50,14 +59,15 @@ namespace HotTips
                     string jsonString = GetJsonStringFromFile(groupFile);
                     TipGroup tipGroup = JsonConvert.DeserializeObject<TipGroup>(jsonString);
 
-                    ProcessTipGroup(tipGroupProvider, tipGroup);
+                    ProcessTipGroup(tipGroupProvider, tipGroup, newTips);
                 }
             }
 
-            return groupsPriList;
+            // Update the allTips list
+            allTips = newTips;
         }
 
-        private void ProcessTipGroup(ITipGroupProvider tipGroupProvider, TipGroup tipGroup)
+        private void ProcessTipGroup(ITipGroupProvider tipGroupProvider, TipGroup tipGroup, Dictionary<string, TipInfo> newTips)
         {
             // Create a new GroupOfTips
             GroupOfTips groupOfTips = InitializeGroupOfTips(tipGroup);
@@ -71,6 +81,8 @@ namespace HotTips
                 // Add the TipInfo to the groupOfTips
                 TipInfo tipInfo = TipInfo.Create(tipGroup, tip, tipContentUri);
                 AddTipToPriListOfTips(groupOfTips, tipInfo);
+                // Also add to the AllTips lookup dictionary
+                newTips.Add(tipInfo.globalTipId, tipInfo);
             }
 
             // Add the TipGroup to the correct PriList of ordered Groups (GroupsPriList)
@@ -106,17 +118,17 @@ namespace HotTips
         private void AddTipGroupToGroupsPriList(GroupOfTips groupOfTips, int groupPriority)
         {
             // Initialze GroupsPriList if required
-            if (groupsPriList == null)
+            if (_groupsPriList == null)
             {
-                groupsPriList = new List<GroupOfTips>[3];
+                _groupsPriList = new List<GroupOfTips>[3];
             }
 
-            List<GroupOfTips> groupsList = groupsPriList[groupPriority - 1];
+            List<GroupOfTips> groupsList = _groupsPriList[groupPriority - 1];
             // Initialize groupsList if required
             if (groupsList == null)
             {
                 groupsList = new List<GroupOfTips>();
-                groupsPriList[groupPriority - 1] = groupsList;
+                _groupsPriList[groupPriority - 1] = groupsList;
             }
 
             groupsList.Add(groupOfTips);

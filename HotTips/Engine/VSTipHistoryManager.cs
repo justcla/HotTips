@@ -54,8 +54,15 @@ namespace HotTips
 
         public void MarkTipAsSeen(string globalTipId)
         {
-            // Add tip ID to the tip history and persist to the VS settings store
+            // Back out if tip already seen
             List<string> tipsSeen = GetTipHistory();
+            if (tipsSeen.Contains(globalTipId))
+            {
+                // Item is already in the history. No need to add it again.
+                return;
+            }
+
+            // Add tip ID to the tip history and persist to the VS settings store
             tipsSeen.Add(globalTipId);
 
             // Update the VS settings store with the latest tip history
