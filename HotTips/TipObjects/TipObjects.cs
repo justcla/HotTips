@@ -1,7 +1,10 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace HotTips
 {
+
+    //------ Raw objects for parsing from groups json --------------
     public class TipGroup
     {
         public string groupId { get; set; }
@@ -17,6 +20,8 @@ namespace HotTips
         public string content { get; set; }
         public int priority { get; set; }
     }
+
+    //---------- Ojbects used internally by Tip Manager ----------------------------------------
 
     public class TipInfo
     {
@@ -45,9 +50,21 @@ namespace HotTips
             return tipInfo;
         }
 
-        private static string GetGlobalTipId(string groupId, string tipId)
+        public static string GetGlobalTipId(string groupId, string tipId)
         {
             return groupId + "-" + tipId;
+        }
+
+        public static string GetGroupId(string globalTipId)
+        {
+            // TODO: Error Check
+            return globalTipId.Split('-')[0];
+        }
+
+        public static string GetTipId(string globalTipId)
+        {
+            // TODO: Error Check
+            return globalTipId.Split('-')[1];
         }
     }
 
@@ -56,7 +73,19 @@ namespace HotTips
         public string groupId { get; set; }
         public string groupName { get; set; }
         public int groupPriority { get; set; }
-        public List<TipInfo>[] tipsPriList { get; set; }
+        public List<TipInfo>[] TipsPriList { get; set; }
+        public List<string> TipsSorted { get; set; }
+
+        public static GroupOfTips Create(TipGroup tipGroup)
+        {
+            return new GroupOfTips
+            {
+                groupId = tipGroup.groupId,
+                groupName = tipGroup.groupName,
+                groupPriority = tipGroup.groupPriority,
+                TipsPriList = new List<TipInfo>[3]
+            };
+        }
     }
 
 }
