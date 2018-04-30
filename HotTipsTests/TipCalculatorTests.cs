@@ -93,9 +93,9 @@ namespace HotTips
             GroupOfTips editorGroup = new GroupOfTips { groupId = "Editor", groupPriority = 2 };
 
             List<TipInfo>[] generalItems = SetupGroupOfTips("General", new string[] { "GN001" });
-            generalGroup.tipsPriList = generalItems;
+            generalGroup.TipsPriList = generalItems;
             List<TipInfo>[] editorItems = SetupGroupOfTips("Editor", new string[] { "ED001", "ED002" }, new string[] { "ED003" });
-            editorGroup.tipsPriList = editorItems;
+            editorGroup.TipsPriList = editorItems;
 
             List<GroupOfTips>[] list = new List<GroupOfTips>[3];
             list[0] = new List<GroupOfTips> { generalGroup };

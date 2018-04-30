@@ -5,6 +5,7 @@ namespace HotTips
     public interface ITipManager
     {
         List<GroupOfTips>[] GetPrioritizedTipGroups();
-        TipInfo GetTipInfo(string previousTipId);
+        TipInfo GetTipInfo(string globalTipId);
+        TipInfo GetNextTipInGroup(string globalTipId);
     }
 }

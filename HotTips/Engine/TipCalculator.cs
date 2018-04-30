@@ -92,7 +92,7 @@ namespace HotTips
                             }
 
                             // Look into the tipPri bucket (if it exists)
-                            List<TipInfo>[] tipGroupTipsPriList = tipGroup.tipsPriList;
+                            List<TipInfo>[] tipGroupTipsPriList = tipGroup.TipsPriList;
                             if (tipGroupTipsPriList == null || tipGroupTipsPriList.Length < tipPri)
                             {
                                 // This tipGroup has no tips at this tipPri level. Move to next group.

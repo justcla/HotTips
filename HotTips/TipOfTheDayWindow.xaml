@@ -19,14 +19,25 @@
             
             <WebBrowser Name="TipContentBrowser" Margin="30,60" VerticalAlignment="Top" MinWidth="400" MinHeight="160"/>
 
-            <Button Name="PrevTipButton" Content="&lt;&lt; _Previous" HorizontalAlignment="Left" Margin="30 10" VerticalAlignment="Bottom" Width="75"
+            <Button Name="PrevTipButton" 
+                    Content="&lt;&lt; _Previous" 
                     AutomationProperties.Name="Previous Tip"
-                    ToolTip="Show the previous tip" Click="PrevTipButton_Click"
+                    ToolTip="Show the previous tip" 
+                    HorizontalAlignment="Left" 
+                    VerticalAlignment="Bottom" 
+                    Margin="30 10" 
+                    Width="80"
+                    Click="PrevTipButton_Click"
                     />
             <Button Name="NextTipButton" Content="_Next Tip &gt;&gt;" HorizontalAlignment="Left" Margin="120 10"
-                    VerticalAlignment="Bottom" Width="75" Click="NextTipButton_Click"
+                    VerticalAlignment="Bottom" Width="80" Click="NextTipButton_Click"
                     AutomationProperties.Name="Next Tip"
                     IsDefault="True" ToolTip="Show the next unseen tip"
+                    />
+            <Button Name="MoreLikeThisButton" Content="_More like this" HorizontalAlignment="Left" Margin="210 0 0 10"
+                    VerticalAlignment="Bottom" Width="80"
+                    AutomationProperties.Name="More like this"
+                    ToolTip="Show a new tip from the same tip group" Click="MoreLikeThisButton_Click"
                     />
             <Button Name="CloseButton" Content="_Got it!" HorizontalAlignment="Right" Margin="10" VerticalAlignment="Bottom" Width="75"
                     AutomationProperties.Name="Got it" ToolTip="Close Tip of the Day window"

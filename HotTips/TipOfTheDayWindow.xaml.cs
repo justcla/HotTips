@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Windows;
 using System.Windows.Forms;
+using MessageBox = System.Windows.MessageBox;
 
 namespace HotTips
 {
@@ -152,6 +153,11 @@ namespace HotTips
             GoToPrevTip();
         }
 
+        private void MoreLikeThisButton_Click(object sender, RoutedEventArgs e)
+        {
+            GoToMoreLikeThis();
+        }
+
         private void GoToNextTip()
         {
             // If the current tip is not the last tip in the tip history, then go to the next tip in the tip history that exists.
@@ -247,9 +253,26 @@ namespace HotTips
             return GetPreviousTip(tipHistory, prevTipHistoryIndex);
         }
 
+        private void GoToMoreLikeThis()
+        {
+            // Ask the TipManager for the next tip in the current group
+            TipInfo nextTipInGroup = _tipManager.GetNextTipInGroup(currentTip);
+
+            if (nextTipInGroup == null)
+            {
+                MessageBox.Show("There are no more tips in this group.");
+                return;
+            }
+            
+            // Navigate to the next tip
+            NavigateToTip(nextTipInGroup, markAsSeen: true);
+        }
+
+        //-------- Helper functions --------
+
         internal bool NavigateToTip(TipInfo nextTip, bool markAsSeen = true)
         {
-            if (nextTip == null || String.IsNullOrEmpty(nextTip.contentUri))
+            if (nextTip == null || string.IsNullOrEmpty(nextTip.contentUri))
             {
                 // Unable to navigate. No tip content URI.
                 return false;
