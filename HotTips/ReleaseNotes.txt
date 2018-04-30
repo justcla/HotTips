@@ -1,5 +1,6 @@
 ﻿Hot Tips
 
+29-Apr-2018 v1.0.4: Added buttons for "Previous" and "More from the Group"
 27-Apr-2018 v1.0.3: Updated icon
 26-Apr-2018 v1.0.2: Added initial icon
 26-Apr-2018 v1.0.0: Initial release
