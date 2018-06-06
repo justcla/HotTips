@@ -53,7 +53,8 @@ namespace HotTips
                 }
 
                 // Now show the dialog
-                tipOfTheDayWindow.Show();
+                tipOfTheDayWindow.ShowActivated = true;
+                tipOfTheDayWindow.ShowDialog();
 
                 // Mark tip as seen
                 _tipHistoryManager.MarkTipAsSeen(nextTip.globalTipId);
