@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <PackageManifest Version="2.0.0" xmlns="http://schemas.microsoft.com/developer/vsx-schema/2011" xmlns:d="http://schemas.microsoft.com/developer/vsx-schema-design/2011">
     <Metadata>
-        <Identity Id="HotTips.a69101f6-9edd-4579-a98f-625e3b680bad" Version="1.0.4" Language="en-US" Publisher="Justin Clareburt" />
+        <Identity Id="HotTips.a69101f6-9edd-4579-a98f-625e3b680bad" Version="1.0.5" Language="en-US" Publisher="Justin Clareburt" />
         <DisplayName>Hot Tips</DisplayName>
         <Description xml:space="preserve">Tip of the Day provider for Visual Studio. See useful tips and handy shortcuts that help you be more productive in Visual Studio.</Description>
         <MoreInfo>https://marketplace.visualstudio.com/items?itemName=JustinClareburtMSFT.HotTips</MoreInfo>

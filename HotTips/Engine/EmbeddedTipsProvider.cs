@@ -16,9 +16,11 @@ namespace HotTips
 
         public List<string> GetGroupDefinitions()
         {
+            // TODO: Read all files from the /Groups dir
             List<string> tipGroups = new List<string>();
             tipGroups.Add(GetGroupPath("general"));
             tipGroups.Add(GetGroupPath("editor"));
+            tipGroups.Add(GetGroupPath("shell"));
             return tipGroups;
         }
 

@@ -1,0 +1,26 @@
+{
+  "groupId": "Shell",
+  "groupName": "Shell",
+  "groupPriority": 2,
+  "tips": [
+    {
+      "tipId": "SHL001",
+      "name": "Close Tool Window",
+      "content": "SHL001.html",
+      "priority": 1
+    },
+    {
+      "tipId": "SHL002",
+      "name": "Navigate Back and Forward",
+      "content": "SHL002.html",
+      "priority": 2
+    },
+    {
+      "tipId": "SHL003",
+      "name": "Go To Next or Previous Doc",
+      "content": "SHL003.html",
+      "priority": 2
+    }
+  ]
+
+}
