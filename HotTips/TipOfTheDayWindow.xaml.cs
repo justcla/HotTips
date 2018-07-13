@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Justcla;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -287,6 +288,9 @@ namespace HotTips
             {
                 _tipHistoryManager.MarkTipAsSeen(nextTip.globalTipId);
             }
+
+            // Output telemetry: Tip Shown (Consider making this conditional on "markAsSeen")
+            VSTelemetryHelper.PostEvent("Justcla/HotTips/TipShown", "TipId", currentTip);
 
             return true;
         }

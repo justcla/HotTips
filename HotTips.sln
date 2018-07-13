@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HotTips", "HotTips\HotTips.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HotTipsTests", "HotTipsTests\HotTipsTests.csproj", "{D4A279FC-DA31-4466-BD3A-3173E2B2562F}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JustclaTelemetry", "JustclaTelemetry\JustclaTelemetry.csproj", "{548122BF-267B-43E7-B81A-1B0442D56335}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{D4A279FC-DA31-4466-BD3A-3173E2B2562F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D4A279FC-DA31-4466-BD3A-3173E2B2562F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D4A279FC-DA31-4466-BD3A-3173E2B2562F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{548122BF-267B-43E7-B81A-1B0442D56335}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{548122BF-267B-43E7-B81A-1B0442D56335}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{548122BF-267B-43E7-B81A-1B0442D56335}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{548122BF-267B-43E7-B81A-1B0442D56335}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
