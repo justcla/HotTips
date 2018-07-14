@@ -70,6 +70,7 @@
     </Compile>
     <Compile Include="TipOfTheDayPackage.cs" />
     <Compile Include="Utils.cs" />
+    <Compile Include="VSPackage1.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config">
@@ -103,6 +104,7 @@
     </Content>
     <Content Include="Resources\TipOfTheDay.png" />
     <Content Include="Resources\TipOfTheDayPackage.ico" />
+    <Content Include="Resources\VSPackage1.ico" />
     <Content Include="Tips\ED001.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       <IncludeInVSIX>true</IncludeInVSIX>
@@ -252,6 +254,7 @@
     <EmbeddedResource Include="VSPackage.resx">
       <MergeWithCTO>true</MergeWithCTO>
       <ManifestResourceName>VSPackage</ManifestResourceName>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
