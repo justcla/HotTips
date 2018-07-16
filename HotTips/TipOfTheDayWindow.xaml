@@ -1,4 +1,4 @@
-﻿<Window x:Class="HotTips.TipOfTheDayWindow"
+<Window x:Class="HotTips.TipOfTheDayWindow"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
@@ -13,23 +13,50 @@
         MinWidth="450"
         PreviewKeyDown="Window_PreviewKeyDown"
         >
+
+    <Window.Resources>
+        <Style x:Key="MyButton" TargetType="Button">
+            <Setter Property="OverridesDefaultStyle" Value="True" />
+            <Setter Property="Cursor" Value="Hand" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Name="border" BorderThickness="0" BorderBrush="Black" Background="{TemplateBinding Background}">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Opacity" Value="0.8" />
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </Window.Resources>
+
+
     <Border>
         <Grid>
             <Label Content="Tip of the Day" HorizontalAlignment="Left" Margin="30,30,0,0" VerticalAlignment="Top" Height="36" FontSize="18" FontWeight="Bold"/>
             
-            <WebBrowser Name="TipContentBrowser" Margin="30,60" VerticalAlignment="Top" MinWidth="400" MinHeight="160"/>
+            <WebBrowser Name="TipContentBrowser" Margin="30,60" VerticalAlignment="Top" MinWidth="400" MinHeight="140"/>
+
+            <Button Name="LikeButton" HorizontalAlignment="Right" Margin="50,40" VerticalAlignment="Bottom" Width="20" Height="20" Style="{StaticResource MyButton}" BorderThickness="0" Click="LikeButton_Click"/>
+
+            <Button Name="DislikeButton" HorizontalAlignment="Right" Margin="25,40" VerticalAlignment="Bottom" Width="20" Height="20" Style="{StaticResource MyButton}" BorderThickness="0" Click="DislikeButton_Click"/>
 
             <Button Name="PrevTipButton" 
-                    Content="&lt;&lt; _Previous" 
-                    AutomationProperties.Name="Previous Tip"
-                    ToolTip="Show the previous tip" 
-                    HorizontalAlignment="Left" 
-                    VerticalAlignment="Bottom" 
-                    Margin="30 10" 
-                    Width="80"
-                    Click="PrevTipButton_Click"
-                    />
-            <Button Name="NextTipButton" Content="_Next Tip &gt;&gt;" HorizontalAlignment="Left" Margin="120 10"
+                Content="&lt;&lt; _Previous" 
+                AutomationProperties.Name="Previous Tip"
+                ToolTip="Show the previous tip" 
+                HorizontalAlignment="Left" 
+                VerticalAlignment="Bottom" 
+                Margin="30 10" 
+                Width="80"
+                Click="PrevTipButton_Click"
+                />
+                <Button Name="NextTipButton" Content="_Next Tip &gt;&gt;" HorizontalAlignment="Left" Margin="120 10"
                     VerticalAlignment="Bottom" Width="80" Click="NextTipButton_Click"
                     AutomationProperties.Name="Next Tip"
                     IsDefault="True" ToolTip="Show the next unseen tip"
