@@ -7,6 +7,8 @@ using System.Globalization;
 using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Windows;
+using System.Windows.Forms;
 using Microsoft.VisualStudio;
 using Microsoft.VisualStudio.OLE.Interop;
 using Microsoft.VisualStudio.Shell;
@@ -37,6 +39,7 @@ namespace HotTips
     [InstalledProductRegistration("#1110", "#1112", "1.0", IconResourceID = 1400)] // Info on this package for Help/About
     [Guid(VSPackage1.PackageGuidString)]
     [ProvideOptionPage(typeof(OptionPageGrid), "My Category", "My Grid Page", 0, 0, true)]
+    [ProvideOptionPage(typeof(OptionPageCustom),"My Category", "My Custom Page", 0, 0, true)]
     [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1650:ElementDocumentationMustBeSpelledCorrectly", Justification = "pkgdef, VS and vsixmanifest are valid VS terms")]
     public sealed class VSPackage1 : AsyncPackage
     {
@@ -87,5 +90,39 @@ namespace HotTips
             get { return optionInt; }
             set { optionInt = value; }
         }
+    }
+
+    [Guid("BF41E5A7-EF14-4AF4-904C-6CDDA6D56F56")]
+    public class OptionPageCustom : UIElementDialogPage
+    {
+        private string optionValue = "alpha";
+
+        public string OptionString
+        {
+            get { return optionValue; }
+            set { optionValue = value; }
+        }
+
+        protected override UIElement Child
+        {
+            get
+            {
+                MyUserControl page = new MyUserControl();
+                page.optionsPage = this;
+                page.Initialize();
+                return page;
+            }
+        }
+
+        //protected override IWin32Window Window
+        //{
+        //    get
+        //    {
+        //        MyUserControl page = new MyUserControl();
+        //        page.optionsPage = this;
+        //        page.Initialize();
+        //        return this;
+        //    }
+        //}
     }
 }
