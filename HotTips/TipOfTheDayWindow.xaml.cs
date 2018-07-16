@@ -1,10 +1,11 @@
-﻿using Justcla;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Forms;
+using System.Windows.Media;
+using System.Windows.Media.Imaging;
 using MessageBox = System.Windows.MessageBox;
 
 namespace HotTips
@@ -129,6 +130,10 @@ namespace HotTips
         private ITipManager _tipManager;
         private string currentTip;
 
+        private bool isLiked = false;
+        
+        private bool isUnLiked = false;
+
         public TipOfTheDayWindow(TipCalculator tipCalculator)
         {
             InitializeComponent();
@@ -137,6 +142,23 @@ namespace HotTips
             _tipCalculator = tipCalculator;
             _tipHistoryManager = tipCalculator.TipHistoryManager;
             _tipManager = tipCalculator.TipManager;
+
+            PopulateDefaultImages();
+        }
+
+        private void PopulateDefaultImages()
+        {
+
+            var brush = new ImageBrush();
+            brush.ImageSource = new BitmapImage(new Uri("Tips/images/Like.png", UriKind.Relative));
+            LikeButton.Background = brush;
+
+            var brush1 = new ImageBrush();
+            brush1.ImageSource = new BitmapImage(new Uri("Tips/images/Dislike.png", UriKind.Relative));
+            DislikeButton.Background = brush1;
+
+            isLiked = false;
+            isUnLiked = false;
         }
 
         private void CloseButton_Click(object sender, RoutedEventArgs e)
@@ -147,11 +169,13 @@ namespace HotTips
         private void NextTipButton_Click(object sender, RoutedEventArgs e)
         {
             GoToNextTip();
+            PopulateDefaultImages();
         }
 
         private void PrevTipButton_Click(object sender, RoutedEventArgs e)
         {
             GoToPrevTip();
+            PopulateDefaultImages();
         }
 
         private void MoreLikeThisButton_Click(object sender, RoutedEventArgs e)
@@ -289,15 +313,76 @@ namespace HotTips
                 _tipHistoryManager.MarkTipAsSeen(nextTip.globalTipId);
             }
 
-            // Output telemetry: Tip Shown (Consider making this conditional on "markAsSeen")
-            VSTelemetryHelper.PostEvent("Justcla/HotTips/TipShown", "TipId", currentTip);
-
             return true;
         }
 
         private void Window_PreviewKeyDown(object sender, System.Windows.Input.KeyEventArgs e)
         {
             // Add telemetry here for keys pressed
+        }
+
+        private void LikeButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (isLiked)
+            {
+                PopulateDislikeFilledImage();
+                PopulateLikeImage();
+            }
+            else
+            {
+                PopulateDislikeImage();
+                PopulateLikeFilledImage();
+            }
+        }
+
+        private void DislikeButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (isUnLiked)
+            {
+                PopulateDislikeImage();
+                PopulateLikeFilledImage();              
+            }
+            else
+            {
+                PopulateDislikeFilledImage();
+                PopulateLikeImage();
+            }
+        }
+
+        private void PopulateLikeImage()
+        {
+            var brush = new ImageBrush();
+            brush.ImageSource = new BitmapImage(new Uri("Tips/images/Like.png", UriKind.Relative));
+            LikeButton.Background = brush;
+            isUnLiked = true;
+            isLiked = false;
+        }
+
+        private void PopulateDislikeFilledImage()
+        {
+            isLiked = false;
+            var brush = new ImageBrush();
+            brush.ImageSource = new BitmapImage(new Uri("Tips/images/DislikeFilled.png", UriKind.Relative));
+            DislikeButton.Background = brush;
+            isUnLiked = true;
+        }
+
+        private void PopulateDislikeImage()
+        {
+            var brush = new ImageBrush();
+            brush.ImageSource = new BitmapImage(new Uri("Tips/images/Dislike.png", UriKind.Relative));
+            DislikeButton.Background = brush;
+            isLiked = true;
+            isUnLiked = false;
+        }
+
+        private void PopulateLikeFilledImage()
+        {
+            var brush = new ImageBrush();
+            brush.ImageSource = new BitmapImage(new Uri("Tips/images/LikeFilled.png", UriKind.Relative));
+            LikeButton.Background = brush;
+            isLiked = true;
+            isUnLiked = false;
         }
     }
 
