@@ -264,7 +264,7 @@ namespace HotTips
                 MessageBox.Show("There are no more tips in this group.");
                 return;
             }
-            
+
             // Navigate to the next tip
             NavigateToTip(nextTipInGroup, markAsSeen: true);
         }
@@ -292,12 +292,26 @@ namespace HotTips
             // Output telemetry: Tip Shown (Consider making this conditional on "markAsSeen")
             VSTelemetryHelper.PostEvent("Justcla/HotTips/TipShown", "TipId", currentTip);
 
+            GroupNameLabel.Content = $"{nextTip.groupName}";
+
+            GroupNameCheckBox.IsChecked = !_tipHistoryManager.IsTipGroupExcluded(nextTip.groupId);
+
             return true;
         }
 
         private void Window_PreviewKeyDown(object sender, System.Windows.Input.KeyEventArgs e)
         {
             // Add telemetry here for keys pressed
+        }
+
+        private void GroupNameCheckBox_Unchecked(object sender, RoutedEventArgs e)
+        {
+            _tipHistoryManager.MarkTipGroupAsExcluded(GroupNameLabel.Content.ToString());
+        }
+
+        private void GroupNameCheckBox_Checked(object sender, RoutedEventArgs e)
+        {
+            _tipHistoryManager?.MarkTipGroupAsIncluded(GroupNameLabel.Content.ToString());
         }
     }
 

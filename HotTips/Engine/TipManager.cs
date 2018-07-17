@@ -32,7 +32,7 @@ namespace HotTips
             // Get groupId and tipId of current tip
             string currentGroupId = TipInfo.GetGroupId(globalTipId);
             string currentTipId = TipInfo.GetTipId(globalTipId);
-            
+
             // See if there is a further tip later in the list
             GroupOfTips currentGroup = _allGroups.Find(x => x.groupId == currentGroupId);
             List<string> tips = currentGroup.TipsSorted;
@@ -119,7 +119,7 @@ namespace HotTips
 
             // Add the TipGroup to the correct PriList of ordered Groups (GroupsPriList)
             AddTipGroupToGroupsPriList(groupOfTips, tipGroup.groupPriority);
-            
+
             // Add the TipGroup to the AllGroups lookup
             AddTipGroupToAllGroupsSet(groupOfTips);
         }
@@ -127,7 +127,7 @@ namespace HotTips
         private static List<string> CreateSortedTipsList(List<TipInfo>[] tipsPriList)
         {
             var tipsList = new List<string>();
-            
+
             // For each of the priority groups (1-3), check for null and add all tips to the ordered list.
             var tipPriLists = tipsPriList.Where(x => x != null);
             foreach (List<TipInfo> tipPriList in tipPriLists)
