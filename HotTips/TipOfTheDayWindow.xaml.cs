@@ -133,6 +133,7 @@ namespace HotTips
         {
             InitializeComponent();
             Owner = System.Windows.Application.Current.MainWindow;
+            this.DataContext = new TipViewModel();
 
             _tipCalculator = tipCalculator;
             _tipHistoryManager = tipCalculator.TipHistoryManager;
