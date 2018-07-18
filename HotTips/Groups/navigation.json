@@ -1,0 +1,38 @@
+{
+    "groupId": "Navigation",
+    "groupName": "Navigation",
+    "groupPriority": 1,
+    "tips": [
+      {
+        "tipId": "NAV001",
+        "name": "Find All References",
+        "content": "NAV_FindAllReferences.html",
+        "priority": 1
+      },
+      {
+        "tipId": "NAV002",
+        "name": "Find In Files",
+        "content": "NAV_FindInFiles.html",
+        "priority": 2
+      },
+      {
+        "tipId": "NAV003",
+        "name": "Quick Find",
+        "content": "NAV_QuickFind.html",
+        "priority": 2
+      },
+      {
+        "tipId": "NAV004",
+        "name": "Quick Launch",
+        "content": "NAV_QuickLaunch.html",
+        "priority": 1
+      },
+      {
+        "tipId": "NAV005",
+        "name": "Go To Definition",
+        "content": "NAV_GoToDefinition.html",
+        "priority": 2
+      }
+    ]
+  
+  }
