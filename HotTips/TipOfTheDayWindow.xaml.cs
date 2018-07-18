@@ -17,12 +17,14 @@ namespace HotTips
         private ITipHistoryManager _tipHistoryManager;
         private ITipManager _tipManager;
         private string currentTip;
+        private TipViewModel _tipViewModel;
 
         public TipOfTheDayWindow(TipCalculator tipCalculator)
         {
             InitializeComponent();
             Owner = System.Windows.Application.Current.MainWindow;
-            this.DataContext = new TipViewModel();
+            _tipViewModel = new TipViewModel();
+            this.DataContext = _tipViewModel;
 
             _tipCalculator = tipCalculator;
             _tipHistoryManager = tipCalculator.TipHistoryManager;
@@ -169,14 +171,16 @@ namespace HotTips
                 return false;
             }
 
-            // Navigate to the Tip URI
             currentTip = nextTip.globalTipId;
-            TipContentBrowser.Navigate(new Uri(nextTip.contentUri));
+
+            // Navigate to the Tip URI
+            //TipContentBrowser.Navigate(new Uri(nextTip.contentUri));
+            ShowTipContent(nextTip);
 
             // Mark tip as shown
             if (markAsSeen)
             {
-                _tipHistoryManager.MarkTipAsSeen(nextTip.globalTipId);
+                _tipHistoryManager.MarkTipAsSeen(currentTip);
             }
 
             // Output telemetry: Tip Shown (Consider making this conditional on "markAsSeen")
@@ -187,6 +191,21 @@ namespace HotTips
             GroupNameCheckBox.IsChecked = !_tipHistoryManager.IsTipGroupExcluded(nextTip.groupId);
 
             return true;
+        }
+
+        private void ShowTipContent(TipInfo nextTip)
+        {
+            // Fetch the path of the file that contains the tip content
+            string contentFilePath = nextTip.contentUri;
+            // Read the text into a string
+            string tipContentString = ReadStringFromFile(contentFilePath);
+            // Update the value in the model (which should be reflected in the view through binding)
+            _tipViewModel.TipContent = tipContentString;
+        }
+
+        private string ReadStringFromFile(string contentUri)
+        {
+            return System.IO.File.ReadAllText(contentUri);
         }
 
         private void Window_PreviewKeyDown(object sender, System.Windows.Input.KeyEventArgs e)

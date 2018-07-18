@@ -119,7 +119,7 @@
                 Margin="30,60" VerticalAlignment="Top" MinWidth="400" MinHeight="160" Panel.ZIndex="5"
                                   Document="{Binding Path=TipContent, Converter={StaticResource TextToFlowDocumentConverter}}" />
 
-            <WebBrowser Name="TipContentBrowser" Margin="30,60" VerticalAlignment="Top" MinWidth="400" MinHeight="160" Visibility="Collapsed"/>
+            <!--<WebBrowser Name="TipContentBrowser" Margin="30,60" VerticalAlignment="Top" MinWidth="400" MinHeight="160" Visibility="Collapsed"/>-->
 
             <Button Name="PrevTipButton"
                     Content="&lt;&lt; _Previous"
