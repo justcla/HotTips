@@ -275,14 +275,13 @@ namespace HotTips
         {
             if (isLiked)
             {
-                PopulateDislikeFilledImage();
                 PopulateLikeImage();
             }
             else
             {
-                PopulateDislikeImage();
                 PopulateLikeFilledImage();
             }
+            PopulateDislikeImage();
         }
 
         private void DislikeButton_Click(object sender, RoutedEventArgs e)
@@ -290,13 +289,12 @@ namespace HotTips
             if (isUnLiked)
             {
                 PopulateDislikeImage();
-                PopulateLikeFilledImage();
             }
             else
             {
                 PopulateDislikeFilledImage();
-                PopulateLikeImage();
             }
+            PopulateLikeImage();
         }
 
         private void PopulateLikeImage()
