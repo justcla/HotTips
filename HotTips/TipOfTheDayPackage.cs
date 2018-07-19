@@ -32,6 +32,8 @@ namespace HotTips
     [ProvideAutoLoad(VSConstants.UICONTEXT.SolutionExists_string)]
     [ProvideAutoLoad(VSConstants.UICONTEXT.SolutionHasMultipleProjects_string)]
     [ProvideAutoLoad(VSConstants.UICONTEXT.SolutionHasSingleProject_string)]
+    [ProvideOptionPage(typeof(Options.GridPage), "Hot Tips", "Sample Grid Page", 0, 0, true)]
+    [ProvideOptionPage(typeof(Options.CustomPage), "Hot Tips", "Sample Custom Page", 0, 0, true)]
     [Guid(TipOfTheDayPackage.PackageGuidString)]
     [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1650:ElementDocumentationMustBeSpelledCorrectly", Justification = "pkgdef, VS and vsixmanifest are valid VS terms")]
     public sealed class TipOfTheDayPackage : AsyncPackage
