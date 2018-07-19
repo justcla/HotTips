@@ -60,6 +60,10 @@
     <Compile Include="Engine\ITipManager.cs" />
     <Compile Include="Engine\TipManager.cs" />
     <Compile Include="Engine\VSTipHistoryManager.cs" />
+    <Compile Include="TipOfTheDay.cs" />
+    <Compile Include="TipViewModel.cs" />
+    <Compile Include="Markdown.xaml\Markdown.cs" />
+    <Compile Include="Markdown.xaml\TextToFlowDocumentConverter.cs" />
     <Compile Include="MyUserControl.xaml.cs">
       <DependentUpon>MyUserControl.xaml</DependentUpon>
     </Compile>
