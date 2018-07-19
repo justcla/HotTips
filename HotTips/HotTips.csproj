@@ -79,6 +79,18 @@
     <Compile Include="VSPackage1.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Tips\images\Dislike.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Tips\images\DislikeFilled.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Tips\images\Like.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Tips\images\LikeFilled.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Tips\NAV_FindAllReferences.html">
       <IncludeInVSIX>true</IncludeInVSIX>
     </Content>

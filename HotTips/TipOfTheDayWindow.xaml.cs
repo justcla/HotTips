@@ -6,6 +6,8 @@ using System.Diagnostics;
 using System.IO;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Media;
+using System.Windows.Media.Imaging;
 using MessageBox = System.Windows.MessageBox;
 
 namespace HotTips
@@ -21,6 +23,10 @@ namespace HotTips
         private string currentTip;
         private TipViewModel _tipViewModel;
 
+        private bool isLiked = false;
+
+        private bool isUnLiked = false;
+
         public TipOfTheDayWindow(TipCalculator tipCalculator)
         {
             InitializeComponent();
@@ -31,6 +37,23 @@ namespace HotTips
             _tipCalculator = tipCalculator;
             _tipHistoryManager = tipCalculator.TipHistoryManager;
             _tipManager = tipCalculator.TipManager;
+
+            PopulateDefaultImages();
+        }
+
+        private void PopulateDefaultImages()
+        {
+
+            var brush = new ImageBrush();
+            brush.ImageSource = new BitmapImage(new Uri("Tips/images/Like.png", UriKind.Relative));
+            LikeButton.Background = brush;
+
+            var brush1 = new ImageBrush();
+            brush1.ImageSource = new BitmapImage(new Uri("Tips/images/Dislike.png", UriKind.Relative));
+            DislikeButton.Background = brush1;
+
+            isLiked = false;
+            isUnLiked = false;
         }
 
         private void CloseButton_Click(object sender, RoutedEventArgs e)
@@ -41,11 +64,13 @@ namespace HotTips
         private void NextTipButton_Click(object sender, RoutedEventArgs e)
         {
             GoToNextTip();
+            PopulateDefaultImages();
         }
 
         private void PrevTipButton_Click(object sender, RoutedEventArgs e)
         {
             GoToPrevTip();
+            PopulateDefaultImages();
         }
 
         private void MoreLikeThisButton_Click(object sender, RoutedEventArgs e)
@@ -244,6 +269,70 @@ namespace HotTips
         private void GroupNameCheckBox_Checked(object sender, RoutedEventArgs e)
         {
             _tipHistoryManager?.MarkTipGroupAsIncluded(GroupNameLabel.Content.ToString());
+        }
+
+        private void LikeButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (isLiked)
+            {
+                PopulateDislikeFilledImage();
+                PopulateLikeImage();
+            }
+            else
+            {
+                PopulateDislikeImage();
+                PopulateLikeFilledImage();
+            }
+        }
+
+        private void DislikeButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (isUnLiked)
+            {
+                PopulateDislikeImage();
+                PopulateLikeFilledImage();
+            }
+            else
+            {
+                PopulateDislikeFilledImage();
+                PopulateLikeImage();
+            }
+        }
+
+        private void PopulateLikeImage()
+        {
+            var brush = new ImageBrush();
+            brush.ImageSource = new BitmapImage(new Uri("Tips/images/Like.png", UriKind.Relative));
+            LikeButton.Background = brush;
+            isUnLiked = true;
+            isLiked = false;
+        }
+
+        private void PopulateDislikeFilledImage()
+        {
+            isLiked = false;
+            var brush = new ImageBrush();
+            brush.ImageSource = new BitmapImage(new Uri("Tips/images/DislikeFilled.png", UriKind.Relative));
+            DislikeButton.Background = brush;
+            isUnLiked = true;
+        }
+
+        private void PopulateDislikeImage()
+        {
+            var brush = new ImageBrush();
+            brush.ImageSource = new BitmapImage(new Uri("Tips/images/Dislike.png", UriKind.Relative));
+            DislikeButton.Background = brush;
+            isLiked = true;
+            isUnLiked = false;
+        }
+
+        private void PopulateLikeFilledImage()
+        {
+            var brush = new ImageBrush();
+            brush.ImageSource = new BitmapImage(new Uri("Tips/images/LikeFilled.png", UriKind.Relative));
+            LikeButton.Background = brush;
+            isLiked = true;
+            isUnLiked = false;
         }
     }
 
