@@ -14,6 +14,26 @@
         PreviewKeyDown="Window_PreviewKeyDown"
         >
     <Window.Resources>
+
+        <Style x:Key="MyButton" TargetType="Button">
+            <Setter Property="OverridesDefaultStyle" Value="True" />
+            <Setter Property="Cursor" Value="Hand" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Name="border" BorderThickness="0" BorderBrush="Black" Background="{TemplateBinding Background}">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Opacity" Value="0.8" />
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        
         <Style TargetType="FlowDocument" x:Key="DocumentStyle">
             <Setter Property="FontFamily"
                 Value="Calibri" />
@@ -119,6 +139,10 @@
                 Margin="30,60" VerticalAlignment="Top" MinWidth="400" MinHeight="160" Panel.ZIndex="5"
                                   Document="{Binding Path=TipContent, Converter={StaticResource TextToFlowDocumentConverter}}" />
 
+            <Button Name="LikeButton" HorizontalAlignment="Right" Margin="50,40" ToolTip="Like" VerticalAlignment="Bottom" Width="20" Height="20" Style="{StaticResource MyButton}" BorderThickness="0" Click="LikeButton_Click"/>
+
+            <Button Name="DislikeButton" HorizontalAlignment="Right" Margin="25,40" ToolTip="Dislike" VerticalAlignment="Bottom" Width="20" Height="20" Style="{StaticResource MyButton}" BorderThickness="0" Click="DislikeButton_Click"/>
+            
             <Button Name="PrevTipButton"
                     Content="&lt;&lt; _Previous"
                     AutomationProperties.Name="Previous Tip"
