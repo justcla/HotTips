@@ -1,0 +1,1 @@
+Press **F12** to go to the definition underneath the caret.

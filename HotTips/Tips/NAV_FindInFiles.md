@@ -1,0 +1,1 @@
+Press **Ctrl+Shift+F** to find any string in the files within a specified scope.

@@ -6,7 +6,7 @@
     {
       "tipId": "GN001",
       "name": "Go To All",
-      "content": "GN_GoToAll.html",
+      "content": "GN_GoToAll.md",
       "priority": 1
     }
   ]
