@@ -10,12 +10,14 @@ namespace HotTips
         private static readonly string SVsSettingsPersistenceManagerGuid = "9B164E40-C3A2-4363-9BC5-EB4039DEF653";
         private static readonly string TIP_OF_THE_DAY_SETTINGS = "TipOfTheDay";
         private static readonly string TIP_HISTORY = "TipHistory";
+        private static readonly string EXCLUDED_TIP_GROUPS = TIP_OF_THE_DAY_SETTINGS+"_ExcludedTipGroups";
         private static readonly bool RoamSettings = true;
 
         private static VSTipHistoryManager _instance;
 
         private ISettingsManager SettingsManager;
         private List<string> _tipsSeen;
+        private HashSet<string> _excludedTipGroups;
 
         public static ITipHistoryManager Instance()
         {
@@ -30,11 +32,11 @@ namespace HotTips
 
         public List<string> GetTipHistory()
         {
-            if (_tipsSeen == null) InitialiseTipHistory();
+            if (_tipsSeen == null) InitialiseTipHistoryManager();
             return _tipsSeen;
         }
 
-        private void InitialiseTipHistory()
+        private void InitialiseTipHistoryManager()
         {
             // Note: Must instaniate on UI thread.
             ThreadHelper.ThrowIfNotOnUIThread();
@@ -42,7 +44,13 @@ namespace HotTips
 
             // Pull tip history from VS settings store (Comma separated string of TipIDs)
             string tipHistory = GetTipHistoryFromSettingsStore();
-            _tipsSeen = (!String.IsNullOrEmpty(tipHistory)) ? new List<string>(tipHistory.Split(',')) : new List<string>();
+            _tipsSeen = (!string.IsNullOrEmpty(tipHistory)) ? new List<string>(tipHistory.Split(',')) : new List<string>();
+
+            SettingsManager.TryGetValue(EXCLUDED_TIP_GROUPS, out string excludedGroups);
+
+            _excludedTipGroups = (!string.IsNullOrEmpty(excludedGroups))
+                ? new HashSet<string>(excludedGroups.Split(','), StringComparer.OrdinalIgnoreCase)
+                : new HashSet<string>(StringComparer.OrdinalIgnoreCase);
         }
 
         private string GetTipHistoryFromSettingsStore()
@@ -82,6 +90,44 @@ namespace HotTips
             string collectionPath = TIP_OF_THE_DAY_SETTINGS;
             SettingsManager.SetValueAsync(collectionPath, string.Empty, isMachineLocal: !RoamSettings);
 
+        }
+
+        public bool IsTipGroupExcluded(string tipGroupId)
+        {
+            if (_excludedTipGroups == null)
+            {
+                InitialiseTipHistoryManager();
+            }
+
+            return _excludedTipGroups.Contains(tipGroupId);
+        }
+
+        public void MarkTipGroupAsExcluded(string tipGroupId)
+        {
+            if (_excludedTipGroups == null)
+            {
+                InitialiseTipHistoryManager();
+            }
+
+            _excludedTipGroups.Add(tipGroupId);
+            StoreExcludedGroupsToSettings();
+        }
+
+        private void StoreExcludedGroupsToSettings()
+        {
+            string value = string.Join(",", _excludedTipGroups);
+            SettingsManager.SetValueAsync(EXCLUDED_TIP_GROUPS, value, isMachineLocal: !RoamSettings);
+        }
+
+        public void MarkTipGroupAsIncluded(string tipGroupId)
+        {
+            if (_excludedTipGroups == null)
+            {
+                InitialiseTipHistoryManager();
+            }
+
+            _excludedTipGroups.Remove(tipGroupId);
+            StoreExcludedGroupsToSettings();
         }
     }
 }

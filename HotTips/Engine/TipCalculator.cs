@@ -64,7 +64,7 @@ namespace HotTips
                     // If the scan finishes and there's a holdItem, return it.
                     // If tips found, but none to show scan whoe priorityBand at next scanRow.
                     // Stop when no tips found in the whole priorityBand for the given scanRow.
-                    
+
                     tipFound = false;
                     TipInfo sameGroupTip = null;
 
@@ -162,14 +162,7 @@ namespace HotTips
 
         private bool IsExcludedGroup(string groupId)
         {
-            // TODO: Store excluded groups as class variable
-            return GetExcludedGroups().Contains(groupId);
-        }
-
-        private HashSet<string> GetExcludedGroups()
-        {
-            // TODO: Fetch excluded groups from VS store (user should be able to ignore specific groups)
-            return new HashSet<string>();
+            return TipHistoryManager.IsTipGroupExcluded(groupId);
         }
 
         private void ClearTipHistory()

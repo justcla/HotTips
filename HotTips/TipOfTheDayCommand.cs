@@ -75,7 +75,9 @@ namespace HotTips
         {
             // Verify the current thread is the UI thread - the call to AddCommand in TipOfTheDay's constructor requires
             // the UI thread.
+#pragma warning disable VSTHRD109
             ThreadHelper.ThrowIfNotOnUIThread();
+#pragma warning restore VSTHRD109
 
             OleMenuCommandService commandService = await package.GetServiceAsync((typeof(IMenuCommandService))) as OleMenuCommandService;
             Instance = new TipOfTheDayCommand(package, commandService);
