@@ -79,6 +79,30 @@
     <Compile Include="VSPackage1.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Tips\NAV_FindAllReferences.html">
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="Tips\NAV_FindInFiles.html">
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="Tips\NAV_GoToDefinition.html">
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="Tips\NAV_QuickFind.html">
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="Tips\NAV_QuickLaunch.html">
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="Tips\SHL_CloseWindow.html">
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="Tips\SHL_GoToNext.html">
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="Tips\SHL_NavigateBack.html">
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
     <None Include="app.config">
       <SubType>Designer</SubType>
     </None>
@@ -110,35 +134,19 @@
     </Content>
     <Content Include="Resources\TipOfTheDay.png" />
     <Content Include="Resources\TipOfTheDayPackage.ico" />
-    <Content Include="Tips\ED001.html">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    <Content Include="Tips\ED_DeleteLine.html">
       <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
-    <Content Include="Tips\ED002.html">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    <Content Include="Tips\ED_DuplicateText.html">
       <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
-    <Content Include="Tips\ED003.html">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    <Content Include="Tips\ED_ExpandSelection.html">
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="Tips\GN_GoToAll.html">
       <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
     <Content Include="Tips\images\GoToAll.PNG">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      <IncludeInVSIX>true</IncludeInVSIX>
-    </Content>
-    <Content Include="Tips\SHL003.html">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      <IncludeInVSIX>true</IncludeInVSIX>
-    </Content>
-    <Content Include="Tips\SHL002.html">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      <IncludeInVSIX>true</IncludeInVSIX>
-    </Content>
-    <Content Include="Tips\SHL001.html">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      <IncludeInVSIX>true</IncludeInVSIX>
-    </Content>
-    <Content Include="Tips\Tip001.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
