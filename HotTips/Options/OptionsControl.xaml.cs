@@ -13,23 +13,23 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace HotTips
+namespace HotTips.Options
 {
     /// <summary>
     /// Interaction logic for MyUserControl.xaml
     /// </summary>
-    public partial class MyUserControl : UserControl
+    public partial class OptionsControl : UserControl
     {
-        public MyUserControl()
+        public OptionsControl()
         {
             InitializeComponent();
         }
 
-        internal OptionPageCustom optionsPage;
+        internal CustomPage OptionsPage { get; set; }
 
         public void Initialize()
         {
-            textBox1.Text = optionsPage.OptionString;
+            textBox1.Text = OptionsPage.OptionString;
         }
 
         //private void MyUserControl1_TextChanged(object sender, TextChangedEventArgs e)
@@ -44,7 +44,7 @@ namespace HotTips
 
         private void textBox1_LostFocus(object sender, RoutedEventArgs e)
         {
-            optionsPage.OptionString = textBox1.Text;
+            OptionsPage.OptionString = textBox1.Text;
         }
     }
 }
