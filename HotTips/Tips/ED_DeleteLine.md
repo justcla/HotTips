@@ -1,0 +1,1 @@
+﻿Press **Ctrl+Shift+L** to delete a line. (without copying it to your clipboard!)

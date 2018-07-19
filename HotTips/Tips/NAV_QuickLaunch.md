@@ -1,0 +1,1 @@
+Press **Ctrl+Q** to find settings, menu options, and much more through Quick Launch.

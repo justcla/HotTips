@@ -1,0 +1,1 @@
+Press **Ctrl+12** to find all references to the symbol at the caret.

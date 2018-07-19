@@ -6,31 +6,31 @@
       {
         "tipId": "NAV001",
         "name": "Find All References",
-        "content": "NAV_FindAllReferences.html",
+        "content": "NAV_FindAllReferences.md",
         "priority": 1
       },
       {
         "tipId": "NAV002",
         "name": "Find In Files",
-        "content": "NAV_FindInFiles.html",
+        "content": "NAV_FindInFiles.md",
         "priority": 2
       },
       {
         "tipId": "NAV003",
         "name": "Quick Find",
-        "content": "NAV_QuickFind.html",
+        "content": "NAV_QuickFind.md",
         "priority": 2
       },
       {
         "tipId": "NAV004",
         "name": "Quick Launch",
-        "content": "NAV_QuickLaunch.html",
+        "content": "NAV_QuickLaunch.md",
         "priority": 1
       },
       {
         "tipId": "NAV005",
         "name": "Go To Definition",
-        "content": "NAV_GoToDefinition.html",
+        "content": "NAV_GoToDefinition.md",
         "priority": 2
       }
     ]

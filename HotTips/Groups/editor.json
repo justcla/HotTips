@@ -6,19 +6,19 @@
     {
       "tipId": "ED001",
       "name": "Duplicate Text",
-      "content": "ED_DuplicateText.html",
+      "content": "ED_DuplicateText.md",
       "priority": 1
     },
     {
       "tipId": "ED002",
       "name": "Expand Selection",
-      "content": "ED_ExpandSelection.html",
+      "content": "ED_ExpandSelection.md",
       "priority": 1
     },
     {
       "tipId": "ED003",
       "name": "Delete Line",
-      "content": "ED_DeleteLine.html",
+      "content": "ED_DeleteLine.md",
       "priority": 2
     }
   ]

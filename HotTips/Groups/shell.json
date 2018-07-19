@@ -6,19 +6,19 @@
     {
       "tipId": "SHL001",
       "name": "Close Tool Window",
-      "content": "SHL_CloseWindow.html",
+      "content": "SHL_CloseWindow.md",
       "priority": 1
     },
     {
       "tipId": "SHL002",
       "name": "Navigate Back and Forward",
-      "content": "SHL_NavigateBack.html",
+      "content": "SHL_NavigateBack.md",
       "priority": 2
     },
     {
       "tipId": "SHL003",
       "name": "Go To Next or Previous Doc",
-      "content": "SHL_GoToNext.html",
+      "content": "SHL_GoToNext.md",
       "priority": 2
     }
   ]

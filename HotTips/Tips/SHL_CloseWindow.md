@@ -1,0 +1,1 @@
+﻿Press **Shift+Esc** to close the current tool window.
