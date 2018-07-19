@@ -1,8 +1,10 @@
 ﻿using Justcla;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Diagnostics;
-using System.Linq;
+using System.IO;
+using System.Threading.Tasks;
 using System.Windows;
 using MessageBox = System.Windows.MessageBox;
 
@@ -173,9 +175,11 @@ namespace HotTips
 
             currentTip = nextTip.globalTipId;
 
-            // Navigate to the Tip URI
-            //TipContentBrowser.Navigate(new Uri(nextTip.contentUri));
+            // Render the new tip content in the tip viewer
             ShowTipContent(nextTip);
+
+            // Display Group settings
+            UpdateGroupDisplayElements(nextTip);
 
             // Mark tip as shown
             if (markAsSeen)
@@ -185,10 +189,6 @@ namespace HotTips
 
             // Output telemetry: Tip Shown (Consider making this conditional on "markAsSeen")
             VSTelemetryHelper.PostEvent("Justcla/HotTips/TipShown", "TipId", currentTip);
-
-            GroupNameLabel.Content = $"{nextTip.groupName}";
-
-            GroupNameCheckBox.IsChecked = !_tipHistoryManager.IsTipGroupExcluded(nextTip.groupId);
 
             return true;
         }
@@ -203,9 +203,32 @@ namespace HotTips
             _tipViewModel.TipContent = tipContentString;
         }
 
+        private void UpdateGroupDisplayElements(TipInfo nextTip)
+        {
+            GroupNameLabel.Content = $"{nextTip.groupName}";
+            GroupNameCheckBox.IsChecked = !_tipHistoryManager.IsTipGroupExcluded(nextTip.groupId);
+        }
+
         private string ReadStringFromFile(string contentUri)
         {
             return System.IO.File.ReadAllText(contentUri);
+        }
+
+        /// Consider using this instead of ReadStringFromFile
+        private async Task<string> ReadFileAsync(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                using (StreamReader sr = new StreamReader("TestFile.txt"))
+                {
+                    String line = await sr.ReadToEndAsync();
+                    return line;
+                }
+            }
+            catch (Exception ex)
+            {
+                return "Could not read the file";
+            }
         }
 
         private void Window_PreviewKeyDown(object sender, System.Windows.Input.KeyEventArgs e)
