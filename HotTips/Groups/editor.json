@@ -6,7 +6,7 @@
     {
       "tipId": "ED001",
       "name": "Duplicate Text",
-      "content": "ED_DeleteLine.html",
+      "content": "ED_DuplicateText.html",
       "priority": 1
     },
     {

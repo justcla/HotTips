@@ -21,6 +21,7 @@ namespace HotTips
             tipGroups.Add(GetGroupPath("general"));
             tipGroups.Add(GetGroupPath("editor"));
             tipGroups.Add(GetGroupPath("shell"));
+            tipGroups.Add(GetGroupPath("navigation"));
             return tipGroups;
         }
 

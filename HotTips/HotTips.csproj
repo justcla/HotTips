@@ -60,6 +60,10 @@
     <Compile Include="Engine\ITipManager.cs" />
     <Compile Include="Engine\TipManager.cs" />
     <Compile Include="Engine\VSTipHistoryManager.cs" />
+    <Compile Include="TipOfTheDay.cs" />
+    <Compile Include="TipViewModel.cs" />
+    <Compile Include="Markdown.xaml\Markdown.cs" />
+    <Compile Include="Markdown.xaml\TextToFlowDocumentConverter.cs" />
     <Compile Include="MyUserControl.xaml.cs">
       <DependentUpon>MyUserControl.xaml</DependentUpon>
     </Compile>
@@ -75,12 +79,52 @@
     <Compile Include="VSPackage1.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Tips\images\Dislike.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Tips\images\DislikeFilled.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Tips\images\Like.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Tips\images\LikeFilled.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Tips\NAV_FindAllReferences.html">
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="Tips\NAV_FindInFiles.html">
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="Tips\NAV_GoToDefinition.html">
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="Tips\NAV_QuickFind.html">
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="Tips\NAV_QuickLaunch.html">
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="Tips\SHL_CloseWindow.html">
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="Tips\SHL_GoToNext.html">
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="Tips\SHL_NavigateBack.html">
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
     <None Include="app.config">
       <SubType>Designer</SubType>
     </None>
     <Content Include="Groups\shell.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="Groups\navigation.json">
+      <IncludeInVSIX>true</IncludeInVSIX>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <None Include="packages.config" />
     <None Include="source.extension.vsixmanifest">
@@ -106,35 +150,19 @@
     </Content>
     <Content Include="Resources\TipOfTheDay.png" />
     <Content Include="Resources\TipOfTheDayPackage.ico" />
-    <Content Include="Tips\ED001.html">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    <Content Include="Tips\ED_DeleteLine.html">
       <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
-    <Content Include="Tips\ED002.html">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    <Content Include="Tips\ED_DuplicateText.html">
       <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
-    <Content Include="Tips\ED003.html">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    <Content Include="Tips\ED_ExpandSelection.html">
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="Tips\GN_GoToAll.html">
       <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
     <Content Include="Tips\images\GoToAll.PNG">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      <IncludeInVSIX>true</IncludeInVSIX>
-    </Content>
-    <Content Include="Tips\SHL003.html">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      <IncludeInVSIX>true</IncludeInVSIX>
-    </Content>
-    <Content Include="Tips\SHL002.html">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      <IncludeInVSIX>true</IncludeInVSIX>
-    </Content>
-    <Content Include="Tips\SHL001.html">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      <IncludeInVSIX>true</IncludeInVSIX>
-    </Content>
-    <Content Include="Tips\Tip001.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       <IncludeInVSIX>true</IncludeInVSIX>
     </Content>

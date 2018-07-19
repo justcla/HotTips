@@ -1,124 +1,17 @@
 ﻿using Justcla;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Diagnostics;
-using System.Linq;
+using System.IO;
+using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Forms;
+using System.Windows.Media;
+using System.Windows.Media.Imaging;
 using MessageBox = System.Windows.MessageBox;
 
 namespace HotTips
 {
-    public class TipOfTheDay
-    {
-        private static readonly string TIP_OF_THE_DAY_TITLE = "Tip of the Day";
-
-        private static ITipManager _tipManager;
-        private static ITipHistoryManager _tipHistoryManager;
-        private static TipCalculator _tipCalculator;
-
-        public static void ShowWindow()
-        {
-            try
-            {
-                // TODO: Perf optimisation: First time, use hard-coded tip.
-                if (IsFirstTime())
-                {
-                    // TODO: Set nextTip to hard-coded First-Tip.
-                    // Avoid loading tip parser if user is going to close and never run it again.
-                }
-
-                _tipManager = new TipManager();
-                _tipHistoryManager = VSTipHistoryManager.Instance();
-                _tipCalculator = new TipCalculator(_tipHistoryManager, _tipManager);
-
-                TipInfo nextTip = GetNewTip();
-
-                if (nextTip == null)
-                {
-                    // There's no tip to show. Don't show the Tip of the Day window.
-                    Debug.WriteLine("Tip of the Day: There's no tip to show. Will not launch TotD dialog.");
-                    return;
-                }
-
-                // We have a tip! Let's create the Tip of the Day UI.
-                TipOfTheDayWindow tipOfTheDayWindow = new TipOfTheDayWindow(_tipCalculator);
-
-                // Attempt to navigate to the chose tip
-                var success = tipOfTheDayWindow.NavigateToTip(nextTip);
-                if (!success)
-                {
-                    // Failed to navigate to tip URI
-                    Debug.WriteLine("Tip of the Day: Failed to navigate to tip URI. Will not launch TotD dialog.");
-                    return;
-                }
-
-                // Now show the dialog
-                tipOfTheDayWindow.Show();
-
-                // Mark tip as seen
-                _tipHistoryManager.MarkTipAsSeen(nextTip.globalTipId);
-            }
-            catch (Exception e)
-            {
-                // Fail gracefully when window will now show
-                Debug.WriteLine("Unable to open Tip of the Day: " + e.Message);
-                return;
-            }
-        }
-
-        public static TipInfo GetNewTip()
-        {
-            TipInfo nextTip = _tipCalculator.GetNextTip();
-
-            if (nextTip == null)
-            {
-                // No new tips to show. Attempt to reset history and start again.
-                nextTip = GetTipAfterResetTipHistory(ref nextTip);
-            }
-
-            return nextTip;
-        }
-
-        private static TipInfo GetTipAfterResetTipHistory(ref TipInfo nextTip)
-        {
-            // Check strange case - No new tips and no tips shown.
-            if (_tipHistoryManager.GetTipHistory() == null)
-            {
-                // No tip found and there are none in the history, so we must have no tips at all. (Strange case)
-                Debug.WriteLine("No tips seen and no tips yet to see. (Check if tip groups loaded correctly.)");
-                return null;
-            }
-
-            // Ask user if they want to clear the history and start again from the beginning.
-            if (!ShouldResetHistory())
-            {
-                // User does not want to reset history. Exit nicely.
-                return null;
-            }
-
-            // Reset Tip History
-            _tipHistoryManager.ClearTipHistory();
-
-            // Fetch next tip
-            return _tipCalculator.GetNextTip();
-        }
-
-        private static bool ShouldResetHistory()
-        {
-            const string Text = "No new tips to show.\n\nClear tip history and start showing tips from the beginning?";
-            DialogResult dialogResult = System.Windows.Forms.MessageBox.Show(Text, TIP_OF_THE_DAY_TITLE, MessageBoxButtons.OKCancel);
-            return dialogResult == DialogResult.OK;
-        }
-
-        private static bool IsFirstTime()
-        {
-            // TODO: Determine if is first time
-            return false;
-        }
-
-    }
-
     /// <summary>
     /// Interaction logic for TipOfTheDayControl.xaml
     /// </summary>
@@ -128,15 +21,39 @@ namespace HotTips
         private ITipHistoryManager _tipHistoryManager;
         private ITipManager _tipManager;
         private string currentTip;
+        private TipViewModel _tipViewModel;
+
+        private bool isLiked = false;
+
+        private bool isUnLiked = false;
 
         public TipOfTheDayWindow(TipCalculator tipCalculator)
         {
             InitializeComponent();
             Owner = System.Windows.Application.Current.MainWindow;
+            _tipViewModel = new TipViewModel();
+            this.DataContext = _tipViewModel;
 
             _tipCalculator = tipCalculator;
             _tipHistoryManager = tipCalculator.TipHistoryManager;
             _tipManager = tipCalculator.TipManager;
+
+            PopulateDefaultImages();
+        }
+
+        private void PopulateDefaultImages()
+        {
+
+            var brush = new ImageBrush();
+            brush.ImageSource = new BitmapImage(new Uri("Tips/images/Like.png", UriKind.Relative));
+            LikeButton.Background = brush;
+
+            var brush1 = new ImageBrush();
+            brush1.ImageSource = new BitmapImage(new Uri("Tips/images/Dislike.png", UriKind.Relative));
+            DislikeButton.Background = brush1;
+
+            isLiked = false;
+            isUnLiked = false;
         }
 
         private void CloseButton_Click(object sender, RoutedEventArgs e)
@@ -147,11 +64,13 @@ namespace HotTips
         private void NextTipButton_Click(object sender, RoutedEventArgs e)
         {
             GoToNextTip();
+            PopulateDefaultImages();
         }
 
         private void PrevTipButton_Click(object sender, RoutedEventArgs e)
         {
             GoToPrevTip();
+            PopulateDefaultImages();
         }
 
         private void MoreLikeThisButton_Click(object sender, RoutedEventArgs e)
@@ -279,24 +198,62 @@ namespace HotTips
                 return false;
             }
 
-            // Navigate to the Tip URI
             currentTip = nextTip.globalTipId;
-            TipContentBrowser.Navigate(new Uri(nextTip.contentUri));
+
+            // Render the new tip content in the tip viewer
+            ShowTipContent(nextTip);
+
+            // Display Group settings
+            UpdateGroupDisplayElements(nextTip);
 
             // Mark tip as shown
             if (markAsSeen)
             {
-                _tipHistoryManager.MarkTipAsSeen(nextTip.globalTipId);
+                _tipHistoryManager.MarkTipAsSeen(currentTip);
             }
 
             // Output telemetry: Tip Shown (Consider making this conditional on "markAsSeen")
             VSTelemetryHelper.PostEvent("Justcla/HotTips/TipShown", "TipId", currentTip);
 
-            GroupNameLabel.Content = $"{nextTip.groupName}";
-
-            GroupNameCheckBox.IsChecked = !_tipHistoryManager.IsTipGroupExcluded(nextTip.groupId);
-
             return true;
+        }
+
+        private void ShowTipContent(TipInfo nextTip)
+        {
+            // Fetch the path of the file that contains the tip content
+            string contentFilePath = nextTip.contentUri;
+            // Read the text into a string
+            string tipContentString = ReadStringFromFile(contentFilePath);
+            // Update the value in the model (which should be reflected in the view through binding)
+            _tipViewModel.TipContent = tipContentString;
+        }
+
+        private void UpdateGroupDisplayElements(TipInfo nextTip)
+        {
+            GroupNameLabel.Content = $"{nextTip.groupName}";
+            GroupNameCheckBox.IsChecked = !_tipHistoryManager.IsTipGroupExcluded(nextTip.groupId);
+        }
+
+        private string ReadStringFromFile(string contentUri)
+        {
+            return System.IO.File.ReadAllText(contentUri);
+        }
+
+        /// Consider using this instead of ReadStringFromFile
+        private async Task<string> ReadFileAsync(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                using (StreamReader sr = new StreamReader("TestFile.txt"))
+                {
+                    String line = await sr.ReadToEndAsync();
+                    return line;
+                }
+            }
+            catch (Exception ex)
+            {
+                return "Could not read the file";
+            }
         }
 
         private void Window_PreviewKeyDown(object sender, System.Windows.Input.KeyEventArgs e)
@@ -312,6 +269,68 @@ namespace HotTips
         private void GroupNameCheckBox_Checked(object sender, RoutedEventArgs e)
         {
             _tipHistoryManager?.MarkTipGroupAsIncluded(GroupNameLabel.Content.ToString());
+        }
+
+        private void LikeButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (isLiked)
+            {
+                PopulateLikeImage();
+            }
+            else
+            {
+                PopulateLikeFilledImage();
+            }
+            PopulateDislikeImage();
+        }
+
+        private void DislikeButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (isUnLiked)
+            {
+                PopulateDislikeImage();
+            }
+            else
+            {
+                PopulateDislikeFilledImage();
+            }
+            PopulateLikeImage();
+        }
+
+        private void PopulateLikeImage()
+        {
+            var brush = new ImageBrush();
+            brush.ImageSource = new BitmapImage(new Uri("Tips/images/Like.png", UriKind.Relative));
+            LikeButton.Background = brush;
+            isUnLiked = true;
+            isLiked = false;
+        }
+
+        private void PopulateDislikeFilledImage()
+        {
+            isLiked = false;
+            var brush = new ImageBrush();
+            brush.ImageSource = new BitmapImage(new Uri("Tips/images/DislikeFilled.png", UriKind.Relative));
+            DislikeButton.Background = brush;
+            isUnLiked = true;
+        }
+
+        private void PopulateDislikeImage()
+        {
+            var brush = new ImageBrush();
+            brush.ImageSource = new BitmapImage(new Uri("Tips/images/Dislike.png", UriKind.Relative));
+            DislikeButton.Background = brush;
+            isLiked = true;
+            isUnLiked = false;
+        }
+
+        private void PopulateLikeFilledImage()
+        {
+            var brush = new ImageBrush();
+            brush.ImageSource = new BitmapImage(new Uri("Tips/images/LikeFilled.png", UriKind.Relative));
+            LikeButton.Background = brush;
+            isLiked = true;
+            isUnLiked = false;
         }
     }
 
