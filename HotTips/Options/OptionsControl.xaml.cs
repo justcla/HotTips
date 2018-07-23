@@ -29,22 +29,50 @@ namespace HotTips.Options
 
         public void Initialize()
         {
-            textBox1.Text = OptionsPage.OptionString;
+            var groups = GetTipGroups();
+            foreach (var g in groups)
+            {
+                var checkbox = new CheckBox()
+                {
+                    IsChecked = g.Value,
+                    Content = g.Key
+                };
+
+                checkbox.Checked += Checkbox_Checked;
+                checkbox.Unchecked += Checkbox_Unchecked;
+
+                TipGroupsListBox.Children.Add(checkbox);
+            }
+
         }
 
-        //private void MyUserControl1_TextChanged(object sender, TextChangedEventArgs e)
-        //{
-        //    optionsPage.OptionString = textBox1.Text;
-        //}
-
-        //private void textBox1_Leave(object sender, EventArgs e)
-        //{
-        //    optionsPage.OptionString = textBox1.Text;
-        //}
-
-        private void textBox1_LostFocus(object sender, RoutedEventArgs e)
+        private Dictionary<string, bool> GetTipGroups()
         {
-            OptionsPage.OptionString = textBox1.Text;
+            var tipManager = new TipManager();
+            var allTipGroups = tipManager.GetPrioritizedTipGroups();
+            var tipGroupStatus = new Dictionary<string, bool>(StringComparer.OrdinalIgnoreCase);
+            foreach (var tipGroup in allTipGroups.Where(t => t != null).SelectMany(t => t))
+            {
+                tipGroupStatus[tipGroup.groupId] = VSTipHistoryManager.Instance().IsTipGroupExcluded(tipGroup.groupId);
+            }
+
+            return tipGroupStatus;
+        }
+
+        private void Checkbox_Unchecked(object sender, RoutedEventArgs e)
+        {
+            if (e.Source is CheckBox checkbox)
+            {
+                VSTipHistoryManager.Instance().MarkTipGroupAsExcluded(checkbox.Content.ToString().Trim());
+            }
+        }
+
+        private void Checkbox_Checked(object sender, RoutedEventArgs e)
+        {
+            if (e.Source is CheckBox checkbox)
+            {
+                VSTipHistoryManager.Instance().MarkTipGroupAsIncluded(checkbox.Content.ToString().Trim());
+            }
         }
     }
 }
