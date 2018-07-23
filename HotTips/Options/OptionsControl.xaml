@@ -7,7 +7,7 @@
              mc:Ignorable="d"
              d:DesignHeight="450" d:DesignWidth="800">
     <Grid>
-        <GroupBox Header="Tip Groups" Margin="20" MinHeight="60" MaxHeight="400" VerticalAlignment="Top">
+        <GroupBox Header="Show tips from these groups" Margin="20" MinHeight="60" MaxHeight="400" VerticalAlignment="Top">
             <StackPanel x:Name="TipGroupsListBox" HorizontalAlignment="Left" MinHeight="60" Margin="20" VerticalAlignment="Top" CanVerticallyScroll="True"/>
         </GroupBox>
     </Grid>
