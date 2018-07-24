@@ -85,11 +85,11 @@ namespace HotTips.Options
             if (newCadence.ShowEstimate)
             {
                 ShowAgainTextBlock.Text = LastDisplayTime.Add(newCadence.Delay).ToLocalTime().ToString("d");
-                ShowAgainTextBlock.Visibility = Visibility.Visible;
+                ShowAgainPanel.Visibility = Visibility.Visible;
             }
             else
             {
-                ShowAgainTextBlock.Visibility = Visibility.Collapsed;
+                ShowAgainPanel.Visibility = Visibility.Collapsed;
             }
         }
 
