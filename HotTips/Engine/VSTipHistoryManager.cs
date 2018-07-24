@@ -143,7 +143,11 @@ namespace HotTips
 
         public bool ShouldShowTip(DisplayCadence cadence)
         {
-            return DateTime.UtcNow >= GetLastDisplayTime() + cadence.Delay;
+            var localLastDisplayTime = GetLastDisplayTime().ToLocalTime();
+            var localStartOfDay = localLastDisplayTime.Date;
+            var withDelay = localStartOfDay + cadence.Delay;
+            var appropriateShowTime = withDelay.ToUniversalTime();
+            return DateTime.UtcNow >= appropriateShowTime;
         }
 
         public void HandleVsInitialized()
