@@ -141,9 +141,35 @@ namespace HotTips
             return SettingsManager.GetValueOrDefault(TIP_LAST_DISPLAY, DateTime.UtcNow);
         }
 
-        public bool ShouldShowTip()
+        public bool ShouldShowTip(DisplayCadence cadence)
         {
-            return DateTime.UtcNow >= GetLastDisplayTime() + GetCadence().Delay;
+            return DateTime.UtcNow >= GetLastDisplayTime() + cadence.Delay;
+        }
+
+        public void HandleVsInitialized()
+        {
+            var cadence = GetCadence();
+            if (cadence == DisplayCadence.Never || cadence == DisplayCadence.SolutionLoad)
+                return;
+
+            if (ShouldShowTip(cadence))
+            {
+                TipOfTheDay.ShowWindow();
+                Task.Run(async () => await SetLastDisplayTimeNowAsync());
+            }
+        }
+
+        public void HandleSolutionOpened()
+        {
+            var cadence = GetCadence();
+            if (cadence != DisplayCadence.SolutionLoad)
+                return;
+
+            if (ShouldShowTip(cadence))
+            {
+                TipOfTheDay.ShowWindow();
+                Task.Run(async () => await SetLastDisplayTimeNowAsync());
+            }
         }
     }
 }

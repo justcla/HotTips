@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 namespace HotTips.Engine
 {
     [Serializable]
-    public struct DisplayCadence
+    public struct DisplayCadence : IEquatable<DisplayCadence>
     {
         public string Name { get; }
         public TimeSpan Delay { get; }
@@ -31,5 +31,20 @@ namespace HotTips.Engine
         public static DisplayCadence FromName(string name) => KnownDisplayCadences.FirstOrDefault(n => n.Name == name);
 
         public override string ToString() => Name;
+
+        public bool Equals(DisplayCadence other)
+        {
+            return Name.Equals(other.Name, StringComparison.Ordinal);
+        }
+
+        public static bool operator == (DisplayCadence c1, DisplayCadence c2)
+        {
+            return c1.Equals(c2);
+        }
+
+        public static bool operator !=(DisplayCadence c1, DisplayCadence c2)
+        {
+            return !c1.Equals(c2);
+        }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using Microsoft.VisualStudio;
 using Microsoft.VisualStudio.Shell;
+using Microsoft.VisualStudio.Shell.Interop;
 using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Runtime.InteropServices;
@@ -42,6 +43,8 @@ namespace HotTips
         /// TipOfTheDayPackage GUID string.
         /// </summary>
         public const string PackageGuidString = "7c97805a-7191-482c-9396-5b8ef31bc05d";
+        private uint _solutionEventCookie;
+        private IVsSolution _vsSolution;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="TipOfTheDayCommand"/> class.
@@ -65,6 +68,8 @@ namespace HotTips
         /// <returns>A task representing the async work of package initialization, or an already completed task if there is none. Do not return null from this method.</returns>
         protected override async Task InitializeAsync(CancellationToken cancellationToken, IProgress<ServiceProgressData> progress)
         {
+            _vsSolution = await GetServiceAsync(typeof(SVsSolution)) as IVsSolution;
+
             // When initialized asynchronously, the current thread may be a background thread at this point.
             // Do any initialization that requires the UI thread after switching to the UI thread.
             await this.JoinableTaskFactory.SwitchToMainThreadAsync(cancellationToken);
@@ -72,12 +77,20 @@ namespace HotTips
             var initializedHistoryManager = VSTipHistoryManager.GetInstance();
 
             // Show sheduled TotD
-            var tipHistoryManager = VSTipHistoryManager.GetInstance();
-            if (tipHistoryManager.ShouldShowTip())
+            VSTipHistoryManager.GetInstance().HandleVsInitialized();
+
+            // Hook up to solution load events
+            _vsSolution.AdviseSolutionEvents(new SolutionEventHandler(), out _solutionEventCookie);
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing)
             {
-                TipOfTheDay.ShowWindow();
-                Task.Run(async () => await tipHistoryManager.SetLastDisplayTimeNowAsync());
+                ThreadHelper.ThrowIfNotOnUIThread();
+                _vsSolution.UnadviseSolutionEvents(_solutionEventCookie);
             }
+            base.Dispose(disposing);
         }
 
         #endregion

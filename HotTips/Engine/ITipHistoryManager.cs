@@ -19,6 +19,8 @@ namespace HotTips
         Task SetLastDisplayTimeNowAsync();
         Task SetLastDisplayTimeAsync(DateTime dateTime);
         DateTime GetLastDisplayTime();
-        bool ShouldShowTip();
+        bool ShouldShowTip(DisplayCadence cadence);
+        void HandleVsInitialized();
+        void HandleSolutionOpened();
     }
 }
