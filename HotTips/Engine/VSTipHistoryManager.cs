@@ -3,6 +3,7 @@ using Microsoft.VisualStudio.Settings;
 using Microsoft.VisualStudio.Shell;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Task = System.Threading.Tasks.Task;
 
 namespace HotTips
@@ -15,6 +16,7 @@ namespace HotTips
         private static readonly string EXCLUDED_TIP_GROUPS = TIP_OF_THE_DAY_SETTINGS+"_ExcludedTipGroups";
         private static readonly string TIP_CADENCE = TIP_OF_THE_DAY_SETTINGS + "_Cadence";
         private static readonly string TIP_LAST_DISPLAY = TIP_OF_THE_DAY_SETTINGS + "_NextDisplay";
+        private static readonly string EXCLUDED_TIP_LEVELS = TIP_OF_THE_DAY_SETTINGS + "_ExcludedTipLevels";
         private static readonly bool RoamSettings = true;
 
         private static VSTipHistoryManager _instance;
@@ -23,6 +25,7 @@ namespace HotTips
         private List<string> _tipsSeen;
         private HashSet<string> _excludedTipGroups;
         private bool _solutionOpenedOnce;
+        private HashSet<TipLevel> _excludedTipLevels;
 
         public VSTipHistoryManager()
         {
@@ -39,6 +42,20 @@ namespace HotTips
             _excludedTipGroups = (!string.IsNullOrEmpty(excludedGroups))
                 ? new HashSet<string>(excludedGroups.Split(','), StringComparer.OrdinalIgnoreCase)
                 : new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+
+            SettingsManager.TryGetValue(EXCLUDED_TIP_LEVELS, out string excludedTipLevels);
+            _excludedTipLevels = new HashSet<TipLevel>();
+
+            if (!string.IsNullOrEmpty(excludedTipLevels))
+            {
+                foreach(var level in excludedTipLevels.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
+                {
+                    if (Enum.TryParse(level, out TipLevel value))
+                    {
+                        _excludedTipLevels.Add(value);
+                    }
+                }
+            }
         }
 
         public static ITipHistoryManager GetInstance()
@@ -179,6 +196,29 @@ namespace HotTips
                 _solutionOpenedOnce = true; // When DisplayCadence is Startup, show tip only once
                 Task.Run(async () => await SetLastDisplayTimeNowAsync());
             }
+        }
+
+        public bool IsTipLevelExcluded(TipLevel level)
+        {
+            return _excludedTipLevels.Contains(level);
+        }
+
+        public void MarkTipLevelAsIncluded(TipLevel level)
+        {
+            _excludedTipLevels.Remove(level);
+            StoreExcludedLevelsToSettings();
+        }
+
+        public void MarkTipLevelAsExcluded(TipLevel level)
+        {
+            _excludedTipLevels.Add(level);
+            StoreExcludedLevelsToSettings();
+        }
+
+        private void StoreExcludedLevelsToSettings()
+        {
+            string value = string.Join(",", _excludedTipLevels.Select(l => l.ToString()));
+            SettingsManager.SetValueAsync(EXCLUDED_TIP_LEVELS, value, isMachineLocal: !RoamSettings);
         }
     }
 }

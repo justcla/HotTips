@@ -22,5 +22,8 @@ namespace HotTips
         bool ShouldShowTip(DisplayCadence cadence);
         void HandleVsInitialized();
         void HandleSolutionOpened();
+        bool IsTipLevelExcluded(TipLevel tipLevel);
+        void MarkTipLevelAsExcluded(TipLevel tipLevel);
+        void MarkTipLevelAsIncluded(TipLevel tipLevel);
     }
 }

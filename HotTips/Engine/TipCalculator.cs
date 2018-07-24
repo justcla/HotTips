@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace HotTips
@@ -72,6 +73,7 @@ namespace HotTips
                     {
                         int groupPri = priorityBand - i;
                         if (groupPri < 1 || groupPri > 3) break;
+
                         int tipPri = priorityBand - groupPri;
                         if (tipPri < 1 || tipPri > 3) break;
 
@@ -108,6 +110,12 @@ namespace HotTips
                             }
                             // Assume tipInfo will not be null at this point.
                             TipInfo tipInfo = tipsAtPriBand[scanRow];
+
+                            // If the tip level is excluded, move on to the next group.
+                            if (IsExcludedLevel(tipInfo.Level))
+                            {
+                                continue;
+                            }
 
                             // TipInfo is not null! We found a tip at this scanRow in this tipPri in this groupPri
                             // Note: Tip might have already been seen.
@@ -148,6 +156,11 @@ namespace HotTips
 
             //  if none found at the priGroup level, go to next priGroup level and search again.
             return null;
+        }
+
+        private bool IsExcludedLevel(TipLevel level)
+        {
+            return TipHistoryManager.IsTipLevelExcluded(level);
         }
 
         private string GetGlobalTipId(TipInfo tipInfo)

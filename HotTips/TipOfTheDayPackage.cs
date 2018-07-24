@@ -1,7 +1,9 @@
-﻿using Microsoft.VisualStudio;
+﻿using HotTips.Options;
+using Microsoft.VisualStudio;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
 using System;
+using System.ComponentModel.Design;
 using System.Diagnostics.CodeAnalysis;
 using System.Runtime.InteropServices;
 using System.Threading;
@@ -38,6 +40,8 @@ namespace HotTips
     [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1650:ElementDocumentationMustBeSpelledCorrectly", Justification = "pkgdef, VS and vsixmanifest are valid VS terms")]
     public sealed class TipOfTheDayPackage : AsyncPackage
     {
+
+        public static TipOfTheDayPackage Instance { get; private set; }
         /// <summary>
         /// TipOfTheDayPackage GUID string.
         /// </summary>
@@ -54,6 +58,8 @@ namespace HotTips
             // any Visual Studio service because at this point the package object is created but
             // not sited yet inside Visual Studio environment. The place to do all the other
             // initialization is the Initialize method.
+
+            Instance = this;
         }
 
         #region Package Members
@@ -90,5 +96,10 @@ namespace HotTips
         }
 
         #endregion
+
+        public void ShowOptionsPage()
+        {
+            ShowOptionPage(typeof(OptionsPage));
+        }
     }
 }
