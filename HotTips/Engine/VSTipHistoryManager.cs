@@ -126,7 +126,7 @@ namespace HotTips
         public DisplayCadence GetCadence()
         {
             var cadenceString = SettingsManager.GetValueOrDefault(TIP_CADENCE, string.Empty);
-            return string.IsNullOrEmpty(cadenceString) ? DisplayCadence.VSStartup : DisplayCadence.FromName(cadenceString);
+            return string.IsNullOrEmpty(cadenceString) ? DisplayCadence.Startup : DisplayCadence.FromName(cadenceString);
         }
 
         public async Task SetLastDisplayTimeNowAsync() => await SetLastDisplayTimeAsync(DateTime.UtcNow);
