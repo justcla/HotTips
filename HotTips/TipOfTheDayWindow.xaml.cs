@@ -239,23 +239,6 @@ namespace HotTips
             return System.IO.File.ReadAllText(contentUri);
         }
 
-        /// Consider using this instead of ReadStringFromFile
-        private async Task<string> ReadFileAsync(object sender, RoutedEventArgs e)
-        {
-            try
-            {
-                using (StreamReader sr = new StreamReader("TestFile.txt"))
-                {
-                    String line = await sr.ReadToEndAsync();
-                    return line;
-                }
-            }
-            catch (Exception ex)
-            {
-                return "Could not read the file";
-            }
-        }
-
         private void Window_PreviewKeyDown(object sender, System.Windows.Input.KeyEventArgs e)
         {
             // Add telemetry here for keys pressed
