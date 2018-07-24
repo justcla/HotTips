@@ -1,0 +1,1 @@
+﻿Press **Ctrl+.** to activate a specific refactoring on the selected symbol when available.

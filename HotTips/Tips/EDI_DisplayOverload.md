@@ -1,0 +1,1 @@
+﻿Instead of retyping '(' to show parameter info in method signatures, use **Ctrl+Shift+Space** to display the currently used overload.

@@ -1,0 +1,1 @@
+﻿Press Ctrl + Backspace to delete the word to left of the cursor.

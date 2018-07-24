@@ -1,0 +1,1 @@
+﻿Press **Alt+Up/Down** arrow to move the current line up or down.

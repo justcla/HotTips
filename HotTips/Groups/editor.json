@@ -1,25 +1,189 @@
 {
   "groupId": "Editor",
   "groupName": "Editor",
-  "groupPriority": 2,
+  "groupPriority": 1,
   "tips": [
     {
-      "tipId": "ED001",
-      "name": "Duplicate Text",
-      "content": "ED_DuplicateText.md",
-      "priority": 1
+      "tipId": "EDI004",
+      "name": "Add Class",
+      "content": "EDI_AddClass.md",
+      "priority": 2,
+      "level": 1
     },
     {
-      "tipId": "ED002",
-      "name": "Expand Selection",
-      "content": "ED_ExpandSelection.md",
-      "priority": 1
+      "tipId": "EDI005",
+      "name": "Add Line",
+      "content": "EDI_AddLine.md",
+      "priority": 2,
+      "level": 1
     },
     {
-      "tipId": "ED003",
+      "tipId": "EDI006",
+      "name": "Clean Usings",
+      "content": "EDI_CleanUsings.md",
+      "priority": 2,
+      "level": 1
+    },
+    {
+      "tipId": "EDI007",
+      "name": "Code Snippet",
+      "content": "EDI_CodeSnippet.md",
+      "priority": 2,
+      "level": 1
+    },
+    {
+      "tipId": "EDI008",
+      "name": "Comment Code",
+      "content": "EDI_CommentCode.md",
+      "priority": 2,
+      "level": 1
+    },
+    {
+      "tipId": "EDI009",
+      "name": "Create Snippet",
+      "content": "EDI_CreateSnippet.md",
+      "priority": 2,
+      "level": 1
+    },
+    {
+      "tipId": "EDI010",
+      "name": "Cut Line",
+      "content": "EDI_CutLine.md",
+      "priority": 2,
+      "level": 1
+    },
+    {
+      "tipId": "EDI011",
+      "name": "Cycle Clipboard",
+      "content": "EDI_CycleClipboard.md",
+      "priority": 2,
+      "level": 1
+    },
+    {
+      "tipId": "EDI012",
+      "name": "Delete Left Word",
+      "content": "EDI_DeleteLeft.md",
+      "priority": 2,
+      "level": 1
+    },
+    {
+      "tipId": "EDI013",
       "name": "Delete Line",
-      "content": "ED_DeleteLine.md",
-      "priority": 2
+      "content": "EDI_DeleteLine.md",
+      "priority": 2,
+      "level": 1
+    },
+    {
+      "tipId": "EDI014",
+      "name": "Delete Right Word",
+      "content": "EDI_DeleteRight.md",
+      "priority": 2,
+      "level": 1
+    },
+    {
+      "tipId": "EDI015",
+      "name": "Display Overload",
+      "content": "EDI_DisplayOverload.md",
+      "priority": 2,
+      "level": 1
+    },
+    {
+      "tipId": "EDI016",
+      "name": "Duplicate Text",
+      "content": "EDI_DuplicateText.md",
+      "priority": 2,
+      "level": 1
+    },
+    {
+      "tipId": "EDI017",
+      "name": "Editor Config",
+      "content": "EDI_EditorConfig.md",
+      "priority": 2,
+      "level": 1
+    },
+    {
+      "tipId": "EDI018",
+      "name": "Expand Selection",
+      "content": "EDI_ExpandSelection.md",
+      "priority": 2,
+      "level": 1
+    },
+    {
+      "tipId": "EDI019",
+      "name": "For Loop",
+      "content": "EDI_ForLoop.md",
+      "priority": 2,
+      "level": 1
+    },
+    {
+      "tipId": "EDI020",
+      "name": "Format Doc",
+      "content": "EDI_FormatDoc.md",
+      "priority": 2,
+      "level": 1
+    },
+    {
+      "tipId": "EDI021",
+      "name": "For Refactoring",
+      "content": "EDI_ForRefactoring.md",
+      "priority": 2,
+      "level": 1
+    },
+    {
+      "tipId": "EDI022",
+      "name": "Full Screen",
+      "content": "EDI_FullScreen.md",
+      "priority": 2,
+      "level": 1
+    },
+    {
+      "tipId": "EDI023",
+      "name": "If Else Refactoring",
+      "content": "EDI_IfElseRefactor.md",
+      "priority": 2,
+      "level": 1
+    },
+    {
+      "tipId": "EDI024",
+      "name": "Move Line",
+      "content": "EDI_MoveLine.md",
+      "priority": 2,
+      "level": 1
+    },
+    {
+      "tipId": "EDI025",
+      "name": "Open/Close Region",
+      "content": "EDI_OpenRegion.md",
+      "priority": 2,
+      "level": 1
+    },
+    {
+      "tipId": "EDI026",
+      "name": "Refactorings",
+      "content": "EDI_Refactorings.md",
+      "priority": 2,
+      "level": 1
+    },
+    {
+      "tipId": "EDI027",
+      "name": "Select Vertical",
+      "content": "EDI_SelectVertical.md",
+      "priority": 2,
+      "level": 1
+    },
+    {
+      "tipId": "EDI028",
+      "name": "Transparent Tooltip",
+      "content": "EDI_TransparentTooltip.md",
+      "priority": 2,
+      "level": 1
+    },
+    {
+      "tipId": "EDI029",
+      "name": "Unreachable Code",
+      "content": "EDI_UnreachableCode.md",
+      "priority": 2,
+      "level": 1
     }
   ]
 

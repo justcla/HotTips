@@ -1,0 +1,1 @@
+﻿Press **Ctrl+Enter** to add a line behind cursor. 

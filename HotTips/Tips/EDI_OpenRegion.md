@@ -1,0 +1,1 @@
+﻿Press **Ctrl+M+O/P** to open and close methods and regions. You can also try **Ctrl+M+H** for current selection.
