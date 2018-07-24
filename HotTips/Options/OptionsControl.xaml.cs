@@ -24,6 +24,16 @@ namespace HotTips.Options
         public OptionsControl()
         {
             InitializeComponent();
+
+            this.IsVisibleChanged += OptionsControl_IsVisibleChanged;
+        }
+
+        private void OptionsControl_IsVisibleChanged(object sender, DependencyPropertyChangedEventArgs e)
+        {
+            if (e.NewValue is bool visibility && visibility == true)
+            {
+                InitializeTipGroups();
+            }
         }
 
         internal CustomPage OptionsPage { get; set; }
@@ -31,7 +41,12 @@ namespace HotTips.Options
 
         public void Initialize()
         {
+        }
+
+        private void InitializeTipGroups()
+        {
             var groups = GetTipGroups();
+            TipGroupsListBox.Children.Clear();
             foreach (var g in groups)
             {
                 var checkbox = new CheckBox()
@@ -85,7 +100,7 @@ namespace HotTips.Options
             var tipGroupStatus = new Dictionary<string, bool>(StringComparer.OrdinalIgnoreCase);
             foreach (var tipGroup in allTipGroups.Where(t => t != null).SelectMany(t => t))
             {
-                tipGroupStatus[tipGroup.groupId] = VSTipHistoryManager.GetInstance().IsTipGroupExcluded(tipGroup.groupId);
+                tipGroupStatus[tipGroup.groupId] = !VSTipHistoryManager.GetInstance().IsTipGroupExcluded(tipGroup.groupId);
             }
 
             return tipGroupStatus;
