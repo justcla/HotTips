@@ -13,8 +13,8 @@ namespace HotTips.Engine
         public TimeSpan Delay { get; }
         public bool ShowEstimate { get; }
 
-        public static DisplayCadence SolutionLoad { get; } = new DisplayCadence("every time solution loads", TimeSpan.FromSeconds(0), showEstimate: false);
-        public static DisplayCadence Startup { get; } = new DisplayCadence("next time VS starts", TimeSpan.FromSeconds(0), showEstimate: false);
+        public static DisplayCadence SolutionLoad { get; } = new DisplayCadence("On solution load", TimeSpan.FromSeconds(0), showEstimate: false);
+        public static DisplayCadence Startup { get; } = new DisplayCadence("On VS startup", TimeSpan.FromSeconds(0), showEstimate: false);
         public static DisplayCadence Daily { get; } = new DisplayCadence("Daily", TimeSpan.FromDays(1), showEstimate: true);
         public static DisplayCadence Weekly { get; } = new DisplayCadence("Weekly", TimeSpan.FromDays(7), showEstimate: true);
         public static DisplayCadence Monthly { get; } = new DisplayCadence("Monthly", TimeSpan.FromDays(30), showEstimate: true);
