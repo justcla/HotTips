@@ -10,16 +10,8 @@ using System.Windows;
 namespace HotTips.Options
 {
     [Guid("BF41E5A7-EF14-4AF4-904C-6CDDA6D56F56")]
-    public class CustomPage : UIElementDialogPage
+    public class OptionsPage : UIElementDialogPage
     {
-        private string optionValue = "alpha";
-
-        public string OptionString
-        {
-            get { return optionValue; }
-            set { optionValue = value; }
-        }
-
         protected override UIElement Child
         {
             get

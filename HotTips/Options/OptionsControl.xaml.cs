@@ -36,7 +36,7 @@ namespace HotTips.Options
             }
         }
 
-        internal CustomPage OptionsPage { get; set; }
+        internal OptionsPage OptionsPage { get; set; }
         private DateTime LastDisplayTime { get; set; }
 
         public void Initialize()

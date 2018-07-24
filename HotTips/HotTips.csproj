@@ -61,10 +61,7 @@
     <Compile Include="Engine\ITipManager.cs" />
     <Compile Include="Engine\TipManager.cs" />
     <Compile Include="Engine\VSTipHistoryManager.cs" />
-    <Compile Include="Options\CustomPage.cs">
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="Options\GridPage.cs">
+    <Compile Include="Options\OptionsPage.cs">
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="SolutionEventHandler.cs" />
