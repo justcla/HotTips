@@ -54,7 +54,6 @@ namespace HotTips
 
                 // Mark tip as seen
                 _tipHistoryManager.MarkTipAsSeen(nextTip.globalTipId);
-                Task.Run(async () => await _tipHistoryManager.SetLastDisplayTimeNowAsync());
             }
             catch (Exception e)
             {

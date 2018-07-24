@@ -71,16 +71,13 @@ namespace HotTips
             await TipOfTheDayCommand.InitializeAsync(this);
             var initializedHistoryManager = VSTipHistoryManager.GetInstance();
 
-            // Show TotD at startup
-            if (ShouldShowTOTD())
+            // Show sheduled TotD
+            var tipHistoryManager = VSTipHistoryManager.GetInstance();
+            if (tipHistoryManager.ShouldShowTip())
             {
                 TipOfTheDay.ShowWindow();
+                Task.Run(async () => await tipHistoryManager.SetLastDisplayTimeNowAsync());
             }
-        }
-
-        private bool ShouldShowTOTD()
-        {
-            return VSTipHistoryManager.GetInstance().ShouldShowTip();
         }
 
         #endregion
