@@ -20,7 +20,7 @@ namespace HotTips
         private TipCalculator _tipCalculator;
         private ITipHistoryManager _tipHistoryManager;
         private ITipManager _tipManager;
-        private string currentTip;
+        private TipHistoryInfo currentTip;
         private TipViewModel _tipViewModel;
 
         private bool isLiked = false;
@@ -43,7 +43,6 @@ namespace HotTips
 
         private void PopulateDefaultImages()
         {
-
             var brush = new ImageBrush();
             brush.ImageSource = new BitmapImage(new Uri("Tips/images/Like.png", UriKind.Relative));
             LikeButton.Background = brush;
@@ -63,14 +62,14 @@ namespace HotTips
 
         private void NextTipButton_Click(object sender, RoutedEventArgs e)
         {
-            GoToNextTip();
             PopulateDefaultImages();
+            GoToNextTip();
         }
 
         private void PrevTipButton_Click(object sender, RoutedEventArgs e)
         {
-            GoToPrevTip();
             PopulateDefaultImages();
+            GoToPrevTip();            
         }
 
         private void MoreLikeThisButton_Click(object sender, RoutedEventArgs e)
@@ -81,10 +80,10 @@ namespace HotTips
         private void GoToNextTip()
         {
             // If the current tip is not the last tip in the tip history, then go to the next tip in the tip history that exists.
-            List<string> tipHistory = _tipHistoryManager.GetTipHistory();
+            List<TipHistoryInfo> tipHistory = _tipHistoryManager.GetTipHistory();
 
             // Is there a tip later in the history than the current tip?
-            var currentTipIndex = tipHistory.LastIndexOf(currentTip);   // Use LastIndexOf for performance as it will normally be towards the end of the list.
+            var currentTipIndex = tipHistory.FindLastIndex(a => a.globalTipId.Equals(currentTip.globalTipId)); // Use LastIndexOf for performance as it will normally be towards the end of the list.
             TipInfo nextTipInHistory = GetNextTipInHistory(tipHistory, currentTipHistoryIndex: currentTipIndex);
             if (nextTipInHistory != null)
             {
@@ -103,7 +102,7 @@ namespace HotTips
             }
         }
 
-        private TipInfo GetNextTipInHistory(List<string> tipHistory, int currentTipHistoryIndex)
+        private TipInfo GetNextTipInHistory(List<TipHistoryInfo> tipHistory, int currentTipHistoryIndex)
         {
             int nextTipIndex = currentTipHistoryIndex + 1;
             if (nextTipIndex >= tipHistory.Count)
@@ -114,7 +113,7 @@ namespace HotTips
 
             var nextTipId = tipHistory[nextTipIndex];
 
-            TipInfo nextTip = _tipManager.GetTipInfo(nextTipId);
+            TipInfo nextTip = _tipManager.GetTipInfo(nextTipId.globalTipId);
 
             if (nextTip != null)
             {
@@ -129,8 +128,8 @@ namespace HotTips
         private void GoToPrevTip()
         {
             // Get the index of the current tip in the tip history. (Should always resolve.)
-            List<string> tipHistory = _tipHistoryManager.GetTipHistory();
-            int currentTipHistoryIndex = tipHistory.LastIndexOf(currentTip);
+            List<TipHistoryInfo> tipHistory = _tipHistoryManager.GetTipHistory();
+            int currentTipHistoryIndex = tipHistory.FindLastIndex(a=>a.globalTipId.Equals(currentTip.globalTipId));
 
             // Get the previous tip (if there is one)
             TipInfo previousTip = GetPreviousTip(tipHistory, currentTipHistoryIndex);
@@ -143,10 +142,10 @@ namespace HotTips
             }
 
             // Navigate to the previous tip.
-            bool success = NavigateToTip(previousTip, markAsSeen: false);
+            bool success = NavigateToTip(previousTip, markAsSeen: true);
         }
 
-        private TipInfo GetPreviousTip(List<string> tipHistory, int currentTipHistoryIndex)
+        private TipInfo GetPreviousTip(List<TipHistoryInfo> tipHistory, int currentTipHistoryIndex)
         {
             int prevTipHistoryIndex = currentTipHistoryIndex - 1;
             if (prevTipHistoryIndex < 0)
@@ -156,7 +155,7 @@ namespace HotTips
             }
 
             // Previous tip is the one before the current tip in the tip history.
-            string previousTipId = tipHistory[prevTipHistoryIndex];
+            string previousTipId = tipHistory[prevTipHistoryIndex].globalTipId;
 
             // Get the full TipInfo (by the given TipId) from the Tip Manager.
             TipInfo previousTip = _tipManager.GetTipInfo(previousTipId);
@@ -166,17 +165,19 @@ namespace HotTips
                 // Found a tip! Return it.
                 return previousTip;
             }
-
-            // No Previous tip to show. It's possible the tip previously shown no longer exists.
-            // Look for next previous tip. (drop the index back one position and try again)
-            // repeat - until currentTipHistoryIndex < 1 or previousTip != null
-            return GetPreviousTip(tipHistory, prevTipHistoryIndex);
+            else
+            {
+                // No Previous tip to show. It's possible the tip previously shown no longer exists.
+                // Look for next previous tip. (drop the index back one position and try again)
+                // repeat - until currentTipHistoryIndex < 1 or previousTip != null
+                return GetPreviousTip(tipHistory, prevTipHistoryIndex);
+            }
         }
 
         private void GoToMoreLikeThis()
         {
             // Ask the TipManager for the next tip in the current group
-            TipInfo nextTipInGroup = _tipManager.GetNextTipInGroup(currentTip);
+            TipInfo nextTipInGroup = _tipManager.GetNextTipInGroup(currentTip.globalTipId);
 
             if (nextTipInGroup == null)
             {
@@ -198,7 +199,11 @@ namespace HotTips
                 return false;
             }
 
-            currentTip = nextTip.globalTipId;
+            TipHistoryInfo tipHistoryObj = new TipHistoryInfo();
+            tipHistoryObj.globalTipId = nextTip.globalTipId;
+            tipHistoryObj.tipLikeStatus = TipLikeEnum.NORMAL;
+
+            currentTip = tipHistoryObj;
 
             // Render the new tip content in the tip viewer
             ShowTipContent(nextTip);
@@ -226,6 +231,21 @@ namespace HotTips
             string tipContentString = ReadStringFromFile(contentFilePath);
             // Update the value in the model (which should be reflected in the view through binding)
             _tipViewModel.TipContent = tipContentString;
+
+            List<TipHistoryInfo> tipHistory = _tipHistoryManager.GetTipHistory();
+            TipHistoryInfo historyData = tipHistory.Find(a => a.globalTipId.Equals(nextTip.globalTipId));
+            if (historyData != null)
+            {
+                if (historyData.tipLikeStatus.Equals(TipLikeEnum.LIKE))
+                {
+                    PopulateLikeFilledImage();
+                }
+
+                if (historyData.tipLikeStatus.Equals(TipLikeEnum.DISLIKE))
+                {
+                    PopulateDislikeFilledImage();
+                }
+            }
         }
 
         private void UpdateGroupDisplayElements(TipInfo nextTip)
@@ -273,6 +293,7 @@ namespace HotTips
 
         private void LikeButton_Click(object sender, RoutedEventArgs e)
         {
+            currentTip.tipLikeStatus = TipLikeEnum.NORMAL;
             if (isLiked)
             {
                 PopulateLikeImage();
@@ -282,10 +303,12 @@ namespace HotTips
                 PopulateLikeFilledImage();
             }
             PopulateDislikeImage();
+            _tipHistoryManager.SaveTipStatus(currentTip);
         }
 
         private void DislikeButton_Click(object sender, RoutedEventArgs e)
         {
+            currentTip.tipLikeStatus = TipLikeEnum.NORMAL;
             if (isUnLiked)
             {
                 PopulateDislikeImage();
@@ -295,6 +318,7 @@ namespace HotTips
                 PopulateDislikeFilledImage();
             }
             PopulateLikeImage();
+            _tipHistoryManager.SaveTipStatus(currentTip);
         }
 
         private void PopulateLikeImage()
@@ -308,6 +332,7 @@ namespace HotTips
 
         private void PopulateDislikeFilledImage()
         {
+            currentTip.tipLikeStatus = TipLikeEnum.DISLIKE;
             isLiked = false;
             var brush = new ImageBrush();
             brush.ImageSource = new BitmapImage(new Uri("Tips/images/DislikeFilled.png", UriKind.Relative));
@@ -326,6 +351,7 @@ namespace HotTips
 
         private void PopulateLikeFilledImage()
         {
+            currentTip.tipLikeStatus = TipLikeEnum.LIKE;
             var brush = new ImageBrush();
             brush.ImageSource = new BitmapImage(new Uri("Tips/images/LikeFilled.png", UriKind.Relative));
             LikeButton.Background = brush;

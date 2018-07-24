@@ -4,12 +4,14 @@ namespace HotTips
 {
     public interface ITipHistoryManager
     {
-        List<string> GetTipHistory();
+        List<TipHistoryInfo> GetTipHistory();
         bool HasTipBeenSeen(string globalTipId);
-        void MarkTipAsSeen(string globalTipId);
+        void MarkTipAsSeen(TipHistoryInfo globalTipId);
         void ClearTipHistory();
         bool IsTipGroupExcluded(string tipGroupId);
         void MarkTipGroupAsExcluded(string tipGroupId);
         void MarkTipGroupAsIncluded(string tipGroupId);
+
+        void SaveTipStatus(TipHistoryInfo globalTipId);
     }
 }

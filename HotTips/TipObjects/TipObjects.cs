@@ -68,6 +68,31 @@ namespace HotTips
         }
     }
 
+    public class TipHistoryInfo
+    {
+        public string globalTipId { get; set; }
+
+        public TipLikeEnum tipLikeStatus { get; set; }
+
+        public override string ToString()
+        {
+            return string.Concat(globalTipId, ':', (int)tipLikeStatus);
+        }
+
+        public TipHistoryInfo()
+        {
+
+        }
+        public TipHistoryInfo(string tipHistoryItem)
+        {
+            if (tipHistoryItem.Contains(":"))
+            {
+                this.globalTipId = tipHistoryItem.Split(':')[0];
+                this.tipLikeStatus = (TipLikeEnum)Convert.ToInt32(tipHistoryItem.Split(':')[1]);
+            }
+        }
+    }
+
     public class GroupOfTips
     {
         public string groupId { get; set; }
@@ -86,6 +111,13 @@ namespace HotTips
                 TipsPriList = new List<TipInfo>[3]
             };
         }
+    }
+
+    public enum TipLikeEnum
+    {
+        DISLIKE=0,
+        NORMAL=1,
+        LIKE=2
     }
 
 }

@@ -25,6 +25,7 @@ namespace HotTips
 
                 _tipManager = new TipManager();
                 _tipHistoryManager = VSTipHistoryManager.Instance();
+
                 _tipCalculator = new TipCalculator(_tipHistoryManager, _tipManager);
 
                 TipInfo nextTip = GetNewTip();
@@ -51,8 +52,8 @@ namespace HotTips
                 // Now show the dialog
                 tipOfTheDayWindow.Show();
 
-                // Mark tip as seen
-                _tipHistoryManager.MarkTipAsSeen(nextTip.globalTipId);
+                // Mark tip as seen and default like status is normal
+                _tipHistoryManager.MarkTipAsSeen(new TipHistoryInfo(nextTip.globalTipId+":1"));
             }
             catch (Exception e)
             {
