@@ -69,6 +69,7 @@ namespace HotTips
             // Do any initialization that requires the UI thread after switching to the UI thread.
             await this.JoinableTaskFactory.SwitchToMainThreadAsync(cancellationToken);
             await TipOfTheDayCommand.InitializeAsync(this);
+            var initializedHistoryManager = VSTipHistoryManager.GetInstance();
 
             // Show TotD at startup
             if (ShouldShowTOTD())
@@ -79,8 +80,7 @@ namespace HotTips
 
         private bool ShouldShowTOTD()
         {
-            // TODO: Check if we should be showing TotD
-            return true;
+            return VSTipHistoryManager.GetInstance().ShouldShowTip();
         }
 
         #endregion

@@ -12,7 +12,7 @@
         </GroupBox>
         <StackPanel Orientation="Horizontal" Margin="20">
             <TextBlock Margin="0 0 6 0">Show again: </TextBlock>
-            <ComboBox x:Name="ShowAgainComboBox" MinWidth="80" ></ComboBox>
+            <ComboBox x:Name="ShowAgainComboBox" Width="160" ></ComboBox>
             <TextBlock x:Name="ShowAgainTextBlock" Margin="6 0 0 0"></TextBlock>
         </StackPanel>
     </StackPanel>

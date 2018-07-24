@@ -1,4 +1,5 @@
-﻿using Microsoft.VisualStudio.Settings;
+﻿using HotTips.Engine;
+using Microsoft.VisualStudio.Settings;
 using Microsoft.VisualStudio.Shell;
 using System;
 using System.Collections.Generic;
@@ -22,7 +23,8 @@ namespace HotTips
         private List<string> _tipsSeen;
         private HashSet<string> _excludedTipGroups;
 
-        public static ITipHistoryManager Instance()
+        public static ITipHistoryManager GetInstance()
+
         {
             return _instance ?? (_instance = new VSTipHistoryManager());
         }
@@ -35,11 +37,10 @@ namespace HotTips
 
         public List<string> GetTipHistory()
         {
-            if (_tipsSeen == null) InitialiseTipHistoryManager();
             return _tipsSeen;
         }
 
-        private void InitialiseTipHistoryManager()
+        public VSTipHistoryManager()
         {
             // Note: Must instaniate on UI thread.
             ThreadHelper.ThrowIfNotOnUIThread();
@@ -97,21 +98,11 @@ namespace HotTips
 
         public bool IsTipGroupExcluded(string tipGroupId)
         {
-            if (_excludedTipGroups == null)
-            {
-                InitialiseTipHistoryManager();
-            }
-
             return _excludedTipGroups.Contains(tipGroupId);
         }
 
         public void MarkTipGroupAsExcluded(string tipGroupId)
         {
-            if (_excludedTipGroups == null)
-            {
-                InitialiseTipHistoryManager();
-            }
-
             _excludedTipGroups.Add(tipGroupId);
             StoreExcludedGroupsToSettings();
         }
@@ -124,24 +115,22 @@ namespace HotTips
 
         public void MarkTipGroupAsIncluded(string tipGroupId)
         {
-            if (_excludedTipGroups == null)
-            {
-                InitialiseTipHistoryManager();
-            }
-
             _excludedTipGroups.Remove(tipGroupId);
             StoreExcludedGroupsToSettings();
         }
 
-        public async Task SetCadenceAsync(string cadence)
+        public async Task SetCadenceAsync(DisplayCadence cadence)
         {
-            await SettingsManager.SetValueAsync(TIP_CADENCE, cadence, isMachineLocal: true);
+            await SettingsManager.SetValueAsync(TIP_CADENCE, cadence.Name, isMachineLocal: true);
         }
 
-        public string GetCadence()
+        public DisplayCadence GetCadence()
         {
-            return SettingsManager.GetValueOrDefault(TIP_CADENCE, string.Empty);
+            var cadenceString = SettingsManager.GetValueOrDefault(TIP_CADENCE, string.Empty);
+            return string.IsNullOrEmpty(cadenceString) ? DisplayCadence.VSStartup : DisplayCadence.FromName(cadenceString);
         }
+
+        public async Task SetLastDisplayTimeNowAsync() => await SetLastDisplayTimeAsync(DateTime.UtcNow);
 
         public async Task SetLastDisplayTimeAsync(DateTime dateTime)
         {
@@ -151,6 +140,11 @@ namespace HotTips
         public DateTime GetLastDisplayTime()
         {
             return SettingsManager.GetValueOrDefault(TIP_NEXT_DISPLAY, DateTime.UtcNow);
+        }
+
+        public bool ShouldShowTip()
+        {
+            return DateTime.UtcNow >= GetLastDisplayTime() + GetCadence().Delay;
         }
     }
 }

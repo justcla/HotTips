@@ -1,4 +1,5 @@
-﻿using System;
+﻿using HotTips.Engine;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -13,9 +14,11 @@ namespace HotTips
         bool IsTipGroupExcluded(string tipGroupId);
         void MarkTipGroupAsExcluded(string tipGroupId);
         void MarkTipGroupAsIncluded(string tipGroupId);
-        Task SetCadenceAsync(string cadence);
-        string GetCadence();
+        Task SetCadenceAsync(DisplayCadence cadence);
+        DisplayCadence GetCadence();
+        Task SetLastDisplayTimeNowAsync();
         Task SetLastDisplayTimeAsync(DateTime dateTime);
         DateTime GetLastDisplayTime();
+        bool ShouldShowTip();
     }
 }
