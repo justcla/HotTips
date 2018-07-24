@@ -54,6 +54,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Engine\DisplayCadence.cs" />
     <Compile Include="Engine\EmbeddedTipsProvider.cs" />
     <Compile Include="Engine\ITipGroupProvider.cs" />
     <Compile Include="Engine\ITipHistoryManager.cs" />

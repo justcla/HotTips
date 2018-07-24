@@ -2,6 +2,7 @@
 using Microsoft.VisualStudio.Shell;
 using System;
 using System.Collections.Generic;
+using Task = System.Threading.Tasks.Task;
 
 namespace HotTips
 {
@@ -11,6 +12,8 @@ namespace HotTips
         private static readonly string TIP_OF_THE_DAY_SETTINGS = "TipOfTheDay";
         private static readonly string TIP_HISTORY = "TipHistory";
         private static readonly string EXCLUDED_TIP_GROUPS = TIP_OF_THE_DAY_SETTINGS+"_ExcludedTipGroups";
+        private static readonly string TIP_CADENCE = TIP_OF_THE_DAY_SETTINGS + "_Cadence";
+        private static readonly string TIP_NEXT_DISPLAY = TIP_OF_THE_DAY_SETTINGS + "_NextDisplay";
         private static readonly bool RoamSettings = true;
 
         private static VSTipHistoryManager _instance;
@@ -128,6 +131,26 @@ namespace HotTips
 
             _excludedTipGroups.Remove(tipGroupId);
             StoreExcludedGroupsToSettings();
+        }
+
+        public async Task SetCadenceAsync(string cadence)
+        {
+            await SettingsManager.SetValueAsync(TIP_CADENCE, cadence, isMachineLocal: true);
+        }
+
+        public string GetCadence()
+        {
+            return SettingsManager.GetValueOrDefault(TIP_CADENCE, string.Empty);
+        }
+
+        public async Task SetLastDisplayTimeAsync(DateTime dateTime)
+        {
+            await SettingsManager.SetValueAsync(TIP_NEXT_DISPLAY, dateTime, isMachineLocal: true);
+        }
+
+        public DateTime GetLastDisplayTime()
+        {
+            return SettingsManager.GetValueOrDefault(TIP_NEXT_DISPLAY, DateTime.UtcNow);
         }
     }
 }

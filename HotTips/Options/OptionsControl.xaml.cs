@@ -1,4 +1,5 @@
-﻿using System;
+﻿using HotTips.Engine;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -26,6 +27,7 @@ namespace HotTips.Options
         }
 
         internal CustomPage OptionsPage { get; set; }
+        private DateTime LastDisplayTime { get; set; }
 
         public void Initialize()
         {
@@ -44,6 +46,18 @@ namespace HotTips.Options
                 TipGroupsListBox.Children.Add(checkbox);
             }
 
+            ShowAgainComboBox.ItemsSource = DisplayCadence.KnownDisplayCadences;
+            ShowAgainComboBox.SelectedValue = VSTipHistoryManager.Instance().GetCadence();
+            LastDisplayTime = VSTipHistoryManager.Instance().GetLastDisplayTime();
+            ShowAgainComboBox.SelectionChanged += ShowAgainComboBox_SelectionChanged;
+        }
+
+        private void ShowAgainComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            var newCadence = DisplayCadence.FromName(ShowAgainComboBox.SelectedValue.ToString());
+            var nextDisplayTime = LastDisplayTime.Add(newCadence.Delay);
+            ShowAgainTextBlock.Text = nextDisplayTime.ToString();
+            VSTipHistoryManager.Instance().SetCadenceAsync(ShowAgainComboBox.SelectedValue.ToString());
         }
 
         private Dictionary<string, bool> GetTipGroups()
