@@ -2,7 +2,7 @@
 Visual Studio extension that provides Tip of the Day
 
 
-How to contributew new tips:
+How to contribute new tips:
 
 Rough steps:
 - fork the repo
