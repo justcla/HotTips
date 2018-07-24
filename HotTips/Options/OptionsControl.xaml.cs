@@ -84,7 +84,7 @@ namespace HotTips.Options
             var newCadence = DisplayCadence.FromName(ShowAgainComboBox.SelectedValue.ToString());
             if (newCadence.ShowEstimate)
             {
-                ShowAgainTextBlock.Text = LastDisplayTime.Add(newCadence.Delay).ToLocalTime().ToString();
+                ShowAgainTextBlock.Text = LastDisplayTime.Add(newCadence.Delay).ToLocalTime().ToString("d");
                 ShowAgainTextBlock.Visibility = Visibility.Visible;
             }
             else
