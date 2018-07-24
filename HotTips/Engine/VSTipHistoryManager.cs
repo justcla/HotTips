@@ -14,7 +14,7 @@ namespace HotTips
         private static readonly string TIP_HISTORY = "TipHistory";
         private static readonly string EXCLUDED_TIP_GROUPS = TIP_OF_THE_DAY_SETTINGS+"_ExcludedTipGroups";
         private static readonly string TIP_CADENCE = TIP_OF_THE_DAY_SETTINGS + "_Cadence";
-        private static readonly string TIP_NEXT_DISPLAY = TIP_OF_THE_DAY_SETTINGS + "_NextDisplay";
+        private static readonly string TIP_LAST_DISPLAY = TIP_OF_THE_DAY_SETTINGS + "_NextDisplay";
         private static readonly bool RoamSettings = true;
 
         private static VSTipHistoryManager _instance;
@@ -22,23 +22,6 @@ namespace HotTips
         private ISettingsManager SettingsManager;
         private List<string> _tipsSeen;
         private HashSet<string> _excludedTipGroups;
-
-        public static ITipHistoryManager GetInstance()
-
-        {
-            return _instance ?? (_instance = new VSTipHistoryManager());
-        }
-
-        public bool HasTipBeenSeen(string globalTipId)
-        {
-            List<string> tipsSeen = GetTipHistory();
-            return tipsSeen != null && tipsSeen.Contains(globalTipId);
-        }
-
-        public List<string> GetTipHistory()
-        {
-            return _tipsSeen;
-        }
 
         public VSTipHistoryManager()
         {
@@ -55,6 +38,22 @@ namespace HotTips
             _excludedTipGroups = (!string.IsNullOrEmpty(excludedGroups))
                 ? new HashSet<string>(excludedGroups.Split(','), StringComparer.OrdinalIgnoreCase)
                 : new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+        }
+
+        public static ITipHistoryManager GetInstance()
+        {
+            return _instance ?? (_instance = new VSTipHistoryManager());
+        }
+
+        public bool HasTipBeenSeen(string globalTipId)
+        {
+            List<string> tipsSeen = GetTipHistory();
+            return tipsSeen != null && tipsSeen.Contains(globalTipId);
+        }
+
+        public List<string> GetTipHistory()
+        {
+            return _tipsSeen;
         }
 
         private string GetTipHistoryFromSettingsStore()
@@ -134,12 +133,12 @@ namespace HotTips
 
         public async Task SetLastDisplayTimeAsync(DateTime dateTime)
         {
-            await SettingsManager.SetValueAsync(TIP_NEXT_DISPLAY, dateTime, isMachineLocal: true);
+            await SettingsManager.SetValueAsync(TIP_LAST_DISPLAY, dateTime, isMachineLocal: true);
         }
 
         public DateTime GetLastDisplayTime()
         {
-            return SettingsManager.GetValueOrDefault(TIP_NEXT_DISPLAY, DateTime.UtcNow);
+            return SettingsManager.GetValueOrDefault(TIP_LAST_DISPLAY, DateTime.UtcNow);
         }
 
         public bool ShouldShowTip()
