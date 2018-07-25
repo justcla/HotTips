@@ -75,10 +75,7 @@ namespace HotTips
             await TipOfTheDayCommand.InitializeAsync(this);
             var initializedHistoryManager = VSTipHistoryManager.GetInstance();
 
-            // Show sheduled TotD
-            VSTipHistoryManager.GetInstance().HandleVsInitialized();
-
-            // Hook up to solution load events
+            // Hook up to solution events, so that the tip appears when the solution loads
             _vsSolution.AdviseSolutionEvents(new SolutionEventHandler(), out _solutionEventCookie);
         }
 

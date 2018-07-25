@@ -22,6 +22,7 @@ namespace HotTips
         private ISettingsManager SettingsManager;
         private List<string> _tipsSeen;
         private HashSet<string> _excludedTipGroups;
+        private bool _solutionOpenedOnce;
 
         public VSTipHistoryManager()
         {
@@ -166,12 +167,16 @@ namespace HotTips
         public void HandleSolutionOpened()
         {
             var cadence = GetCadence();
-            if (cadence != DisplayCadence.SolutionLoad)
+
+            // Allow one operation when cadence is Startup and multiple when cadence is SolutionLoad
+            if (!(cadence == DisplayCadence.Startup && !_solutionOpenedOnce)
+                && !(cadence == DisplayCadence.SolutionLoad))
                 return;
 
             if (ShouldShowTip(cadence))
             {
                 TipOfTheDay.ShowWindow();
+                _solutionOpenedOnce = true; // When DisplayCadence is Startup, show tip only once
                 Task.Run(async () => await SetLastDisplayTimeNowAsync());
             }
         }
