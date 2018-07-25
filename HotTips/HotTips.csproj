@@ -66,6 +66,7 @@
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="SolutionEventHandler.cs" />
+    <Compile Include="TelemetryConstants.cs" />
     <Compile Include="TipOfTheDay.cs" />
     <Compile Include="TipViewModel.cs" />
     <Compile Include="Markdown.xaml\Markdown.cs" />
