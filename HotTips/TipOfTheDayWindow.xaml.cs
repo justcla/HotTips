@@ -1,7 +1,9 @@
 ﻿using Justcla;
+using Microsoft.VisualStudio;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.ComponentModel.Design;
 using System.Diagnostics;
 using System.IO;
 using System.Threading.Tasks;
@@ -54,6 +56,10 @@ namespace HotTips
 
             isLiked = false;
             isUnLiked = false;
+
+            var settingsButtonBrush = new ImageBrush();
+            settingsButtonBrush.ImageSource = new BitmapImage(new Uri("Resources/setting-gear.png", UriKind.Relative));
+            SettingsButton.Background = settingsButtonBrush;
         }
 
         private void CloseButton_Click(object sender, RoutedEventArgs e)
@@ -320,6 +326,11 @@ namespace HotTips
         {
             if (e.ChangedButton == System.Windows.Input.MouseButton.Left)
                 this.DragMove();
+        }
+
+        private void SettingsButton_Click(object sender, RoutedEventArgs e)
+        {
+            TipOfTheDayPackage.Instance.ShowOptionsPage();
         }
     }
 

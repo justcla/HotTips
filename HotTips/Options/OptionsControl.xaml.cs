@@ -33,6 +33,7 @@ namespace HotTips.Options
             if (e.NewValue is bool visibility && visibility == true)
             {
                 InitializeTipGroups();
+                InitializeTipLevels();
             }
         }
 
@@ -55,8 +56,8 @@ namespace HotTips.Options
                     Content = g.Key
                 };
 
-                checkbox.Checked += Checkbox_Checked;
-                checkbox.Unchecked += Checkbox_Unchecked;
+                checkbox.Checked += Checkbox_Tip_Group_Checked;
+                checkbox.Unchecked += Checkbox_Tip_Group_Unchecked;
 
                 TipGroupsListBox.Children.Add(checkbox);
             }
@@ -77,6 +78,46 @@ namespace HotTips.Options
             }
             catch
             { }
+        }
+        private void InitializeTipLevels()
+        {
+            var tipLevels = Enum.GetValues(typeof(TipLevel));
+            TipLevelsListBox.Children.Clear();
+
+            foreach (var l in tipLevels)
+            {
+                var checkbox = new CheckBox()
+                {
+                    IsChecked = !VSTipHistoryManager.GetInstance().IsTipLevelExcluded((TipLevel)l),
+                    Content = (TipLevel)l
+                };
+
+                checkbox.Checked += CheckBox_Tip_Level_Checked;
+                checkbox.Unchecked += Checkbox_Tip_Level_Unchecked;
+                TipLevelsListBox.Children.Add(checkbox);
+            }
+        }
+
+        private void Checkbox_Tip_Level_Unchecked(object sender, RoutedEventArgs e)
+        {
+            if (e.Source is CheckBox checkbox)
+            {
+                if (Enum.TryParse(checkbox.Content.ToString(), out TipLevel level))
+                {
+                    VSTipHistoryManager.GetInstance().MarkTipLevelAsExcluded(level);
+                }
+            }
+        }
+
+        private void CheckBox_Tip_Level_Checked(object sender, RoutedEventArgs e)
+        {
+            if (e.Source is CheckBox checkbox)
+            {
+                if (Enum.TryParse(checkbox.Content.ToString(), out TipLevel level))
+                {
+                    VSTipHistoryManager.GetInstance().MarkTipLevelAsIncluded(level);
+                }
+            }
         }
 
         private void UpdateShowAgainUI()
@@ -106,7 +147,7 @@ namespace HotTips.Options
             return tipGroupStatus;
         }
 
-        private void Checkbox_Unchecked(object sender, RoutedEventArgs e)
+        private void Checkbox_Tip_Group_Unchecked(object sender, RoutedEventArgs e)
         {
             if (e.Source is CheckBox checkbox)
             {
@@ -114,7 +155,7 @@ namespace HotTips.Options
             }
         }
 
-        private void Checkbox_Checked(object sender, RoutedEventArgs e)
+        private void Checkbox_Tip_Group_Checked(object sender, RoutedEventArgs e)
         {
             if (e.Source is CheckBox checkbox)
             {
