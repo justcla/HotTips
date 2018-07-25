@@ -108,25 +108,33 @@ namespace HotTips
                                 // No tips left in this group at this scanRow. Move to the next group.
                                 continue;
                             }
-                            // Assume tipInfo will not be null at this point.
-                            TipInfo tipInfo = tipsAtPriBand[scanRow];
 
-                            // If the tip level is excluded, move on to the next group.
-                            if (IsExcludedLevel(tipInfo.Level))
+                            TipInfo tipInfo = null;
+                            int offset = 0;
+                            do
                             {
+                                // Assume tipInfo will not be null at this point.
+                                tipInfo = tipsAtPriBand[scanRow + offset];
+                                offset++;
+
+                                // Find the next unseen tip which doesn't belong to an excluded level.
+                                if (!IsExcludedLevel(tipInfo.Level) && !TipHistoryManager.HasTipBeenSeen(tipInfo.globalTipId))
+                                {
+                                    // Already seen this tip. Skip to the next group.
+                                    break;
+                                }
+
+                            } while (scanRow + offset < tipsAtPriBand.Count);
+
+                            if (scanRow + offset >= tipsAtPriBand.Count)
+                            {
+                                // Current group has no unseen tips, move on to the next group.
                                 continue;
                             }
 
                             // TipInfo is not null! We found a tip at this scanRow in this tipPri in this groupPri
-                            // Note: Tip might have already been seen.
                             tipFound = true;
 
-                            // If we've seen the tip, move to the next group.
-                            if (TipHistoryManager.HasTipBeenSeen(tipInfo.globalTipId))
-                            {
-                                // Already seen this tip. Skip to the next group.
-                                continue;
-                            }
 
                             // If tip is from same group as last tip, hold then show if priGroup exhausted at that scanRow
                             // If tip is NOT from the same group as the last tip shown, we have a good tip to return.
