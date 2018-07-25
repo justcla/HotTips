@@ -54,19 +54,18 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Engine\DisplayCadence.cs" />
     <Compile Include="Engine\CommandHandler.cs" />
     <Compile Include="Engine\EmbeddedTipsProvider.cs" />
     <Compile Include="Engine\ITipGroupProvider.cs" />
-    <Compile Include="Engine\ITipHistoryManager.cs" />
     <Compile Include="Engine\ITipManager.cs" />
     <Compile Include="Engine\TipManager.cs" />
     <Compile Include="Engine\VSTipHistoryManager.cs" />
-    <Compile Include="Options\CustomPage.cs">
+    <Compile Include="Options\OptionsPage.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="Options\GridPage.cs">
-      <SubType>Component</SubType>
-    </Compile>
+    <Compile Include="SolutionEventHandler.cs" />
+    <Compile Include="TelemetryConstants.cs" />
     <Compile Include="TipOfTheDay.cs" />
     <Compile Include="TipViewModel.cs" />
     <Compile Include="Markdown.xaml\Markdown.cs" />
@@ -130,6 +129,10 @@
       <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
     <Content Include="Tips\EDI_TransparentTooltip.md">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="Resources\setting-gear.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
@@ -288,8 +291,6 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
-    <None Include="Tips\DEB_FormatSpecifier.md" />
-    <None Include="Tips\DOC_ExpandDocs.md" />
     <Content Include="Tips\DOC_MapMode.md">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       <IncludeInVSIX>true</IncludeInVSIX>
@@ -493,7 +494,7 @@
     <Error Condition="!Exists('..\packages\Microsoft.VisualStudio.Threading.Analyzers.15.8.122\build\Microsoft.VisualStudio.Threading.Analyzers.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.VisualStudio.Threading.Analyzers.15.8.122\build\Microsoft.VisualStudio.Threading.Analyzers.targets'))" />
     <Error Condition="!Exists('..\packages\Microsoft.VisualStudio.SDK.Analyzers.15.8.33\build\Microsoft.VisualStudio.SDK.Analyzers.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.VisualStudio.SDK.Analyzers.15.8.33\build\Microsoft.VisualStudio.SDK.Analyzers.targets'))" />
   </Target>
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">
   </Target>

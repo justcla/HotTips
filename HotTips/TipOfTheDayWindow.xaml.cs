@@ -1,7 +1,9 @@
 ﻿using Justcla;
+using Microsoft.VisualStudio;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.ComponentModel.Design;
 using System.Diagnostics;
 using System.IO;
 using System.Threading.Tasks;
@@ -18,7 +20,7 @@ namespace HotTips
     public partial class TipOfTheDayWindow : Window
     {
         private TipCalculator _tipCalculator;
-        private ITipHistoryManager _tipHistoryManager;
+        private VSTipHistoryManager _tipHistoryManager;
         private ITipManager _tipManager;
         private string currentTip;
         private TipViewModel _tipViewModel;
@@ -54,6 +56,10 @@ namespace HotTips
 
             isLiked = false;
             isUnLiked = false;
+
+            var settingsButtonBrush = new ImageBrush();
+            settingsButtonBrush.ImageSource = new BitmapImage(new Uri("Resources/setting-gear.png", UriKind.Relative));
+            SettingsButton.Background = settingsButtonBrush;
         }
 
         private void CloseButton_Click(object sender, RoutedEventArgs e)
@@ -75,6 +81,8 @@ namespace HotTips
 
         private void MoreLikeThisButton_Click(object sender, RoutedEventArgs e)
         {
+            // Send telemetry first as the current tip will be lost afterwards.
+            LogTelemetryEvent(TelemetryConstants.MoreLikeThisTipClicked);
             GoToMoreLikeThis();
         }
 
@@ -213,7 +221,7 @@ namespace HotTips
             }
 
             // Output telemetry: Tip Shown (Consider making this conditional on "markAsSeen")
-            VSTelemetryHelper.PostEvent("Justcla/HotTips/TipShown", "TipId", currentTip);
+            LogTelemetryEvent(TelemetryConstants.TipShownEvent);
 
             return true;
         }
@@ -239,23 +247,6 @@ namespace HotTips
             return System.IO.File.ReadAllText(contentUri);
         }
 
-        /// Consider using this instead of ReadStringFromFile
-        private async Task<string> ReadFileAsync(object sender, RoutedEventArgs e)
-        {
-            try
-            {
-                using (StreamReader sr = new StreamReader("TestFile.txt"))
-                {
-                    String line = await sr.ReadToEndAsync();
-                    return line;
-                }
-            }
-            catch (Exception ex)
-            {
-                return "Could not read the file";
-            }
-        }
-
         private void Window_PreviewKeyDown(object sender, System.Windows.Input.KeyEventArgs e)
         {
             // Add telemetry here for keys pressed
@@ -263,38 +254,59 @@ namespace HotTips
 
         private void GroupNameCheckBox_Unchecked(object sender, RoutedEventArgs e)
         {
-            _tipHistoryManager.MarkTipGroupAsExcluded(GroupNameLabel.Content.ToString());
+            string tipGroupId = GroupNameLabel.Content.ToString();
+            _tipHistoryManager.MarkTipGroupAsExcluded(tipGroupId);
+            LogTelemetryEvent(TelemetryConstants.TipGroupDisabled);
         }
 
         private void GroupNameCheckBox_Checked(object sender, RoutedEventArgs e)
         {
-            _tipHistoryManager?.MarkTipGroupAsIncluded(GroupNameLabel.Content.ToString());
+            string tipGroupId = GroupNameLabel.Content.ToString();
+            _tipHistoryManager?.MarkTipGroupAsIncluded(tipGroupId);
+            LogTelemetryEvent(TelemetryConstants.TipGroupEnabled);
         }
 
         private void LikeButton_Click(object sender, RoutedEventArgs e)
         {
+            string eventName = string.Empty;
             if (isLiked)
             {
                 PopulateLikeImage();
+                eventName = TelemetryConstants.TipLikeCanceledEvent;
             }
             else
             {
                 PopulateLikeFilledImage();
+                eventName = TelemetryConstants.TipLikedEvent;
             }
             PopulateDislikeImage();
+
+            LogTelemetryEvent(eventName);
         }
 
         private void DislikeButton_Click(object sender, RoutedEventArgs e)
         {
+            string eventName = string.Empty;
             if (isUnLiked)
             {
                 PopulateDislikeImage();
+                eventName = TelemetryConstants.TipDisLikeCanceledEvent;
             }
             else
             {
                 PopulateDislikeFilledImage();
+                eventName = TelemetryConstants.TipDisLikedEvent;
             }
             PopulateLikeImage();
+
+            LogTelemetryEvent(eventName);
+
+        }
+
+        private void LogTelemetryEvent(string eventName)
+        {
+            string tipGroupId = GroupNameLabel.Content.ToString();
+            VSTelemetryHelper.PostEvent(eventName, "TipGroupId", tipGroupId, "TipId", currentTip);
         }
 
         private void PopulateLikeImage()
@@ -337,6 +349,11 @@ namespace HotTips
         {
             if (e.ChangedButton == System.Windows.Input.MouseButton.Left)
                 this.DragMove();
+        }
+
+        private void SettingsButton_Click(object sender, RoutedEventArgs e)
+        {
+            TipOfTheDayPackage.Instance.ShowOptionsPage();
         }
     }
 

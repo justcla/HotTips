@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace HotTips
@@ -9,7 +10,7 @@ namespace HotTips
         private static readonly string TIP_OF_THE_DAY_TITLE = "Tip of the Day";
 
         private static ITipManager _tipManager;
-        private static ITipHistoryManager _tipHistoryManager;
+        private static VSTipHistoryManager _tipHistoryManager;
         private static TipCalculator _tipCalculator;
 
         public static void ShowWindow()
@@ -24,7 +25,7 @@ namespace HotTips
                 }
 
                 _tipManager = new TipManager();
-                _tipHistoryManager = VSTipHistoryManager.Instance();
+                _tipHistoryManager = VSTipHistoryManager.GetInstance();
                 _tipCalculator = new TipCalculator(_tipHistoryManager, _tipManager);
 
                 TipInfo nextTip = GetNewTip();
