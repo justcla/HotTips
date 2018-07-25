@@ -1,4 +1,6 @@
 ﻿using HotTips.Engine;
+using HotTips.Telemetry;
+using Justcla;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -34,7 +36,18 @@ namespace HotTips.Options
             {
                 InitializeTipGroups();
                 InitializeTipLevels();
+                LogTelemetryEvent(TelemetryConstants.OptionsPageShown);
             }
+            else
+            {
+                LogTelemetryEvent(TelemetryConstants.OptionsPageDismissed);
+            }
+        }
+
+        private void LogTelemetryEvent(string eventName, params object[] namesAndProperties)
+        {
+            TelemetryHelper.LogTelemetryEvent(VSTipHistoryManager.GetInstance() ,eventName,
+                namesAndProperties);
         }
 
         internal OptionsPage OptionsPage { get; set; }
@@ -74,7 +87,11 @@ namespace HotTips.Options
             try
             {
                 UpdateShowAgainUI();
-                await VSTipHistoryManager.GetInstance().SetCadenceAsync(DisplayCadence.FromName(ShowAgainComboBox.SelectedValue.ToString()));
+                string newCadence = ShowAgainComboBox.SelectedValue.ToString();
+                await VSTipHistoryManager.GetInstance().SetCadenceAsync(DisplayCadence.FromName(newCadence));
+
+                var oldCadence = e.RemovedItems?[0]?.ToString();
+                LogTelemetryEvent(TelemetryConstants.NextShowChanged, "NewCadence", newCadence, "OldCadence", oldCadence);
             }
             catch
             { }
@@ -105,6 +122,7 @@ namespace HotTips.Options
                 if (Enum.TryParse(checkbox.Content.ToString(), out TipLevel level))
                 {
                     VSTipHistoryManager.GetInstance().MarkTipLevelAsExcluded(level);
+                    LogTelemetryEvent(TelemetryConstants.TipLevelDisabled, "TipLevel", level);
                 }
             }
         }
@@ -116,6 +134,7 @@ namespace HotTips.Options
                 if (Enum.TryParse(checkbox.Content.ToString(), out TipLevel level))
                 {
                     VSTipHistoryManager.GetInstance().MarkTipLevelAsIncluded(level);
+                    LogTelemetryEvent(TelemetryConstants.TipLevelEnabled, "TipLevel", level);
                 }
             }
         }
@@ -151,7 +170,9 @@ namespace HotTips.Options
         {
             if (e.Source is CheckBox checkbox)
             {
-                VSTipHistoryManager.GetInstance().MarkTipGroupAsExcluded(checkbox.Content.ToString().Trim());
+                string tipGroupId = checkbox.Content.ToString().Trim();
+                VSTipHistoryManager.GetInstance().MarkTipGroupAsExcluded(tipGroupId);
+                LogTelemetryEvent(TelemetryConstants.TipGroupDisabled, "TipGroupId", tipGroupId);
             }
         }
 
@@ -159,7 +180,9 @@ namespace HotTips.Options
         {
             if (e.Source is CheckBox checkbox)
             {
-                VSTipHistoryManager.GetInstance().MarkTipGroupAsIncluded(checkbox.Content.ToString().Trim());
+                string tipGroupId = checkbox.Content.ToString().Trim();
+                VSTipHistoryManager.GetInstance().MarkTipGroupAsIncluded(tipGroupId);
+                LogTelemetryEvent(TelemetryConstants.TipGroupEnabled, "TipGroupId", tipGroupId);
             }
         }
     }

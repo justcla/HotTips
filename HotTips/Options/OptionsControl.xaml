@@ -6,7 +6,7 @@
              xmlns:local="clr-namespace:HotTips"
              mc:Ignorable="d"
              d:DesignHeight="450" d:DesignWidth="800">
-    <StackPanel Orientation="Vertical">
+    <StackPanel Orientation="Vertical" CanVerticallyScroll="True">
         <GroupBox Header="Show tips from these groups" Margin="10" VerticalAlignment="Top">
             <StackPanel x:Name="TipGroupsListBox" HorizontalAlignment="Left" MinHeight="60" Margin="20" VerticalAlignment="Top" CanVerticallyScroll="True"/>
         </GroupBox>

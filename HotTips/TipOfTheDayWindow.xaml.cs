@@ -1,4 +1,5 @@
-﻿using Justcla;
+﻿using HotTips.Telemetry;
+using Justcla;
 using Microsoft.VisualStudio;
 using System;
 using System.Collections.Generic;
@@ -6,6 +7,7 @@ using System.ComponentModel;
 using System.ComponentModel.Design;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Media;
@@ -64,6 +66,7 @@ namespace HotTips
 
         private void CloseButton_Click(object sender, RoutedEventArgs e)
         {
+            LogTelemetryEvent(TelemetryConstants.DialogClosed);
             this.Close();
         }
 
@@ -71,12 +74,14 @@ namespace HotTips
         {
             GoToNextTip();
             PopulateDefaultImages();
+            LogTelemetryEvent(TelemetryConstants.NextTipShown);
         }
 
         private void PrevTipButton_Click(object sender, RoutedEventArgs e)
         {
             GoToPrevTip();
             PopulateDefaultImages();
+            LogTelemetryEvent(TelemetryConstants.PrevTipShown);
         }
 
         private void MoreLikeThisButton_Click(object sender, RoutedEventArgs e)
@@ -220,9 +225,6 @@ namespace HotTips
                 _tipHistoryManager.MarkTipAsSeen(currentTip);
             }
 
-            // Output telemetry: Tip Shown (Consider making this conditional on "markAsSeen")
-            LogTelemetryEvent(TelemetryConstants.TipShownEvent);
-
             return true;
         }
 
@@ -306,7 +308,10 @@ namespace HotTips
         private void LogTelemetryEvent(string eventName)
         {
             string tipGroupId = GroupNameLabel.Content.ToString();
-            VSTelemetryHelper.PostEvent(eventName, "TipGroupId", tipGroupId, "TipId", currentTip);
+
+            TelemetryHelper.LogTelemetryEvent(VSTipHistoryManager.GetInstance(), eventName,
+                "TipGroupId", tipGroupId,
+                "TipId", currentTip ?? string.Empty);
         }
 
         private void PopulateLikeImage()
@@ -354,6 +359,7 @@ namespace HotTips
         private void SettingsButton_Click(object sender, RoutedEventArgs e)
         {
             TipOfTheDayPackage.Instance.ShowOptionsPage();
+            LogTelemetryEvent(TelemetryConstants.OptionsPageShown);
         }
     }
 
