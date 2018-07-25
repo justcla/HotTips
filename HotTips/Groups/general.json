@@ -3,12 +3,6 @@
   "groupName": "General",
   "groupPriority": 1,
   "tips": [
-    {
-      "tipId": "GN001",
-      "name": "Go To All",
-      "content": "GN_GoToAll.md",
-      "priority": 1
-    }
   ]
 
 }

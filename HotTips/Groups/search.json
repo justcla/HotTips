@@ -1,0 +1,15 @@
+{
+  "groupId": "Search",
+  "groupName": "Search",
+  "groupPriority": 1,
+  "tips": [
+    {
+      "tipId": "SEA001",
+      "name": "Go To All",
+      "content": "SEA_GoToAll.md",
+      "priority": 1,
+      "level": 0
+    }
+  ]
+
+}
