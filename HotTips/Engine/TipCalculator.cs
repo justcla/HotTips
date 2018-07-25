@@ -9,10 +9,10 @@ namespace HotTips
         private static readonly char GLOBAL_TIP_ID_SEPARATOR = '-';
 
         // Managers
-        public ITipHistoryManager TipHistoryManager;
+        public VSTipHistoryManager TipHistoryManager;
         public ITipManager TipManager;
 
-        public TipCalculator(ITipHistoryManager tipHistoryManager, ITipManager tipManager = null)
+        public TipCalculator(VSTipHistoryManager tipHistoryManager, ITipManager tipManager = null)
         {
             TipHistoryManager = tipHistoryManager;
             TipManager = tipManager ?? new TipManager();

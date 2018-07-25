@@ -20,7 +20,7 @@ namespace HotTips
     public partial class TipOfTheDayWindow : Window
     {
         private TipCalculator _tipCalculator;
-        private ITipHistoryManager _tipHistoryManager;
+        private VSTipHistoryManager _tipHistoryManager;
         private ITipManager _tipManager;
         private string currentTip;
         private TipViewModel _tipViewModel;

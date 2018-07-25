@@ -46,5 +46,15 @@ namespace HotTips.Engine
         {
             return !c1.Equals(c2);
         }
+
+        public override bool Equals(object obj)
+        {
+            return obj is DisplayCadence other ? Equals(other) : false;
+        }
+
+        public override int GetHashCode()
+        {
+            return Name.GetHashCode();
+        }
     }
 }

@@ -8,7 +8,7 @@ using Task = System.Threading.Tasks.Task;
 
 namespace HotTips
 {
-    public class VSTipHistoryManager : ITipHistoryManager
+    public class VSTipHistoryManager
     {
         private static readonly string SVsSettingsPersistenceManagerGuid = "9B164E40-C3A2-4363-9BC5-EB4039DEF653";
         private static readonly string TIP_OF_THE_DAY_SETTINGS = "TipOfTheDay";
@@ -58,7 +58,7 @@ namespace HotTips
             }
         }
 
-        public static ITipHistoryManager GetInstance()
+        public static VSTipHistoryManager GetInstance()
         {
             return _instance ?? (_instance = new VSTipHistoryManager());
         }
