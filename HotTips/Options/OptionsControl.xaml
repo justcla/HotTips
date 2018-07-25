@@ -6,20 +6,22 @@
              xmlns:local="clr-namespace:HotTips"
              mc:Ignorable="d"
              d:DesignHeight="450" d:DesignWidth="800">
-    <StackPanel Orientation="Vertical">
-        <GroupBox Header="Show tips from these groups" Margin="10" VerticalAlignment="Top">
-            <StackPanel x:Name="TipGroupsListBox" HorizontalAlignment="Left" MinHeight="60" Margin="20" VerticalAlignment="Top" CanVerticallyScroll="True"/>
-        </GroupBox>
-        <GroupBox Header="Show tips for these levels" Margin="10" MinHeight="60" MaxHeight="400" VerticalAlignment="Top">
-            <StackPanel x:Name="TipLevelsListBox" HorizontalAlignment="Left" MinHeight="60" Margin="20" VerticalAlignment="Top" CanVerticallyScroll="True"/>
-        </GroupBox>
-        <StackPanel Orientation="Horizontal" Margin="10 10 10 6">
-            <TextBlock Margin="0 2 6 0">Show again: </TextBlock>
-            <ComboBox x:Name="ShowAgainComboBox" Width="160" ></ComboBox>
+    <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto">
+        <StackPanel Orientation="Vertical" CanVerticallyScroll="True"  >
+            <GroupBox Header="Show tips from these groups" Margin="10" VerticalAlignment="Top" BorderBrush="Gray">
+                <StackPanel x:Name="TipGroupsListBox" HorizontalAlignment="Left" MinHeight="60" Margin="10" VerticalAlignment="Top" CanVerticallyScroll="True"/>
+            </GroupBox>
+            <GroupBox Header="Show tips for these levels" Margin="10" MinHeight="60" MaxHeight="400" VerticalAlignment="Top" BorderBrush="Gray" >
+                <StackPanel x:Name="TipLevelsListBox" HorizontalAlignment="Left" MinHeight="60" Margin="10" VerticalAlignment="Top" CanVerticallyScroll="True"/>
+            </GroupBox>
+            <StackPanel Orientation="Horizontal" Margin="10 10 10 6">
+                <TextBlock Margin="0 2 6 0">Show again: </TextBlock>
+                <ComboBox x:Name="ShowAgainComboBox" Width="160" ></ComboBox>
+            </StackPanel>
+            <StackPanel x:Name="ShowAgainPanel" Orientation="Horizontal" Margin="10 6 10 10">
+                <TextBlock Margin="0 0 6 0">Next tip:</TextBlock>
+                <TextBlock x:Name="ShowAgainTextBlock" Margin="6 0 0 0"></TextBlock>
+            </StackPanel>
         </StackPanel>
-        <StackPanel x:Name="ShowAgainPanel" Orientation="Horizontal" Margin="10 6 10 10">
-            <TextBlock Margin="0 0 6 0">Next tip:</TextBlock>
-            <TextBlock x:Name="ShowAgainTextBlock" Margin="6 0 0 0"></TextBlock>
-        </StackPanel>
-    </StackPanel>
+    </ScrollViewer>
 </UserControl>

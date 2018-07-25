@@ -220,5 +220,15 @@ namespace HotTips
             string value = string.Join(",", _excludedTipLevels.Select(l => l.ToString()));
             SettingsManager.SetValueAsync(EXCLUDED_TIP_LEVELS, value, isMachineLocal: !RoamSettings);
         }
+
+        public ISet<string> GetAllExcludedTipGroups()
+        {
+            return _excludedTipGroups;
+        }
+
+        public ISet<TipLevel> GetAllExcludedTipLevels()
+        {
+            return _excludedTipLevels;
+        }
     }
 }
