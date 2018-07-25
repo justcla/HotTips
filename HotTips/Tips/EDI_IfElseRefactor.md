@@ -1,0 +1,1 @@
+﻿Convert an If-Else loop into a Switch case block and vice-versa by pressing **Ctrl+.** when your caret is on the if/switch keyword, and selecting "Convert to If-Else or Convert to Switch".
