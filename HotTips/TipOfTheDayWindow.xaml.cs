@@ -81,6 +81,8 @@ namespace HotTips
 
         private void MoreLikeThisButton_Click(object sender, RoutedEventArgs e)
         {
+            // Send telemetry first as the current tip will be lost afterwards.
+            LogTelemetryEvent(TelemetryConstants.MoreLikeThisTipClicked);
             GoToMoreLikeThis();
         }
 
@@ -219,7 +221,7 @@ namespace HotTips
             }
 
             // Output telemetry: Tip Shown (Consider making this conditional on "markAsSeen")
-            VSTelemetryHelper.PostEvent("Justcla/HotTips/TipShown", "TipId", currentTip);
+            LogTelemetryEvent(TelemetryConstants.TipShownEvent);
 
             return true;
         }
@@ -252,38 +254,59 @@ namespace HotTips
 
         private void GroupNameCheckBox_Unchecked(object sender, RoutedEventArgs e)
         {
-            _tipHistoryManager.MarkTipGroupAsExcluded(GroupNameLabel.Content.ToString());
+            string tipGroupId = GroupNameLabel.Content.ToString();
+            _tipHistoryManager.MarkTipGroupAsExcluded(tipGroupId);
+            LogTelemetryEvent(TelemetryConstants.TipGroupDisabled);
         }
 
         private void GroupNameCheckBox_Checked(object sender, RoutedEventArgs e)
         {
-            _tipHistoryManager?.MarkTipGroupAsIncluded(GroupNameLabel.Content.ToString());
+            string tipGroupId = GroupNameLabel.Content.ToString();
+            _tipHistoryManager?.MarkTipGroupAsIncluded(tipGroupId);
+            LogTelemetryEvent(TelemetryConstants.TipGroupEnabled);
         }
 
         private void LikeButton_Click(object sender, RoutedEventArgs e)
         {
+            string eventName = string.Empty;
             if (isLiked)
             {
                 PopulateLikeImage();
+                eventName = TelemetryConstants.TipLikeCanceledEvent;
             }
             else
             {
                 PopulateLikeFilledImage();
+                eventName = TelemetryConstants.TipLikedEvent;
             }
             PopulateDislikeImage();
+
+            LogTelemetryEvent(eventName);
         }
 
         private void DislikeButton_Click(object sender, RoutedEventArgs e)
         {
+            string eventName = string.Empty;
             if (isUnLiked)
             {
                 PopulateDislikeImage();
+                eventName = TelemetryConstants.TipDisLikeCanceledEvent;
             }
             else
             {
                 PopulateDislikeFilledImage();
+                eventName = TelemetryConstants.TipDisLikedEvent;
             }
             PopulateLikeImage();
+
+            LogTelemetryEvent(eventName);
+
+        }
+
+        private void LogTelemetryEvent(string eventName)
+        {
+            string tipGroupId = GroupNameLabel.Content.ToString();
+            VSTelemetryHelper.PostEvent(eventName, "TipGroupId", tipGroupId, "TipId", currentTip);
         }
 
         private void PopulateLikeImage()
