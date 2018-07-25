@@ -10,7 +10,7 @@ namespace HotTips
         private static readonly string TIP_OF_THE_DAY_TITLE = "Tip of the Day";
 
         private static ITipManager _tipManager;
-        private static ITipHistoryManager _tipHistoryManager;
+        private static VSTipHistoryManager _tipHistoryManager;
         private static TipCalculator _tipCalculator;
 
         public static void ShowWindow()

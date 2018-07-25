@@ -13,7 +13,7 @@ namespace HotTips
         public void TestGetAllTips()
         {
             // Setup
-            Mock<ITipHistoryManager> mockTipHistoryManager = new Mock<ITipHistoryManager>();
+            Mock<VSTipHistoryManager> mockTipHistoryManager = new Mock<VSTipHistoryManager>();
             List<string> emptyList = new List<string>();
             mockTipHistoryManager.Setup(m => m.GetTipHistory()).Returns(emptyList);
 
@@ -32,7 +32,7 @@ namespace HotTips
         public void TestGetNextTip()
         {
             // Setup
-            Mock<ITipHistoryManager> mockTipHistoryManager = new Mock<ITipHistoryManager>();
+            Mock<VSTipHistoryManager> mockTipHistoryManager = new Mock<VSTipHistoryManager>();
             List<string> tipsSeen = new List<string> {"General-GN001", "Editor-ED001"};
             mockTipHistoryManager.Setup(m => m.GetTipHistory()).Returns(tipsSeen);
 
@@ -50,7 +50,7 @@ namespace HotTips
         public void TestGetNextTip2()
         {
             // Setup
-            Mock<ITipHistoryManager> mockTipHistoryManager = new Mock<ITipHistoryManager>();
+            Mock<VSTipHistoryManager> mockTipHistoryManager = new Mock<VSTipHistoryManager>();
             List<string> tipsSeen = new List<string> {"General-GN001", "Editor-ED001", "Editor-ED002"};
             mockTipHistoryManager.Setup(m => m.GetTipHistory()).Returns(tipsSeen);
 
@@ -73,7 +73,7 @@ namespace HotTips
             mockTipManager.Setup(m => m.GetPrioritizedTipGroups()).Returns(GenerateTestTipGroups());
 
             // Mock the TipHistoryManager
-            Mock<ITipHistoryManager> mockTipHistoryManager = new Mock<ITipHistoryManager>();
+            Mock<VSTipHistoryManager> mockTipHistoryManager = new Mock<VSTipHistoryManager>();
             mockTipHistoryManager.Setup(m => m.GetTipHistory()).Returns(new List<string> { "General-GN001", "Editor-ED001", "Editor-ED002" });
 
             TipCalculator tipCalculator = new TipCalculator(mockTipHistoryManager.Object, mockTipManager.Object);
