@@ -1,0 +1,1 @@
+﻿Press **Ctrl+L** to cut the line where the cursor is. That way it is on the clipboard where you can get it again.

@@ -1,0 +1,1 @@
+﻿Select a code snippet and drag the selected snippet on to the general Tab in the Toolbox to save the code snippet there. You can then rename and reuse it anywhere by dragging it from the Toolbox or pressing **Ctrl+K, Ctrl+X**.

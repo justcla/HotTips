@@ -1,0 +1,1 @@
+﻿Press **Shift+Alt+C** to add new class the current place (folder/project).

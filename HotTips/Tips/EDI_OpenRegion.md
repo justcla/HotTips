@@ -1,0 +1,1 @@
+﻿Press **Ctrl+M, O** will collapse your code to definitions. You can also press **Ctrl+M, H** to hide the current selection, and **Ctrl+M, U** to unhide the hidden block.

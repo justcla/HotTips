@@ -1,0 +1,1 @@
+﻿Press **Ctrl+Del** to delete word to right of cursor.
