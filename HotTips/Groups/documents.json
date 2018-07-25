@@ -1,0 +1,15 @@
+{
+  "groupId": "Documents",
+  "groupName": "Documents",
+  "groupPriority": 1,
+  "tips": [
+    {
+      "tipId": "DOC001",
+      "name": "Expand Documents",
+      "content": "DOC_ExpandDocs.md",
+      "priority": 1,
+      "level": 1
+    }
+  ]
+
+}

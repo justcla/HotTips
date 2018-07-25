@@ -1,0 +1,15 @@
+{
+  "groupId": "Debugging",
+  "groupName": "Debugging",
+  "groupPriority": 1,
+  "tips": [
+    {
+      "tipId": "DEB001",
+      "name": "FormatSpecifier",
+      "content": "DEB_FormatSpecifier.md",
+      "priority": 1,
+      "level": 1
+    }
+  ]
+
+}
