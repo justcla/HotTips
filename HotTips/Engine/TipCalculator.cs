@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace HotTips
@@ -72,6 +73,7 @@ namespace HotTips
                     {
                         int groupPri = priorityBand - i;
                         if (groupPri < 1 || groupPri > 3) break;
+
                         int tipPri = priorityBand - groupPri;
                         if (tipPri < 1 || tipPri > 3) break;
 
@@ -106,19 +108,33 @@ namespace HotTips
                                 // No tips left in this group at this scanRow. Move to the next group.
                                 continue;
                             }
-                            // Assume tipInfo will not be null at this point.
-                            TipInfo tipInfo = tipsAtPriBand[scanRow];
 
-                            // TipInfo is not null! We found a tip at this scanRow in this tipPri in this groupPri
-                            // Note: Tip might have already been seen.
-                            tipFound = true;
-
-                            // If we've seen the tip, move to the next group.
-                            if (TipHistoryManager.HasTipBeenSeen(tipInfo.globalTipId))
+                            TipInfo tipInfo = null;
+                            int offset = 0;
+                            do
                             {
-                                // Already seen this tip. Skip to the next group.
+                                // Assume tipInfo will not be null at this point.
+                                tipInfo = tipsAtPriBand[scanRow + offset];
+                                offset++;
+
+                                // Find the next unseen tip which doesn't belong to an excluded level.
+                                if (!IsExcludedLevel(tipInfo.Level) && !TipHistoryManager.HasTipBeenSeen(tipInfo.globalTipId))
+                                {
+                                    // Already seen this tip. Skip to the next group.
+                                    break;
+                                }
+
+                            } while (scanRow + offset < tipsAtPriBand.Count);
+
+                            if (scanRow + offset >= tipsAtPriBand.Count)
+                            {
+                                // Current group has no unseen tips, move on to the next group.
                                 continue;
                             }
+
+                            // TipInfo is not null! We found a tip at this scanRow in this tipPri in this groupPri
+                            tipFound = true;
+
 
                             // If tip is from same group as last tip, hold then show if priGroup exhausted at that scanRow
                             // If tip is NOT from the same group as the last tip shown, we have a good tip to return.
@@ -148,6 +164,11 @@ namespace HotTips
 
             //  if none found at the priGroup level, go to next priGroup level and search again.
             return null;
+        }
+
+        private bool IsExcludedLevel(TipLevel level)
+        {
+            return TipHistoryManager.IsTipLevelExcluded(level);
         }
 
         private string GetGlobalTipId(TipInfo tipInfo)

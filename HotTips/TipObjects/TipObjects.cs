@@ -19,6 +19,7 @@ namespace HotTips
         public string name { get; set; }
         public string content { get; set; }
         public int priority { get; set; }
+        public TipLevel level { get; set; }
     }
 
     //---------- Ojbects used internally by Tip Manager ----------------------------------------
@@ -33,6 +34,7 @@ namespace HotTips
         public string groupId { get; set; }
         public string groupName { get; set; }
         public int groupPriority { get; set; }
+        public TipLevel Level { get; set; }
 
         public static TipInfo Create(TipGroup tipGroup, Tip tip, string tipContentUri)
         {
@@ -45,7 +47,8 @@ namespace HotTips
                 groupId = tipGroup.groupId,
                 groupName = tipGroup.groupName,
                 groupPriority = tipGroup.groupPriority,
-                globalTipId = GetGlobalTipId(tipGroup.groupId, tip.tipId)
+                globalTipId = GetGlobalTipId(tipGroup.groupId, tip.tipId),
+                Level = tip.level
             };
             return tipInfo;
         }
@@ -123,6 +126,13 @@ namespace HotTips
         DISLIKE=0,
         NORMAL=1,
         LIKE=2
+    }
+
+    public enum TipLevel
+    {
+        Beginner = 0,
+        General = 1,
+        Advanced = 2
     }
 
 }

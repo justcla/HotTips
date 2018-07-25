@@ -1,4 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using HotTips.Engine;
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace HotTips
 {
@@ -11,7 +14,17 @@ namespace HotTips
         bool IsTipGroupExcluded(string tipGroupId);
         void MarkTipGroupAsExcluded(string tipGroupId);
         void MarkTipGroupAsIncluded(string tipGroupId);
-
-        void SaveTipStatus(TipHistoryInfo globalTipId);
+        Task SetCadenceAsync(DisplayCadence cadence);
+        DisplayCadence GetCadence();
+        Task SetLastDisplayTimeNowAsync();
+        Task SetLastDisplayTimeAsync(DateTime dateTime);
+        DateTime GetLastDisplayTime();
+        bool ShouldShowTip(DisplayCadence cadence);
+        void HandleVsInitialized();
+        void HandleSolutionOpened();
+        bool IsTipLevelExcluded(TipLevel tipLevel);
+        void MarkTipLevelAsExcluded(TipLevel tipLevel);
+        void MarkTipLevelAsIncluded(TipLevel tipLevel);
+        void UpdateTipVoteStatus(string globalTipId, TipLikeEnum currentTipVoteStatus);
     }
 }
