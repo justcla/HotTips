@@ -24,14 +24,7 @@ namespace HotTips
 
         public TipInfo GetTipInfo(string globalTipId)
         {
-            if (!string.IsNullOrEmpty(globalTipId) && _allTips.ContainsKey(globalTipId))
-            {
-                return _allTips?[globalTipId];
-            }
-            else
-            {
-                return null;
-            }
+            return _allTips?[globalTipId];
         }
 
         public TipInfo GetNextTipInGroup(string globalTipId)

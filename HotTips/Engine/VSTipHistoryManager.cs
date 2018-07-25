@@ -72,11 +72,11 @@ namespace HotTips
             return tipHistoryRaw;
         }
 
-        public void MarkTipAsSeen(TipHistoryInfo globalTipId)
+        public void MarkTipAsSeen(string globalTipId)
         {
             // Back out if tip already seen
             List<TipHistoryInfo> tipsSeen = GetTipHistory();
-            if (tipsSeen.Exists(a => a.globalTipId.Equals(globalTipId.globalTipId)))
+            if (tipsSeen.Exists(a => a.globalTipId.Equals(globalTipId)))
             {
                 // Item is already in the history. No need to add it again.
                 return;
@@ -84,7 +84,7 @@ namespace HotTips
             else
             {
                 // Add tip ID to the tip history and persist to the VS settings store
-                tipsSeen.Add(globalTipId);
+                tipsSeen.Add(new TipHistoryInfo(globalTipId));
             }
 
             // Update the VS settings store with the latest tip history

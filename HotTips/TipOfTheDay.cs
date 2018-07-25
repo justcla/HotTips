@@ -53,7 +53,7 @@ namespace HotTips
                 tipOfTheDayWindow.Show();
 
                 // Mark tip as seen and default like status is normal
-                _tipHistoryManager.MarkTipAsSeen(new TipHistoryInfo(nextTip.globalTipId+":1"));
+                _tipHistoryManager.MarkTipAsSeen(nextTip.globalTipId);
             }
             catch (Exception e)
             {

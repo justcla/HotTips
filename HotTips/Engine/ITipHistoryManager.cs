@@ -6,7 +6,7 @@ namespace HotTips
     {
         List<TipHistoryInfo> GetTipHistory();
         bool HasTipBeenSeen(string globalTipId);
-        void MarkTipAsSeen(TipHistoryInfo globalTipId);
+        void MarkTipAsSeen(string globalTipId);
         void ClearTipHistory();
         bool IsTipGroupExcluded(string tipGroupId);
         void MarkTipGroupAsExcluded(string tipGroupId);

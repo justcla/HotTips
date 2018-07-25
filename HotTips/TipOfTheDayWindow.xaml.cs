@@ -22,9 +22,7 @@ namespace HotTips
         private ITipManager _tipManager;
         private TipHistoryInfo currentTip;
         private TipViewModel _tipViewModel;
-
         private bool isLiked = false;
-
         private bool isUnLiked = false;
 
         public TipOfTheDayWindow(TipCalculator tipCalculator)
@@ -38,21 +36,7 @@ namespace HotTips
             _tipHistoryManager = tipCalculator.TipHistoryManager;
             _tipManager = tipCalculator.TipManager;
 
-            PopulateDefaultImages();
-        }
-
-        private void PopulateDefaultImages()
-        {
-            var brush = new ImageBrush();
-            brush.ImageSource = new BitmapImage(new Uri("Tips/images/Like.png", UriKind.Relative));
-            LikeButton.Background = brush;
-
-            var brush1 = new ImageBrush();
-            brush1.ImageSource = new BitmapImage(new Uri("Tips/images/Dislike.png", UriKind.Relative));
-            DislikeButton.Background = brush1;
-
-            isLiked = false;
-            isUnLiked = false;
+            ShowNoVote();
         }
 
         private void CloseButton_Click(object sender, RoutedEventArgs e)
@@ -62,13 +46,13 @@ namespace HotTips
 
         private void NextTipButton_Click(object sender, RoutedEventArgs e)
         {
-            PopulateDefaultImages();
+            ShowNoVote();
             GoToNextTip();
         }
 
         private void PrevTipButton_Click(object sender, RoutedEventArgs e)
         {
-            PopulateDefaultImages();
+            ShowNoVote();
             GoToPrevTip();            
         }
 
@@ -214,7 +198,7 @@ namespace HotTips
             // Mark tip as shown
             if (markAsSeen)
             {
-                _tipHistoryManager.MarkTipAsSeen(currentTip);
+                _tipHistoryManager.MarkTipAsSeen(currentTip.globalTipId);
             }
 
             // Output telemetry: Tip Shown (Consider making this conditional on "markAsSeen")
@@ -238,12 +222,12 @@ namespace HotTips
             {
                 if (historyData.tipLikeStatus.Equals(TipLikeEnum.LIKE))
                 {
-                    PopulateLikeFilledImage();
+                    ShowLikeVote();
                 }
 
                 if (historyData.tipLikeStatus.Equals(TipLikeEnum.DISLIKE))
                 {
-                    PopulateDislikeFilledImage();
+                    ShowDislikeVote();
                 }
             }
         }
@@ -296,13 +280,13 @@ namespace HotTips
             currentTip.tipLikeStatus = TipLikeEnum.NORMAL;
             if (isLiked)
             {
-                PopulateLikeImage();
+                ShowNoVote();
             }
             else
             {
-                PopulateLikeFilledImage();
+                ShowLikeVote();
             }
-            PopulateDislikeImage();
+
             _tipHistoryManager.SaveTipStatus(currentTip);
         }
 
@@ -311,26 +295,29 @@ namespace HotTips
             currentTip.tipLikeStatus = TipLikeEnum.NORMAL;
             if (isUnLiked)
             {
-                PopulateDislikeImage();
+                ShowNoVote();
             }
             else
             {
-                PopulateDislikeFilledImage();
+                ShowDislikeVote();
             }
-            PopulateLikeImage();
+
             _tipHistoryManager.SaveTipStatus(currentTip);
         }
 
-        private void PopulateLikeImage()
+        private void ShowNoVote()
         {
             var brush = new ImageBrush();
             brush.ImageSource = new BitmapImage(new Uri("Tips/images/Like.png", UriKind.Relative));
             LikeButton.Background = brush;
-            isUnLiked = true;
+            var brush1 = new ImageBrush();
+            brush1.ImageSource = new BitmapImage(new Uri("Tips/images/Dislike.png", UriKind.Relative));
+            DislikeButton.Background = brush1;
+            isUnLiked = false;
             isLiked = false;
         }
 
-        private void PopulateDislikeFilledImage()
+        private void ShowDislikeVote()
         {
             currentTip.tipLikeStatus = TipLikeEnum.DISLIKE;
             isLiked = false;
@@ -340,16 +327,7 @@ namespace HotTips
             isUnLiked = true;
         }
 
-        private void PopulateDislikeImage()
-        {
-            var brush = new ImageBrush();
-            brush.ImageSource = new BitmapImage(new Uri("Tips/images/Dislike.png", UriKind.Relative));
-            DislikeButton.Background = brush;
-            isLiked = true;
-            isUnLiked = false;
-        }
-
-        private void PopulateLikeFilledImage()
+        private void ShowLikeVote()
         {
             currentTip.tipLikeStatus = TipLikeEnum.LIKE;
             var brush = new ImageBrush();

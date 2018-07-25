@@ -90,6 +90,11 @@ namespace HotTips
                 this.globalTipId = tipHistoryItem.Split(':')[0];
                 this.tipLikeStatus = (TipLikeEnum)Convert.ToInt32(tipHistoryItem.Split(':')[1]);
             }
+            else
+            {
+                this.globalTipId = tipHistoryItem;
+                this.tipLikeStatus = TipLikeEnum.NORMAL;
+            }
         }
     }
 
