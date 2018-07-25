@@ -54,6 +54,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Engine\DisplayCadence.cs" />
     <Compile Include="Engine\CommandHandler.cs" />
     <Compile Include="Engine\EmbeddedTipsProvider.cs" />
     <Compile Include="Engine\ITipGroupProvider.cs" />
@@ -61,12 +62,10 @@
     <Compile Include="Engine\ITipManager.cs" />
     <Compile Include="Engine\TipManager.cs" />
     <Compile Include="Engine\VSTipHistoryManager.cs" />
-    <Compile Include="Options\CustomPage.cs">
+    <Compile Include="Options\OptionsPage.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="Options\GridPage.cs">
-      <SubType>Component</SubType>
-    </Compile>
+    <Compile Include="SolutionEventHandler.cs" />
     <Compile Include="TipOfTheDay.cs" />
     <Compile Include="TipViewModel.cs" />
     <Compile Include="Markdown.xaml\Markdown.cs" />
@@ -451,7 +450,7 @@
     <Error Condition="!Exists('..\packages\Microsoft.VisualStudio.Threading.Analyzers.15.8.122\build\Microsoft.VisualStudio.Threading.Analyzers.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.VisualStudio.Threading.Analyzers.15.8.122\build\Microsoft.VisualStudio.Threading.Analyzers.targets'))" />
     <Error Condition="!Exists('..\packages\Microsoft.VisualStudio.SDK.Analyzers.15.8.33\build\Microsoft.VisualStudio.SDK.Analyzers.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.VisualStudio.SDK.Analyzers.15.8.33\build\Microsoft.VisualStudio.SDK.Analyzers.targets'))" />
   </Target>
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">
   </Target>

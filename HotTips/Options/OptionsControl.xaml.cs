@@ -1,4 +1,5 @@
-﻿using System;
+﻿using HotTips.Engine;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -35,7 +36,8 @@ namespace HotTips.Options
             }
         }
 
-        internal CustomPage OptionsPage { get; set; }
+        internal OptionsPage OptionsPage { get; set; }
+        private DateTime LastDisplayTime { get; set; }
 
         public void Initialize()
         {
@@ -58,6 +60,37 @@ namespace HotTips.Options
 
                 TipGroupsListBox.Children.Add(checkbox);
             }
+
+            ShowAgainComboBox.ItemsSource = DisplayCadence.KnownDisplayCadences;
+            ShowAgainComboBox.SelectedValue = VSTipHistoryManager.GetInstance().GetCadence();
+            LastDisplayTime = VSTipHistoryManager.GetInstance().GetLastDisplayTime();
+            ShowAgainComboBox.SelectionChanged += ShowAgainComboBox_SelectionChanged;
+            UpdateShowAgainUI();
+        }
+
+        private async void ShowAgainComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            try
+            {
+                UpdateShowAgainUI();
+                await VSTipHistoryManager.GetInstance().SetCadenceAsync(DisplayCadence.FromName(ShowAgainComboBox.SelectedValue.ToString()));
+            }
+            catch
+            { }
+        }
+
+        private void UpdateShowAgainUI()
+        {
+            var newCadence = DisplayCadence.FromName(ShowAgainComboBox.SelectedValue.ToString());
+            if (newCadence.ShowEstimate)
+            {
+                ShowAgainTextBlock.Text = LastDisplayTime.Add(newCadence.Delay).ToLocalTime().ToString("d");
+                ShowAgainPanel.Visibility = Visibility.Visible;
+            }
+            else
+            {
+                ShowAgainPanel.Visibility = Visibility.Collapsed;
+            }
         }
 
         private Dictionary<string, bool> GetTipGroups()
@@ -67,7 +100,7 @@ namespace HotTips.Options
             var tipGroupStatus = new Dictionary<string, bool>(StringComparer.OrdinalIgnoreCase);
             foreach (var tipGroup in allTipGroups.Where(t => t != null).SelectMany(t => t))
             {
-                tipGroupStatus[tipGroup.groupId] = !VSTipHistoryManager.Instance().IsTipGroupExcluded(tipGroup.groupId);
+                tipGroupStatus[tipGroup.groupId] = !VSTipHistoryManager.GetInstance().IsTipGroupExcluded(tipGroup.groupId);
             }
 
             return tipGroupStatus;
@@ -77,7 +110,7 @@ namespace HotTips.Options
         {
             if (e.Source is CheckBox checkbox)
             {
-                VSTipHistoryManager.Instance().MarkTipGroupAsExcluded(checkbox.Content.ToString().Trim());
+                VSTipHistoryManager.GetInstance().MarkTipGroupAsExcluded(checkbox.Content.ToString().Trim());
             }
         }
 
@@ -85,7 +118,7 @@ namespace HotTips.Options
         {
             if (e.Source is CheckBox checkbox)
             {
-                VSTipHistoryManager.Instance().MarkTipGroupAsIncluded(checkbox.Content.ToString().Trim());
+                VSTipHistoryManager.GetInstance().MarkTipGroupAsIncluded(checkbox.Content.ToString().Trim());
             }
         }
     }

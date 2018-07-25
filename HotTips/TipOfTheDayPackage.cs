@@ -1,5 +1,6 @@
 ﻿using Microsoft.VisualStudio;
 using Microsoft.VisualStudio.Shell;
+using Microsoft.VisualStudio.Shell.Interop;
 using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Runtime.InteropServices;
@@ -32,8 +33,7 @@ namespace HotTips
     [ProvideAutoLoad(VSConstants.UICONTEXT.SolutionExists_string)]
     [ProvideAutoLoad(VSConstants.UICONTEXT.SolutionHasMultipleProjects_string)]
     [ProvideAutoLoad(VSConstants.UICONTEXT.SolutionHasSingleProject_string)]
-    [ProvideOptionPage(typeof(Options.GridPage), "Hot Tips", "Sample Grid Page", 0, 0, true)]
-    [ProvideOptionPage(typeof(Options.CustomPage), "Hot Tips", "Sample Custom Page", 0, 0, true)]
+    [ProvideOptionPage(typeof(Options.OptionsPage), "Hot Tips", "Hot Tips Options", 0, 0, true)]
     [Guid(TipOfTheDayPackage.PackageGuidString)]
     [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1650:ElementDocumentationMustBeSpelledCorrectly", Justification = "pkgdef, VS and vsixmanifest are valid VS terms")]
     public sealed class TipOfTheDayPackage : AsyncPackage
@@ -42,6 +42,8 @@ namespace HotTips
         /// TipOfTheDayPackage GUID string.
         /// </summary>
         public const string PackageGuidString = "7c97805a-7191-482c-9396-5b8ef31bc05d";
+        private uint _solutionEventCookie;
+        private IVsSolution _vsSolution;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="TipOfTheDayCommand"/> class.
@@ -65,22 +67,26 @@ namespace HotTips
         /// <returns>A task representing the async work of package initialization, or an already completed task if there is none. Do not return null from this method.</returns>
         protected override async Task InitializeAsync(CancellationToken cancellationToken, IProgress<ServiceProgressData> progress)
         {
+            _vsSolution = await GetServiceAsync(typeof(SVsSolution)) as IVsSolution;
+
             // When initialized asynchronously, the current thread may be a background thread at this point.
             // Do any initialization that requires the UI thread after switching to the UI thread.
             await this.JoinableTaskFactory.SwitchToMainThreadAsync(cancellationToken);
             await TipOfTheDayCommand.InitializeAsync(this);
+            var initializedHistoryManager = VSTipHistoryManager.GetInstance();
 
-            // Show TotD at startup
-            if (ShouldShowTOTD())
-            {
-                TipOfTheDay.ShowWindow();
-            }
+            // Hook up to solution events, so that the tip appears when the solution loads
+            _vsSolution.AdviseSolutionEvents(new SolutionEventHandler(), out _solutionEventCookie);
         }
 
-        private bool ShouldShowTOTD()
+        protected override void Dispose(bool disposing)
         {
-            // TODO: Check if we should be showing TotD
-            return true;
+            if (disposing)
+            {
+                ThreadHelper.ThrowIfNotOnUIThread();
+                _vsSolution.UnadviseSolutionEvents(_solutionEventCookie);
+            }
+            base.Dispose(disposing);
         }
 
         #endregion

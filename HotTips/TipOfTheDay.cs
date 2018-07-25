@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace HotTips
@@ -24,7 +25,7 @@ namespace HotTips
                 }
 
                 _tipManager = new TipManager();
-                _tipHistoryManager = VSTipHistoryManager.Instance();
+                _tipHistoryManager = VSTipHistoryManager.GetInstance();
                 _tipCalculator = new TipCalculator(_tipHistoryManager, _tipManager);
 
                 TipInfo nextTip = GetNewTip();
