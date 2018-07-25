@@ -3,7 +3,20 @@
   "groupName": "General",
   "groupPriority": 1,
   "tips": [
-
+    {
+      "tipId": "GEN001",
+      "name": "Add Tips",
+      "content": "GEN_AddTips.md",
+      "priority": 1,
+      "level": 1
+    },
+    {
+      "tipId": "GEN002",
+      "name": "All Shortcuts",
+      "content": "GEN_AllShortcuts.md",
+      "priority": 1,
+      "level": 1
+    }
   ]
 
 }

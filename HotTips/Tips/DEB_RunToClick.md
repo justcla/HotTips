@@ -1,0 +1,1 @@
+﻿Place the mouse on a line during a debug session and you'll see a little green arrow. Press the arrow and the program will run until that line is hit, then it will break for debugging.

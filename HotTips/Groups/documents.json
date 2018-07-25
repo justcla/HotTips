@@ -9,6 +9,20 @@
       "content": "DOC_ExpandDocs.md",
       "priority": 1,
       "level": 1
+    },
+    {
+      "tipId": "DOC002",
+      "name": "Maintain Pinned Tabs",
+      "content": "DOC_MaintainPinTab.md",
+      "priority": 1,
+      "level": 1
+    },
+    {
+      "tipId": "DOC003",
+      "name": "Separate Pinned Tabs",
+      "content": "DOC_SeparatePinTab.md",
+      "priority": 1,
+      "level": 1
     }
   ]
 
