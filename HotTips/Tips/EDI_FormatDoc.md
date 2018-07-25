@@ -1,1 +1,3 @@
-﻿Press **Ctrl+K+D** to format the current document to code formatting settings. No need to use space/delete to format curly braces and indentation.
+﻿Press **Ctrl+K, D** to format the current document to code formatting settings.
+
+And press **Ctrl+K, F** to format the current selection.

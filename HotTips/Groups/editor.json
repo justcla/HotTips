@@ -184,6 +184,13 @@
       "content": "EDI_UnreachableCode.md",
       "priority": 2,
       "level": 1
+    },
+    {
+      "tipId": "EDI030",
+      "name": "Expand Regions",
+      "content": "EDI_ExpandRegion.md",
+      "priority": 2,
+      "level": 1
     }
   ]
 

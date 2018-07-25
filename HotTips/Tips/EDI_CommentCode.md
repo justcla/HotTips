@@ -1,1 +1,1 @@
-﻿Press **Ctrl+K+C** and **Ctrl+K+U** to comment and un-comment code.
+﻿Press **Ctrl+K, C** and **Ctrl+K, U** to comment and un-comment code.

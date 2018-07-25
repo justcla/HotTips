@@ -1,1 +1,1 @@
-﻿Press **Ctrl+M+O/P** to open and close methods and regions. You can also try **Ctrl+M+H** for current selection.
+﻿Press **Ctrl+M, O** will collapse your code to definitions. You can also press **Ctrl+M, H** to hide the current selection, and **Ctrl+M, U** to unhide the hidden block.

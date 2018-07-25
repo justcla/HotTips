@@ -1,1 +1,1 @@
-﻿Press Ctrl + Backspace to delete the word to left of the cursor.
+﻿Press **Shift+Alt+Enter** to put your current open file in full screen mode. This comes handy when there is lot of code to look at.

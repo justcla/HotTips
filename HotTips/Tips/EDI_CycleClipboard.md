@@ -1,1 +1,1 @@
-﻿Press **Ctrl+Shift+P** to cycle through the clipboard until you have the right one pasted.
+﻿Press **Ctrl+Shift+V** to cycle through the clipboard until you have the right one pasted.
