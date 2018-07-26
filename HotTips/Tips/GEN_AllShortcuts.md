@@ -1,0 +1,1 @@
+﻿Checkout the list of all Visual Studio shortcuts at https://docs.microsoft.com/en-us/visualstudio/ide/default-keyboard-shortcuts-in-visual-studio.

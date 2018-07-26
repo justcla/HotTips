@@ -1,0 +1,1 @@
+﻿Have a tip for other Visual Studio users? Contribute to Tip of the Day at https://github.com/justcla/HotTips.

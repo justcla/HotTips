@@ -1,0 +1,1 @@
+﻿Navigate To Tools -> Options -> Projects and Solutions -> General -> ” Track Active Item in Solution Explorer” so that the Solution Explorer highlights the active file as you traverse through them in the document well.

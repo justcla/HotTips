@@ -5,8 +5,50 @@
   "tips": [
     {
       "tipId": "DEB001",
-      "name": "FormatSpecifier",
+      "name": "Format Specifier",
       "content": "DEB_FormatSpecifier.md",
+      "priority": 1,
+      "level": 2
+    },
+    {
+      "tipId": "DEB002",
+      "name": "Debugger Display",
+      "content": "DEB_DebuggerDisplay.md",
+      "priority": 1,
+      "level": 2
+    },
+    {
+      "tipId": "DEB003",
+      "name": "Clean Solution",
+      "content": "DEB_CleanSln.md",
+      "priority": 1,
+      "level": 0
+    },
+    {
+      "tipId": "DEB004",
+      "name": "Intellitrace Stepback",
+      "content": "DEB_IntellitraceStepback.md",
+      "priority": 1,
+      "level": 2
+    },
+    {
+      "tipId": "DEB005",
+      "name": "Run To Caret",
+      "content": "DEB_RunToCaret.md",
+      "priority": 1,
+      "level": 1
+    },
+    {
+      "tipId": "DEB006",
+      "name": "Run To Click",
+      "content": "DEB_RunToClick.md",
+      "priority": 1,
+      "level": 1
+    },
+    {
+      "tipId": "DEB007",
+      "name": "Snapshot Debugger",
+      "content": "DEB_SnapshotDebug.md",
       "priority": 1,
       "level": 1
     }

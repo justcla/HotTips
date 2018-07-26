@@ -1,0 +1,1 @@
+﻿Fixed a bug, but still getting the same annoying error message in your solution? Right click in Solution Explorer and run the Clean feature.

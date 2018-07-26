@@ -24,6 +24,7 @@ namespace HotTips
             tipGroups.Add(GetGroupPath("navigation"));
             tipGroups.Add(GetGroupPath("search"));
             tipGroups.Add(GetGroupPath("documents"));
+            tipGroups.Add(GetGroupPath("solutionexplorer"));
             return tipGroups;
         }
 

@@ -1,0 +1,36 @@
+﻿{
+  "groupId": "Solution Explorer",
+  "groupName": "Solution Explorer",
+  "groupPriority": 1,
+  "tips": [
+    {
+      "tipId": "SLN001",
+      "name": "New Solution Explorer",
+      "content": "SLN_NewSlnExp.md",
+      "priority": 1,
+      "level": 1
+    },
+    {
+      "tipId": "SLN002",
+      "name": "Scope To This",
+      "content": "SLN_ScopeTo.md",
+      "priority": 1,
+      "level": 1
+    },
+    {
+      "tipId": "SLN003",
+      "name": "Search Solution Explorer",
+      "content": "SLN_SearchSlnExp.md",
+      "priority": 1,
+      "level": 0
+    },
+    {
+      "tipId": "SLN004",
+      "name": "Track Active File",
+      "content": "SLN_TrackFile.md",
+      "priority": 1,
+      "level": 1
+    }
+  ]
+
+}
