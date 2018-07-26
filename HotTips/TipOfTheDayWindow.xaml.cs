@@ -21,6 +21,8 @@ namespace HotTips
     /// </summary>
     public partial class TipOfTheDayWindow : Window
     {
+        private static string _installDir = Path.GetDirectoryName(typeof(TipOfTheDayWindow).Assembly.CodeBase);
+
         private TipCalculator _tipCalculator;
         private VSTipHistoryManager _tipHistoryManager;
         private ITipManager _tipManager;
@@ -47,20 +49,22 @@ namespace HotTips
 
         private void PopulateDefaultImages()
         {
-
+            var imagePath = Path.Combine(_installDir, "Tips/images/Like.png");
             var brush = new ImageBrush();
-            brush.ImageSource = new BitmapImage(new Uri("Tips/images/Like.png", UriKind.Relative));
+            brush.ImageSource = new BitmapImage(new Uri(imagePath, UriKind.Absolute));
             LikeButton.Background = brush;
 
+            imagePath = Path.Combine(_installDir, "Tips/images/Dislike.png");
             var brush1 = new ImageBrush();
-            brush1.ImageSource = new BitmapImage(new Uri("Tips/images/Dislike.png", UriKind.Relative));
+            brush1.ImageSource = new BitmapImage(new Uri(imagePath, UriKind.Absolute));
             DislikeButton.Background = brush1;
 
             isLiked = false;
             isUnLiked = false;
 
+            imagePath = Path.Combine(_installDir, "Resources/setting-gear.png");
             var settingsButtonBrush = new ImageBrush();
-            settingsButtonBrush.ImageSource = new BitmapImage(new Uri("Resources/setting-gear.png", UriKind.Relative));
+            settingsButtonBrush.ImageSource = new BitmapImage(new Uri(imagePath, UriKind.Absolute));
             SettingsButton.Background = settingsButtonBrush;
         }
 
@@ -316,8 +320,9 @@ namespace HotTips
 
         private void PopulateLikeImage()
         {
+            var imagePath = Path.Combine(_installDir, "Tips/images/Like.png");
             var brush = new ImageBrush();
-            brush.ImageSource = new BitmapImage(new Uri("Tips/images/Like.png", UriKind.Relative));
+            brush.ImageSource = new BitmapImage(new Uri(imagePath, UriKind.Absolute));
             LikeButton.Background = brush;
             isUnLiked = true;
             isLiked = false;
@@ -325,17 +330,19 @@ namespace HotTips
 
         private void PopulateDislikeFilledImage()
         {
+            var imagePath = Path.Combine(_installDir, "Tips/images/DislikeFilled.png");
             isLiked = false;
             var brush = new ImageBrush();
-            brush.ImageSource = new BitmapImage(new Uri("Tips/images/DislikeFilled.png", UriKind.Relative));
+            brush.ImageSource = new BitmapImage(new Uri(imagePath, UriKind.Absolute));
             DislikeButton.Background = brush;
             isUnLiked = true;
         }
 
         private void PopulateDislikeImage()
         {
+            var imagePath = Path.Combine(_installDir, "Tips/images/Dislike.png");
             var brush = new ImageBrush();
-            brush.ImageSource = new BitmapImage(new Uri("Tips/images/Dislike.png", UriKind.Relative));
+            brush.ImageSource = new BitmapImage(new Uri(imagePath, UriKind.Absolute));
             DislikeButton.Background = brush;
             isLiked = true;
             isUnLiked = false;
@@ -343,8 +350,9 @@ namespace HotTips
 
         private void PopulateLikeFilledImage()
         {
+            var imagePath = Path.Combine(_installDir, "Tips/images/LikeFilled.png");
             var brush = new ImageBrush();
-            brush.ImageSource = new BitmapImage(new Uri("Tips/images/LikeFilled.png", UriKind.Relative));
+            brush.ImageSource = new BitmapImage(new Uri(imagePath, UriKind.Absolute));
             LikeButton.Background = brush;
             isLiked = true;
             isUnLiked = false;
