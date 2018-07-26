@@ -5,14 +5,14 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mdxaml="clr-namespace:HotTips.Markdown.Xaml"
         mc:Ignorable="d"
-        ResizeMode="CanResizeWithGrip"
+        ResizeMode="NoResize"
         WindowStartupLocation="CenterOwner"
         WindowStyle="None"
         ShowInTaskbar="False"
         ShowActivated="True"
-        Height="300"
+        Height="400"
         MinHeight="300"
-        Width="450"
+        Width="600"
         MinWidth="450"
         PreviewKeyDown="Window_PreviewKeyDown"
         MouseDown="Window_MouseDown"
@@ -141,32 +141,28 @@
                 <RowDefinition Height="23"/> <!-- Buttons -->
                 <RowDefinition Height="20"/>
             </Grid.RowDefinitions>
-            <Button Name="SettingsButton" Style="{StaticResource MyButton}" Grid.Row="0" Grid.Column="1"
-                    HorizontalAlignment="Right" VerticalAlignment="Top" Height="20" Width="20" Click="SettingsButton_Click"
-                    ToolTip="Settings" />
-            <TextBlock Grid.Column="1" Grid.Row="1" Text="Tip of the Day" FontSize="28" FontFamily="Segoe UI Light" Padding="0 0 0 0" Foreground="#FF68217A" /> <!-- TODO: The text still has gap above the top of the letters -->
 
+            <TextBlock Grid.Column="1" Grid.Row="1" Text="Did you know...?" FontSize="28" FontFamily="Segoe UI Light" Padding="0 0 0 0" Foreground="#FF68217A" />
+            <!-- TODO: The text still has gap above the top of the letters -->
+            
             <DockPanel Grid.Column="1" Grid.Row="3">
-                <StackPanel DockPanel.Dock="Top" HorizontalAlignment="Right" VerticalAlignment="Bottom" Orientation="Horizontal">
-                    <Label Content="Group:" />
-                    <Label Name ="GroupNameLabel" Content="Group" />
-                    <CheckBox Name="GroupNameCheckBox" IsChecked="True"
+                <DockPanel DockPanel.Dock="Bottom">
+                    <StackPanel Orientation="Horizontal" DockPanel.Dock="Left">
+                        <Label Content="Group:" />
+                        <Label Name ="GroupNameLabel" Content="Group" />
+                        <CheckBox Name="GroupNameCheckBox" IsChecked="True"
                           ToolTip="Include tips from this group. (Uncheck to turn off)"
                           Unchecked="GroupNameCheckBox_Unchecked"
                           Checked="GroupNameCheckBox_Checked"
                           VerticalAlignment="Center"/>
-                </StackPanel>
-                <StackPanel Orientation="Horizontal" DockPanel.Dock="Bottom">
-                    <Button Name="LikeButton" HorizontalAlignment="Right" ToolTip="Like" Width="20" Height="20" Style="{StaticResource MyButton}" BorderThickness="0" Click="LikeButton_Click"/>
-                    <Button Name="DislikeButton" HorizontalAlignment="Right" ToolTip="Dislike" Width="20" Height="20" Style="{StaticResource MyButton}" BorderThickness="0" Click="DislikeButton_Click"/>
-                </StackPanel>
-                <FlowDocumentScrollViewer Grid.Column="1" Grid.Row="3"  Name="TipContentViewer"
-                    VerticalAlignment="Top" MinWidth="400" MinHeight="160"
+                    </StackPanel>
+                </DockPanel>
+                <FlowDocumentScrollViewer Grid.Column="1" Grid.Row="3"  Name="TipContentViewer" VerticalScrollBarVisibility="Auto"
                     Document="{Binding Path=TipContent, Converter={StaticResource TextToFlowDocumentConverter}}"
                 />
             </DockPanel>
 
-            <StackPanel Orientation="Horizontal" Grid.Column="1" Grid.Row="5" HorizontalAlignment="Right">
+            <StackPanel Orientation="Horizontal" Grid.Column="1" Grid.Row="5" HorizontalAlignment="Left">
                 <Button Name="PrevTipButton"
                         Content="&lt;&lt; _Previous"
                         AutomationProperties.Name="Previous Tip"
@@ -174,7 +170,6 @@
                         HorizontalAlignment="Left"
                         Width="80"
                         Click="PrevTipButton_Click"
-                        Margin="6 0 0 0"
                         />
                 <Button Name="NextTipButton" Content="_Next Tip &gt;&gt;" Width="80" Click="NextTipButton_Click"
                         AutomationProperties.Name="Next Tip"
@@ -186,11 +181,22 @@
                         ToolTip="Show a new tip from the same tip group" Click="MoreLikeThisButton_Click"
                         Margin="6 0 0 0"
                         />
+                <Button Name="SettingsButton" Style="{StaticResource MyButton}" 
+                    HorizontalAlignment="Right" VerticalAlignment="Top" Height="20" Width="20" Click="SettingsButton_Click"
+                        Margin="6 2 0 0"
+                    ToolTip="Settings" />
+            </StackPanel>
+
+            <StackPanel Orientation="Horizontal" Grid.Column="1" Grid.Row="5" HorizontalAlignment="Right">
+
+                <Button Name="LikeButton" HorizontalAlignment="Right" ToolTip="Like" Width="20" Height="20" Style="{StaticResource MyButton}" Margin="6 0 0 0" BorderThickness="0" Click="LikeButton_Click"/>
+                <Button Name="DislikeButton" HorizontalAlignment="Right" ToolTip="Dislike" Width="20" Height="20" Style="{StaticResource MyButton}" Margin="6 0 0 0" BorderThickness="0" Click="DislikeButton_Click"/>
+
                 <Button Name="CloseButton" Content="_Got it!" Width="80"
-                        AutomationProperties.Name="Got it" ToolTip="Close Tip of the Day window"
-                        Click="CloseButton_Click" IsCancel="True"
-                        Margin="6 0 0 0"
-                        />
+                    AutomationProperties.Name="Got it" ToolTip="Close Tip of the Day window"
+                    Click="CloseButton_Click" IsCancel="True"
+                    Margin="6 0 0 0"
+                    />
             </StackPanel>
         </Grid>
     </Border>
