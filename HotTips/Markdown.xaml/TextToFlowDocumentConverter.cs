@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics.Contracts;
 using System.Globalization;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -12,6 +13,7 @@ namespace HotTips.Markdown.Xaml
 {
     public class TextToFlowDocumentConverter : DependencyObject, IValueConverter
     {
+        private static string _installDir = Path.GetDirectoryName(typeof(TextToFlowDocumentConverter).Assembly.CodeBase).Replace("\\","/");
         public Markdown Markdown
         {
             get { return (Markdown)GetValue(MarkdownProperty); }
@@ -40,6 +42,8 @@ namespace HotTips.Markdown.Xaml
             }
 
             var text = (string)value;
+
+            text = text.Replace("](images", "]("+_installDir+"/Tips/images");
 
             var engine = Markdown ?? mMarkdown.Value;
 
