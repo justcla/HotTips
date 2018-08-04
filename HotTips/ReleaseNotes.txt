@@ -1,5 +1,6 @@
 ﻿Hot Tips - Tip of the Day extension for Visual Studio
 
+26-Jul-2018 v2.0.2: Fix reset tip history bug
 26-Jul-2018 v2.0.1: Fix icon image loading bug
 26-Jul-2018 v2.0.0: UI redesign, dozens more tips! (Hackathon 2018)
 06-Jun-2018 v1.0.5: Added a few "Shell" tips
