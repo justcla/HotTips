@@ -33,9 +33,7 @@ namespace HotTips
             ThreadHelper.ThrowIfNotOnUIThread();
             SettingsManager = (ISettingsManager)ServiceProvider.GlobalProvider.GetService(new Guid(SVsSettingsPersistenceManagerGuid));
 
-            // Pull tip history from VS settings store (Comma separated string of TipIDs)
-            string tipHistory = GetTipHistoryFromSettingsStore();
-            _tipsSeen = (!string.IsNullOrEmpty(tipHistory)) ? new List<string>(tipHistory.Split(',')) : new List<string>();
+            InitializeTipsSeen();
 
             SettingsManager.TryGetValue(EXCLUDED_TIP_GROUPS, out string excludedGroups);
 
@@ -48,7 +46,7 @@ namespace HotTips
 
             if (!string.IsNullOrEmpty(excludedTipLevels))
             {
-                foreach(var level in excludedTipLevels.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
+                foreach (var level in excludedTipLevels.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
                 {
                     if (Enum.TryParse(level, out TipLevel value))
                     {
@@ -71,6 +69,7 @@ namespace HotTips
 
         public List<string> GetTipHistory()
         {
+            if (_tipsSeen == null) InitializeTipsSeen();
             return _tipsSeen;
         }
 
@@ -79,6 +78,13 @@ namespace HotTips
             string collectionPath = TIP_OF_THE_DAY_SETTINGS;
             SettingsManager.TryGetValue(collectionPath, out string tipHistoryRaw);
             return tipHistoryRaw;
+        }
+
+        private void InitializeTipsSeen()
+        {
+            // Pull tip history from VS settings store (Comma separated string of TipIDs)
+            string tipHistory = GetTipHistoryFromSettingsStore();
+            _tipsSeen = (!string.IsNullOrEmpty(tipHistory)) ? new List<string>(tipHistory.Split(',')) : new List<string>();
         }
 
         public void MarkTipAsSeen(string globalTipId)
