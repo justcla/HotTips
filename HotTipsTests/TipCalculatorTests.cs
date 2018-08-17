@@ -13,8 +13,8 @@ namespace HotTips
         public void TestGetAllTips()
         {
             // Setup
-            Mock<VSTipHistoryManager> mockTipHistoryManager = new Mock<VSTipHistoryManager>();
-            List<string> emptyList = new List<string>();
+            Mock<ITipHistoryManager> mockTipHistoryManager = new Mock<ITipHistoryManager>();
+            List<TipHistoryInfo> emptyList = new List<TipHistoryInfo>();
             mockTipHistoryManager.Setup(m => m.GetTipHistory()).Returns(emptyList);
 
             TipCalculator tipCalculator = new TipCalculator(mockTipHistoryManager.Object);
@@ -32,8 +32,16 @@ namespace HotTips
         public void TestGetNextTip()
         {
             // Setup
-            Mock<VSTipHistoryManager> mockTipHistoryManager = new Mock<VSTipHistoryManager>();
-            List<string> tipsSeen = new List<string> {"General-GN001", "Editor-ED001"};
+            Mock<ITipHistoryManager> mockTipHistoryManager = new Mock<ITipHistoryManager>();
+            TipHistoryInfo tipObj1 = new TipHistoryInfo();
+            tipObj1.globalTipId = "General-GN001";
+            tipObj1.tipLikeStatus = TipLikeEnum.LIKE;
+
+            TipHistoryInfo tipObj2 = new TipHistoryInfo();
+            tipObj2.globalTipId = "Editor-ED001";
+            tipObj2.tipLikeStatus = TipLikeEnum.NORMAL;
+
+            List<TipHistoryInfo> tipsSeen = new List<TipHistoryInfo> {tipObj1, tipObj2};
             mockTipHistoryManager.Setup(m => m.GetTipHistory()).Returns(tipsSeen);
 
             TipCalculator tipCalculator = new TipCalculator(mockTipHistoryManager.Object);
@@ -43,15 +51,23 @@ namespace HotTips
             
             // Verify
             Assert.IsNotNull(nextTip);
-            Assert.AreEqual("Editor-ED002", nextTip.globalTipId);
+            Assert.AreEqual("General-GN001", nextTip.globalTipId);
         }
 
         [TestMethod]
         public void TestGetNextTip2()
         {
             // Setup
-            Mock<VSTipHistoryManager> mockTipHistoryManager = new Mock<VSTipHistoryManager>();
-            List<string> tipsSeen = new List<string> {"General-GN001", "Editor-ED001", "Editor-ED002"};
+            Mock<ITipHistoryManager> mockTipHistoryManager = new Mock<ITipHistoryManager>();
+            TipHistoryInfo tipObj1 = new TipHistoryInfo();
+            tipObj1.globalTipId = "General-GN001";
+            tipObj1.tipLikeStatus = TipLikeEnum.LIKE;
+
+            TipHistoryInfo tipObj2 = new TipHistoryInfo();
+            tipObj2.globalTipId = "Editor-ED001";
+            tipObj2.tipLikeStatus = TipLikeEnum.NORMAL;
+
+            List<TipHistoryInfo> tipsSeen = new List<TipHistoryInfo> {tipObj1, tipObj2};
             mockTipHistoryManager.Setup(m => m.GetTipHistory()).Returns(tipsSeen);
 
             TipCalculator tipCalculator = new TipCalculator(mockTipHistoryManager.Object);
@@ -61,7 +77,7 @@ namespace HotTips
             
             // Verify
             Assert.IsNotNull(nextTip);
-            Assert.AreEqual("Editor-ED003", nextTip.globalTipId);
+            Assert.AreEqual("General-GN001", nextTip.globalTipId);
         }
 
         [TestMethod]
@@ -73,8 +89,17 @@ namespace HotTips
             mockTipManager.Setup(m => m.GetPrioritizedTipGroups()).Returns(GenerateTestTipGroups());
 
             // Mock the TipHistoryManager
-            Mock<VSTipHistoryManager> mockTipHistoryManager = new Mock<VSTipHistoryManager>();
-            mockTipHistoryManager.Setup(m => m.GetTipHistory()).Returns(new List<string> { "General-GN001", "Editor-ED001", "Editor-ED002" });
+            Mock<ITipHistoryManager> mockTipHistoryManager = new Mock<ITipHistoryManager>();
+
+            TipHistoryInfo tipObj1 = new TipHistoryInfo();
+            tipObj1.globalTipId = "General-GN001";
+            tipObj1.tipLikeStatus = TipLikeEnum.LIKE;
+
+            TipHistoryInfo tipObj2 = new TipHistoryInfo();
+            tipObj2.globalTipId = "Editor-ED001";
+            tipObj2.tipLikeStatus = TipLikeEnum.NORMAL;
+
+            mockTipHistoryManager.Setup(m => m.GetTipHistory()).Returns(new List<TipHistoryInfo> { tipObj1, tipObj2 });
 
             TipCalculator tipCalculator = new TipCalculator(mockTipHistoryManager.Object, mockTipManager.Object);
             
@@ -83,7 +108,7 @@ namespace HotTips
             
             // Verify
             Assert.IsNotNull(nextTip);
-            Assert.AreEqual("Editor-ED003", nextTip.globalTipId);
+            Assert.AreEqual("General-GN001", nextTip.globalTipId);
         }
 
         private List<GroupOfTips>[] GenerateTestTipGroups()

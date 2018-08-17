@@ -27,10 +27,9 @@ namespace HotTips
         private VSTipHistoryManager _tipHistoryManager;
         private ITipManager _tipManager;
         private string currentTip;
+        private TipLikeEnum currentTipVoteStatus;
         private TipViewModel _tipViewModel;
-
         private bool isLiked = false;
-
         private bool isUnLiked = false;
 
         public TipOfTheDayWindow(TipCalculator tipCalculator)
@@ -44,7 +43,7 @@ namespace HotTips
             _tipHistoryManager = tipCalculator.TipHistoryManager;
             _tipManager = tipCalculator.TipManager;
 
-            PopulateDefaultImages();
+            ShowNoVote();
         }
 
         private void PopulateDefaultImages()
@@ -98,15 +97,17 @@ namespace HotTips
         private void GoToNextTip()
         {
             // If the current tip is not the last tip in the tip history, then go to the next tip in the tip history that exists.
-            List<string> tipHistory = _tipHistoryManager.GetTipHistory();
-
+            List<TipHistoryInfo> tipHistoryList = _tipHistoryManager.GetTipHistory();
+            
             // Is there a tip later in the history than the current tip?
-            var currentTipIndex = tipHistory.LastIndexOf(currentTip);   // Use LastIndexOf for performance as it will normally be towards the end of the list.
-            TipInfo nextTipInHistory = GetNextTipInHistory(tipHistory, currentTipHistoryIndex: currentTipIndex);
+            var currentTipIndex = tipHistoryList.FindLastIndex(a => a.globalTipId.Equals(currentTip)); // Use LastIndexOf for performance as it will normally be towards the end of the list.
+            TipInfo nextTipInHistory = GetNextTipInHistory(tipHistoryList, currentTipHistoryIndex: currentTipIndex);
             if (nextTipInHistory != null)
             {
                 // Navigate to the next tip in history.
                 NavigateToTip(nextTipInHistory, markAsSeen: false);
+                ////Show next tip voting status from history
+                ShowTipVoteStatusFromHistory(tipHistoryList.Find(a => a.globalTipId.Equals(nextTipInHistory.globalTipId)));
                 return;
             }
 
@@ -118,9 +119,12 @@ namespace HotTips
                 // Failed to show next tip. Close window.
                 Close();
             }
+
+            ////Show next tip voting status from history
+            ShowTipVoteStatusFromHistory(tipHistoryList.Find(a => a.globalTipId.Equals(nextTip.globalTipId)));
         }
 
-        private TipInfo GetNextTipInHistory(List<string> tipHistory, int currentTipHistoryIndex)
+        private TipInfo GetNextTipInHistory(List<TipHistoryInfo> tipHistory, int currentTipHistoryIndex)
         {
             int nextTipIndex = currentTipHistoryIndex + 1;
             if (nextTipIndex >= tipHistory.Count)
@@ -131,7 +135,7 @@ namespace HotTips
 
             var nextTipId = tipHistory[nextTipIndex];
 
-            TipInfo nextTip = _tipManager.GetTipInfo(nextTipId);
+            TipInfo nextTip = _tipManager.GetTipInfo(nextTipId.globalTipId);
 
             if (nextTip != null)
             {
@@ -146,11 +150,12 @@ namespace HotTips
         private void GoToPrevTip()
         {
             // Get the index of the current tip in the tip history. (Should always resolve.)
-            List<string> tipHistory = _tipHistoryManager.GetTipHistory();
-            int currentTipHistoryIndex = tipHistory.LastIndexOf(currentTip);
+            List<TipHistoryInfo> tipHistoryList = _tipHistoryManager.GetTipHistory();
+            int currentTipHistoryIndex = tipHistoryList.FindLastIndex(a=>a.globalTipId.Equals(currentTip));
+
 
             // Get the previous tip (if there is one)
-            TipInfo previousTip = GetPreviousTip(tipHistory, currentTipHistoryIndex);
+            TipInfo previousTip = GetPreviousTip(tipHistoryList, currentTipHistoryIndex);
 
             // Back out if there is no previous tip.
             if (previousTip == null)
@@ -161,9 +166,12 @@ namespace HotTips
 
             // Navigate to the previous tip.
             bool success = NavigateToTip(previousTip, markAsSeen: false);
+
+            ////Show previous tip voting status from history
+            ShowTipVoteStatusFromHistory(tipHistoryList.Find(a => a.globalTipId.Equals(previousTip.globalTipId)));
         }
 
-        private TipInfo GetPreviousTip(List<string> tipHistory, int currentTipHistoryIndex)
+        private TipInfo GetPreviousTip(List<TipHistoryInfo> tipHistory, int currentTipHistoryIndex)
         {
             int prevTipHistoryIndex = currentTipHistoryIndex - 1;
             if (prevTipHistoryIndex < 0)
@@ -173,7 +181,7 @@ namespace HotTips
             }
 
             // Previous tip is the one before the current tip in the tip history.
-            string previousTipId = tipHistory[prevTipHistoryIndex];
+            string previousTipId = tipHistory[prevTipHistoryIndex].globalTipId;
 
             // Get the full TipInfo (by the given TipId) from the Tip Manager.
             TipInfo previousTip = _tipManager.GetTipInfo(previousTipId);
@@ -183,11 +191,13 @@ namespace HotTips
                 // Found a tip! Return it.
                 return previousTip;
             }
-
-            // No Previous tip to show. It's possible the tip previously shown no longer exists.
-            // Look for next previous tip. (drop the index back one position and try again)
-            // repeat - until currentTipHistoryIndex < 1 or previousTip != null
-            return GetPreviousTip(tipHistory, prevTipHistoryIndex);
+            else
+            {
+                // No Previous tip to show. It's possible the tip previously shown no longer exists.
+                // Look for next previous tip. (drop the index back one position and try again)
+                // repeat - until currentTipHistoryIndex < 1 or previousTip != null
+                return GetPreviousTip(tipHistory, prevTipHistoryIndex);
+            }
         }
 
         private void GoToMoreLikeThis()
@@ -219,7 +229,7 @@ namespace HotTips
 
             // Render the new tip content in the tip viewer
             ShowTipContent(nextTip);
-
+            
             // Display Group settings
             UpdateGroupDisplayElements(nextTip);
 
@@ -230,6 +240,22 @@ namespace HotTips
             }
 
             return true;
+        }
+
+        private void ShowTipVoteStatusFromHistory(TipHistoryInfo tipHistory)
+        {
+            switch (tipHistory.tipLikeStatus)
+            {
+                case TipLikeEnum.LIKE:
+                    ShowLikeVote();
+                    break;
+                case TipLikeEnum.DISLIKE:
+                    ShowDislikeVote();
+                    break;
+                default:
+                    ShowNoVote();
+                    break;
+            }
         }
 
         private void ShowTipContent(TipInfo nextTip)
@@ -274,39 +300,30 @@ namespace HotTips
 
         private void LikeButton_Click(object sender, RoutedEventArgs e)
         {
-            string eventName = string.Empty;
             if (isLiked)
             {
-                PopulateLikeImage();
-                eventName = TelemetryConstants.TipLikeCanceledEvent;
+                ShowNoVote();
             }
             else
             {
-                PopulateLikeFilledImage();
-                eventName = TelemetryConstants.TipLikedEvent;
+                ShowLikeVote();
             }
-            PopulateDislikeImage();
 
-            LogTelemetryEvent(eventName);
+            _tipHistoryManager.UpdateTipVoteStatus(currentTip, currentTipVoteStatus);
         }
 
         private void DislikeButton_Click(object sender, RoutedEventArgs e)
         {
-            string eventName = string.Empty;
             if (isUnLiked)
             {
-                PopulateDislikeImage();
-                eventName = TelemetryConstants.TipDisLikeCanceledEvent;
+                ShowNoVote();
             }
             else
             {
-                PopulateDislikeFilledImage();
-                eventName = TelemetryConstants.TipDisLikedEvent;
+                ShowDislikeVote();
             }
-            PopulateLikeImage();
 
-            LogTelemetryEvent(eventName);
-
+            _tipHistoryManager.UpdateTipVoteStatus(currentTip, currentTipVoteStatus);
         }
 
         private void LogTelemetryEvent(string eventName)
@@ -318,20 +335,30 @@ namespace HotTips
                 "TipId", currentTip ?? string.Empty);
         }
 
-        private void PopulateLikeImage()
+        private void ShowNoVote()
         {
+            currentTipVoteStatus = TipLikeEnum.NORMAL;
             var imagePath = Path.Combine(_installDir, "Tips/images/Like.png");
             var brush = new ImageBrush();
             brush.ImageSource = new BitmapImage(new Uri(imagePath, UriKind.Absolute));
             LikeButton.Background = brush;
-            isUnLiked = true;
+            var brush1 = new ImageBrush();
+            brush1.ImageSource = new BitmapImage(new Uri("Tips/images/Dislike.png", UriKind.Relative));
+            DislikeButton.Background = brush1;
+            isUnLiked = false;
             isLiked = false;
         }
 
-        private void PopulateDislikeFilledImage()
+        private void ShowDislikeVote()
         {
+            currentTipVoteStatus = TipLikeEnum.DISLIKE;
+            var brush = new ImageBrush();
+            brush.ImageSource = new BitmapImage(new Uri("Tips/images/Like.png", UriKind.Relative));
+            LikeButton.Background = brush;
             var imagePath = Path.Combine(_installDir, "Tips/images/DislikeFilled.png");
             isLiked = false;
+            var brush1 = new ImageBrush();
+            DislikeButton.Background = brush1;
             var brush = new ImageBrush();
             brush.ImageSource = new BitmapImage(new Uri(imagePath, UriKind.Absolute));
             DislikeButton.Background = brush;
@@ -350,10 +377,14 @@ namespace HotTips
 
         private void PopulateLikeFilledImage()
         {
+            currentTipVoteStatus = TipLikeEnum.LIKE;
             var imagePath = Path.Combine(_installDir, "Tips/images/LikeFilled.png");
             var brush = new ImageBrush();
             brush.ImageSource = new BitmapImage(new Uri(imagePath, UriKind.Absolute));
             LikeButton.Background = brush;
+            var brush1 = new ImageBrush();
+            brush1.ImageSource = new BitmapImage(new Uri("Tips/images/Dislike.png", UriKind.Relative));
+            DislikeButton.Background = brush1;
             isLiked = true;
             isUnLiked = false;
         }

@@ -52,7 +52,7 @@ namespace HotTips
                 // Now show the dialog
                 tipOfTheDayWindow.Show();
 
-                // Mark tip as seen
+                // Mark tip as seen and default like status is normal
                 _tipHistoryManager.MarkTipAsSeen(nextTip.globalTipId);
             }
             catch (Exception e)
