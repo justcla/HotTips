@@ -27,14 +27,21 @@ namespace HotTips
     public class TipInfo
     {
         public string globalTipId { get; set; }
+        
+        // Tip properties
         public string tipId { get; set; }
         public string name { get; set; }
         public int priority { get; set; }
         public string contentUri { get; set; }
+        
+        // Group properties
         public string groupId { get; set; }
         public string groupName { get; set; }
         public int groupPriority { get; set; }
         public TipLevel Level { get; set; }
+        
+        // History properties
+        public TipLikeEnum TipLikeStatus { get; set; }
 
         public static TipInfo Create(TipGroup tipGroup, Tip tip, string tipContentUri)
         {
@@ -48,7 +55,8 @@ namespace HotTips
                 groupName = tipGroup.groupName,
                 groupPriority = tipGroup.groupPriority,
                 globalTipId = GetGlobalTipId(tipGroup.groupId, tip.tipId),
-                Level = tip.level
+                Level = tip.level,
+                TipLikeStatus = TipLikeEnum.NORMAL
             };
             return tipInfo;
         }
@@ -73,13 +81,13 @@ namespace HotTips
 
     public class TipHistoryInfo
     {
-        public string globalTipId { get; set; }
+        public string GlobalTipId { get; set; }
 
-        public TipLikeEnum tipLikeStatus { get; set; }
+        public TipLikeEnum TipLikeStatus { get; set; }
 
         public override string ToString()
         {
-            return string.Concat(globalTipId, ':', (int)tipLikeStatus);
+            return string.Concat(GlobalTipId, ':', (int)TipLikeStatus);
         }
 
         public TipHistoryInfo()
@@ -90,13 +98,13 @@ namespace HotTips
         {
             if (tipHistoryItem.Contains(":"))
             {
-                this.globalTipId = tipHistoryItem.Split(':')[0];
-                this.tipLikeStatus = (TipLikeEnum)Convert.ToInt32(tipHistoryItem.Split(':')[1]);
+                this.GlobalTipId = tipHistoryItem.Split(':')[0];
+                this.TipLikeStatus = (TipLikeEnum)Convert.ToInt32(tipHistoryItem.Split(':')[1]);
             }
             else
             {
-                this.globalTipId = tipHistoryItem;
-                this.tipLikeStatus = TipLikeEnum.NORMAL;
+                this.GlobalTipId = tipHistoryItem;
+                this.TipLikeStatus = TipLikeEnum.NORMAL;
             }
         }
     }

@@ -54,13 +54,10 @@ namespace HotTips
             SettingsManager.TryGetValue(EXCLUDED_TIP_GROUPS, out string excludedGroups);
 
             _excludedTipGroups = (!string.IsNullOrEmpty(excludedGroups))
-
                 ? new HashSet<string>(excludedGroups.Split(','), StringComparer.OrdinalIgnoreCase)
-
                 : new HashSet<string>(StringComparer.OrdinalIgnoreCase);
 
             SettingsManager.TryGetValue(EXCLUDED_TIP_LEVELS, out string excludedTipLevels);
-
             _excludedTipLevels = new HashSet<TipLevel>();
 
             if (!string.IsNullOrEmpty(excludedTipLevels))
@@ -83,7 +80,7 @@ namespace HotTips
         public bool HasTipBeenSeen(string globalTipId)
         {
             List<TipHistoryInfo> tipsSeen = GetTipHistory();
-            return tipsSeen != null && tipsSeen.Exists(a=>a.globalTipId.Equals(globalTipId));
+            return tipsSeen != null && tipsSeen.Exists(a=>a.GlobalTipId.Equals(globalTipId));
         }
 
         public List<TipHistoryInfo> GetTipHistory()
@@ -103,14 +100,20 @@ namespace HotTips
         {
             // Pull tip history from VS settings store (Comma separated string of TipIDs)
             string tipHistory = GetTipHistoryFromSettingsStore();
-            _tipsSeen = (!string.IsNullOrEmpty(tipHistory)) ? new List<string>(tipHistory.Split(',')) : new List<string>();
+            // TODO: Parse the Tip History
+            // Deserialize the raw string stored in the registry.
+            // Format = [TipId]:[Vote];[TipId]:[Vote]
+            // eg. "ED001:1;SHL001:0"
+            // Note: Vote field might be missing (esp if people have previously run the older version before voting was stored)
+            _tipsSeen = new List<TipHistoryInfo>();
+            //_tipsSeen = (!string.IsNullOrEmpty(tipHistory)) ? new List<string>(tipHistory.Split(',')) : new List<string>();
         }
 
         public void MarkTipAsSeen(string globalTipId)
         {
             // Back out if tip already seen
             List<TipHistoryInfo> tipsSeen = GetTipHistory();
-            if (tipsSeen.Exists(a => a.globalTipId.Equals(globalTipId)))
+            if (tipsSeen.Exists(a => a.GlobalTipId.Equals(globalTipId)))
             {
                 // Item is already in the history. No need to add it again.
                 return;
@@ -124,16 +127,16 @@ namespace HotTips
 
         public void UpdateTipVoteStatus(string globalTipId, TipLikeEnum currentTipVoteStatus)
         {
-            if (_tipsSeen.Exists(a => a.globalTipId.Equals(globalTipId)))
+            if (_tipsSeen.Exists(a => a.GlobalTipId.Equals(globalTipId)))
             {
                 ////Update the voting status in the tip history 
-                _tipsSeen.Find(a => a.globalTipId.Equals(globalTipId)).tipLikeStatus = currentTipVoteStatus;
+                _tipsSeen.Find(a => a.GlobalTipId.Equals(globalTipId)).TipLikeStatus = currentTipVoteStatus;
             }
             else
             {
                 TipHistoryInfo tipObj1 = new TipHistoryInfo();
-                tipObj1.globalTipId = globalTipId;
-                tipObj1.tipLikeStatus = currentTipVoteStatus;
+                tipObj1.GlobalTipId = globalTipId;
+                tipObj1.TipLikeStatus = currentTipVoteStatus;
 
                 _tipsSeen.Add(tipObj1);
             }

@@ -22,9 +22,24 @@ namespace HotTips
             return _groupsPriList;
         }
 
+        public bool TipExists(string globalTipId)
+        {
+            if (_allTips == null)
+            {
+                DebugLogInitAllTips(globalTipId);
+                return false;
+            }
+            return _allTips.ContainsKey(globalTipId);
+        }
+
         public TipInfo GetTipInfo(string globalTipId)
         {
-            return _allTips?[globalTipId];
+            if (_allTips == null)
+            {
+                DebugLogInitAllTips(globalTipId);
+                return null;
+            }
+            return _allTips[globalTipId];
         }
 
         public TipInfo GetNextTipInGroup(string globalTipId)
@@ -202,5 +217,11 @@ namespace HotTips
             // In future: Add other tip providers
             return tipGroupProviders;
         }
+
+        private static void DebugLogInitAllTips(string globalTipId)
+        {
+            Debug.WriteLine($"Cannot find tip: {globalTipId}. Internal _allTips dictionary has not been initialized.");
+        }
+
     }
 }

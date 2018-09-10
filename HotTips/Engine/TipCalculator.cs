@@ -42,7 +42,7 @@ namespace HotTips
             string lastSeenGroupId = null;
             if (tipHistoryList != null && tipHistoryList.Count > 0)
             {
-                string lastTipGlobalId = tipHistoryList[tipHistoryList.Count - 1].globalTipId;
+                string lastTipGlobalId = tipHistoryList[tipHistoryList.Count - 1].GlobalTipId;
                 // Extract groupId from global tip Id "[GroupId-TipId]"
                 lastSeenGroupId = lastTipGlobalId.Split(GLOBAL_TIP_ID_SEPARATOR)[0];
             }
