@@ -191,6 +191,13 @@
       "content": "EDI_ExpandRegion.md",
       "priority": 2,
       "level": 1
+    },
+    {
+      "tipId": "EDI031",
+      "name": "Generate Tests",
+      "content": "EDI_CreateUnitTests.md",
+      "priority": 2,
+      "level": 1
     }
   ]
 
