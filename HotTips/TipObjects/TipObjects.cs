@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 namespace HotTips
 {
@@ -92,21 +91,10 @@ namespace HotTips
 
         public TipHistoryInfo()
         {
+            // Default to no vote (Vote=Normal)
+            this.TipLikeStatus = TipLikeEnum.NORMAL;
+        }
 
-        }
-        public TipHistoryInfo(string tipHistoryItem)
-        {
-            if (tipHistoryItem.Contains(":"))
-            {
-                this.GlobalTipId = tipHistoryItem.Split(':')[0];
-                this.TipLikeStatus = (TipLikeEnum)Convert.ToInt32(tipHistoryItem.Split(':')[1]);
-            }
-            else
-            {
-                this.GlobalTipId = tipHistoryItem;
-                this.TipLikeStatus = TipLikeEnum.NORMAL;
-            }
-        }
     }
 
     public class GroupOfTips
