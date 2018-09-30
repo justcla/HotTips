@@ -13,7 +13,7 @@ namespace HotTips
         public void TestGetAllTips()
         {
             // Setup
-            Mock<ITipHistoryManager> mockTipHistoryManager = new Mock<ITipHistoryManager>();
+            Mock<VSTipHistoryManager> mockTipHistoryManager = new Mock<VSTipHistoryManager>();
             List<TipHistoryInfo> emptyList = new List<TipHistoryInfo>();
             mockTipHistoryManager.Setup(m => m.GetTipHistory()).Returns(emptyList);
 
@@ -32,14 +32,14 @@ namespace HotTips
         public void TestGetNextTip()
         {
             // Setup
-            Mock<ITipHistoryManager> mockTipHistoryManager = new Mock<ITipHistoryManager>();
+            Mock<VSTipHistoryManager> mockTipHistoryManager = new Mock<VSTipHistoryManager>();
             TipHistoryInfo tipObj1 = new TipHistoryInfo();
-            tipObj1.globalTipId = "General-GN001";
-            tipObj1.tipLikeStatus = TipLikeEnum.LIKE;
+            tipObj1.GlobalTipId = "General-GN001";
+            tipObj1.TipLikeStatus = TipLikeEnum.LIKE;
 
             TipHistoryInfo tipObj2 = new TipHistoryInfo();
-            tipObj2.globalTipId = "Editor-ED001";
-            tipObj2.tipLikeStatus = TipLikeEnum.NORMAL;
+            tipObj2.GlobalTipId = "Editor-ED001";
+            tipObj2.TipLikeStatus = TipLikeEnum.NORMAL;
 
             List<TipHistoryInfo> tipsSeen = new List<TipHistoryInfo> {tipObj1, tipObj2};
             mockTipHistoryManager.Setup(m => m.GetTipHistory()).Returns(tipsSeen);
@@ -58,14 +58,14 @@ namespace HotTips
         public void TestGetNextTip2()
         {
             // Setup
-            Mock<ITipHistoryManager> mockTipHistoryManager = new Mock<ITipHistoryManager>();
+            Mock<VSTipHistoryManager> mockTipHistoryManager = new Mock<VSTipHistoryManager>();
             TipHistoryInfo tipObj1 = new TipHistoryInfo();
-            tipObj1.globalTipId = "General-GN001";
-            tipObj1.tipLikeStatus = TipLikeEnum.LIKE;
+            tipObj1.GlobalTipId = "General-GN001";
+            tipObj1.TipLikeStatus = TipLikeEnum.LIKE;
 
             TipHistoryInfo tipObj2 = new TipHistoryInfo();
-            tipObj2.globalTipId = "Editor-ED001";
-            tipObj2.tipLikeStatus = TipLikeEnum.NORMAL;
+            tipObj2.GlobalTipId = "Editor-ED001";
+            tipObj2.TipLikeStatus = TipLikeEnum.NORMAL;
 
             List<TipHistoryInfo> tipsSeen = new List<TipHistoryInfo> {tipObj1, tipObj2};
             mockTipHistoryManager.Setup(m => m.GetTipHistory()).Returns(tipsSeen);
@@ -89,15 +89,15 @@ namespace HotTips
             mockTipManager.Setup(m => m.GetPrioritizedTipGroups()).Returns(GenerateTestTipGroups());
 
             // Mock the TipHistoryManager
-            Mock<ITipHistoryManager> mockTipHistoryManager = new Mock<ITipHistoryManager>();
+            Mock<VSTipHistoryManager> mockTipHistoryManager = new Mock<VSTipHistoryManager>();
 
             TipHistoryInfo tipObj1 = new TipHistoryInfo();
-            tipObj1.globalTipId = "General-GN001";
-            tipObj1.tipLikeStatus = TipLikeEnum.LIKE;
+            tipObj1.GlobalTipId = "General-GN001";
+            tipObj1.TipLikeStatus = TipLikeEnum.LIKE;
 
             TipHistoryInfo tipObj2 = new TipHistoryInfo();
-            tipObj2.globalTipId = "Editor-ED001";
-            tipObj2.tipLikeStatus = TipLikeEnum.NORMAL;
+            tipObj2.GlobalTipId = "Editor-ED001";
+            tipObj2.TipLikeStatus = TipLikeEnum.NORMAL;
 
             mockTipHistoryManager.Setup(m => m.GetTipHistory()).Returns(new List<TipHistoryInfo> { tipObj1, tipObj2 });
 
