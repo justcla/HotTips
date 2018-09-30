@@ -1,5 +1,6 @@
 ﻿Hot Tips - Tip of the Day extension for Visual Studio
 
+29-Sep-2018 v2.1.0: Tip votes now stored in roaming settings
 26-Jul-2018 v2.0.2: Fix reset tip history bug
 26-Jul-2018 v2.0.1: Fix icon image loading bug
 26-Jul-2018 v2.0.0: UI redesign, dozens more tips! (Hackathon 2018)
