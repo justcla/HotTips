@@ -26,7 +26,7 @@ namespace HotTips
 
         public TipInfo GetNextTip()
         {
-            List<string> tipHistoryList = TipHistoryManager.GetTipHistory();
+            List<TipHistoryInfo> tipHistoryList = TipHistoryManager.GetTipHistory();
             //List<string> tipHistoryList = GetTipHistory();
 
             string lastSeenGroupId = GetLastTipGroupSeen(tipHistoryList);
@@ -37,12 +37,12 @@ namespace HotTips
             return nextTip;
         }
 
-        private static string GetLastTipGroupSeen(List<string> tipHistoryList)
+        private static string GetLastTipGroupSeen(List<TipHistoryInfo> tipHistoryList)
         {
             string lastSeenGroupId = null;
             if (tipHistoryList != null && tipHistoryList.Count > 0)
             {
-                string lastTipGlobalId = tipHistoryList.Last();
+                string lastTipGlobalId = tipHistoryList[tipHistoryList.Count - 1].GlobalTipId;
                 // Extract groupId from global tip Id "[GroupId-TipId]"
                 lastSeenGroupId = lastTipGlobalId.Split(GLOBAL_TIP_ID_SEPARATOR)[0];
             }

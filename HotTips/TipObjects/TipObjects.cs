@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 namespace HotTips
 {
@@ -27,14 +26,21 @@ namespace HotTips
     public class TipInfo
     {
         public string globalTipId { get; set; }
+        
+        // Tip properties
         public string tipId { get; set; }
         public string name { get; set; }
         public int priority { get; set; }
         public string contentUri { get; set; }
+        
+        // Group properties
         public string groupId { get; set; }
         public string groupName { get; set; }
         public int groupPriority { get; set; }
         public TipLevel Level { get; set; }
+        
+        // History properties
+        public TipLikeEnum TipLikeStatus { get; set; }
 
         public static TipInfo Create(TipGroup tipGroup, Tip tip, string tipContentUri)
         {
@@ -48,7 +54,8 @@ namespace HotTips
                 groupName = tipGroup.groupName,
                 groupPriority = tipGroup.groupPriority,
                 globalTipId = GetGlobalTipId(tipGroup.groupId, tip.tipId),
-                Level = tip.level
+                Level = tip.level,
+                TipLikeStatus = TipLikeEnum.NORMAL
             };
             return tipInfo;
         }
@@ -71,6 +78,25 @@ namespace HotTips
         }
     }
 
+    public class TipHistoryInfo
+    {
+        public string GlobalTipId { get; set; }
+
+        public TipLikeEnum TipLikeStatus { get; set; }
+
+        public override string ToString()
+        {
+            return string.Concat(GlobalTipId, ':', (int)TipLikeStatus);
+        }
+
+        public TipHistoryInfo()
+        {
+            // Default to no vote (Vote=Normal)
+            this.TipLikeStatus = TipLikeEnum.NORMAL;
+        }
+
+    }
+
     public class GroupOfTips
     {
         public string groupId { get; set; }
@@ -89,6 +115,13 @@ namespace HotTips
                 TipsPriList = new List<TipInfo>[3]
             };
         }
+    }
+
+    public enum TipLikeEnum
+    {
+        DISLIKE=0,
+        NORMAL=1,
+        LIKE=2
     }
 
     public enum TipLevel
